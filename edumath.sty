@@ -1,0 +1,904 @@
+%% This is file `edumath.sty', generated from `edumath.tex' (key `pkg').
+%% edumath package for mathematics in educational contexts
+%%
+%% Copyright (C) 2012-2017 by Daniel Wunderlich <code@wu-web.de>
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The current maintainer of this work is Daniel Wunderlich.
+%%
+%% This work consists of the file edumath.tex and the derived files:
+%%  * edumath.sty
+%%  * edumath.pdf
+
+\RequirePackage{expl3, l3keys2e}
+\RequirePackage{xparse}
+
+\ProvidesExplPackage{edumath}
+  {2017/05/01}
+  {0.1}
+  {Math package for educational institutions}
+
+\msg_new:nnn {edumath} {option-dep-enable} {If\ you\ enable\ the\ option\ #1,\ you\ have\ to\ enable\ the\ following\ option(s):\ #2.}
+
+\cs_generate_variant:Nn \tl_if_eq:nnT { V }
+\cs_generate_variant:Nn \tl_if_eq:nnF { V }
+\cs_generate_variant:Nn \tl_if_eq:nnTF { V }
+
+\cs_generate_variant:Nn \tl_if_eq:nnT { v }
+\cs_generate_variant:Nn \tl_if_eq:nnF { v }
+\cs_generate_variant:Nn \tl_if_eq:nnTF { v }
+
+\dim_new:N \g_edumath_temp_dim
+\skip_new:N \g_edumath_temp_skip
+
+\dim_new:N \g_edumath_parskip_dim
+\skip_new:N \g_edumath_parskip_skip
+
+\AtBeginDocument{
+  \dim_set:Nn \g_edumath_parskip_dim \parskip
+  \skip_set:Nn \g_edumath_parskip_skip \parskip
+}
+
+\cs_new:Npn \__edumath_keys_initial:n #1 {
+  \AtBeginDocument{
+    \keys_set:nn {edumath} {#1}
+  }
+}
+
+\DeclareExpandableDocumentCommand \@usetl { m m } {
+  \tl_use:c {g_edumath_#1_#2}
+}
+
+\keys_define:nn {edumath} {
+  commasep .bool_gset:N = \g_edumath_commasep_bool,  % Comma as separator
+  commasep .initial:n = true,
+  amsoptions .tl_gset:N = \g_edumath_amsoptions_tl,  % Pass options to amsmath-package
+  amsoptions .initial:n = intlimits,
+  specialsets .bool_gset:N = \g_edumath_specialsets_bool,        % Create macros special sets
+  specialsets .initial:n = true,
+  qtree .bool_gset:N = \g_edumath_qtree_bool,        % Because of the incompatibility of tikz-qtree and struktex, it is not loaded by default.
+  qtree .initial:n = false,
+}
+
+\keys_define:nn {edumath} {
+  amsthm .bool_gset:N = \g_edumath_amsthm_bool,                      % Predefine amsthm theorems
+  amsthm .initial:n = true,
+  framedthm .bool_gset:N = \g_edumath_framedthm_bool,                % Predefine thmbox theorems
+  framedthm .initial:n = true,
+  thmbox .bool_gset:N = \g_edumath_thmbox_bool,                      % Predefine framed theorems
+  thmbox .initial:n = false,
+  thmimpnumbered .bool_gset:N = \g_edumath_thmimpnumbered_bool,      % Number important theorems
+  thmimpnumbered .initial:n = false,
+  thmunimpnumbered .bool_gset:N = \g_edumath_thmunimpnumbered_bool,  % Number unimportant theorems
+  thmunimpnumbered .initial:n = false,
+}
+
+\keys_define:nn {edumath} {
+  thmlabelfg .tl_gset:N = \g_edumath_thmlabelfg_tl,        % Color of theorem labels
+  thmlabelfg .initial:n = black,
+  thmframefg .tl_gset:N = \g_edumath_thmframefg_tl,        % Color of framed theorem frame.
+  thmframefg .initial:n = darkgray,
+  thmframebg .tl_gset:N = \g_edumath_thmframebg_tl,        % Color of framed theorem background.
+  thmframebg .initial:n = lightgray!50,
+}
+
+\keys_define:nn {edumath} {
+  thmimplabelstyle .tl_gset:N = \g_edumath_thmimplabelstyle_tl,  % Style of heads
+  thmimplabelstyle .initial:n = \sffamily\bfseries,
+  thmimpnotestyle .tl_gset:N = \g_edumath_thmimpnotestyle_tl,  % Style of notes
+  thmimpnotestyle .initial:n = \sffamily\bfseries,
+  thmimpbodystyle .tl_gset:N = \g_edumath_thmimpbodystyle_tl,  % Style of bodies
+  thmimpbodystyle .initial:n =,
+}
+
+\keys_define:nn {edumath} {
+  thmunimplabelstyle .tl_gset:N = \g_edumath_thmunimplabelstyle_tl,  % Style of heads
+  thmunimplabelstyle .initial:n = \sffamily,
+  thmunimpnotestyle .tl_gset:N = \g_edumath_thmunimpnotestyle_tl,  % Style of notes
+  thmunimpnotestyle .initial:n = \sffamily,
+  thmunimpbodystyle .tl_gset:N = \g_edumath_thmunimpbodystyle_tl,  % Style of bodies
+  thmunimpbodystyle .initial:n =,
+}
+
+\keys_define:nn {edumath} {
+  thmdefinitionlabel .tl_gset:N = \g_edumath_thmdefinitionlabel_tl,
+  thmdefinitionlabel .initial:n = Definition,
+  thmdefitheolabel .tl_gset:N = \g_edumath_thmdefitheolabel_tl,
+  thmdefitheolabel .initial:n = Definition/Satz,
+  thmtheoremlabel .tl_gset:N = \g_edumath_thmtheoremlabel_tl,
+  thmtheoremlabel .initial:n = Satz,
+  thmcalcrulelabel .tl_gset:N = \g_edumath_thmcalcrulelabel_tl,
+  thmcalcrulelabel .initial:n = Regel,
+  thmexamplelabel .tl_gset:N = \g_edumath_thmexamplelabel_tl,
+  thmexamplelabel .initial:n = Beispiel,
+  thmexampleexelabel .tl_gset:N = \g_edumath_thmexampleexelabel_tl,
+  thmexampleexelabel .initial:n = Beispielaufgabe,
+  thmhintlabel .tl_gset:N = \g_edumath_thmhintlabel_tl,
+  thmhintlabel .initial:n = Hinweis,
+  thmremarklabel .tl_gset:N = \g_edumath_thmremarklabel_tl,
+  thmremarklabel .initial:n = Bemerkung,
+  thmsolutionlabel .tl_gset:N = \g_edumath_thmsolutionlabel_tl,
+  thmsolutionlabel .initial:n = L\"osung,
+}
+
+\keys_define:nn {edumath} {
+  linepname .tl_gset:N = \g_edumath_linepname_tl,    % Line in parametrical form with vector variable: Name
+  linepname .initial:n = g,
+  linepsupport .tl_gset:N = \g_edumath_linepsupport_tl,    % Line in parametrical form with vector variable: Support vector
+  linepsupport .initial:n = p,
+  linepdir .tl_gset:N = \g_edumath_linepdir_tl,    % Line in parametrical form with vector variable: Directional vector
+  linepdir .initial:n = u,
+  lineppar .tl_gset:N = \g_edumath_lineppar_tl,    % Line in parametrical form with vector variable: Parameter 1
+  lineppar .initial:n = r,
+}
+
+\keys_define:nn {edumath} {
+  planepname .tl_gset:N = \g_edumath_planepname_tl,    % Plane in parametrical form with vector variable: Name
+  planepname .initial:n = E,
+  planepsupport .tl_gset:N = \g_edumath_planepsupport_tl,    % Plane in parametrical form with vector variable: Support vector
+  planepsupport .initial:n = p,
+  planepdiri .tl_gset:N = \g_edumath_planepdiri_tl,    % Plane in parametrical form with vector variable: Directional vector 1
+  planepdiri .initial:n = u,
+  planepdirii .tl_gset:N = \g_edumath_planepdirii_tl,    % Plane in parametrical form with vector variable: Directional vector 2
+  planepdirii .initial:n = v,
+  planeppari .tl_gset:N = \g_edumath_planeppari_tl,    % Plane in parametrical form with vector variable: Parameter 1
+  planeppari .initial:n = r,
+  planepparii .tl_gset:N = \g_edumath_planepparii_tl,    % Plane in parametrical form with vector variable: Parameter 2
+  planepparii .initial:n = s,
+}
+
+\keys_define:nn {edumath} {
+  planenvarname .tl_gset:N = \g_edumath_planenvarname_tl,    % Plane in normal form with vector variable: Name
+  planenvarname .initial:n = E,
+  planenvarsupport .tl_gset:N = \g_edumath_planenvarsupport_tl,    % Plane in normal form with vector variable: Support vector
+  planenvarsupport .initial:n = p,
+  planenvarnormal .tl_gset:N = \g_edumath_planenvarnormal_tl,    % Plane in normal form with vector variable: Normal vector
+  planenvarnormal .initial:n = n,
+}
+
+%\ProcessOptions              % LaTeX-Basics (for \PassOptionsTopkg)
+\ProcessKeysOptions{edumath}  % l3keys2e options
+
+\RequirePackage{calc}
+\RequirePackage{etoolbox}
+
+\RequirePackage{tikz}
+
+\ExplSyntaxOff  % Important! \usetikzlibrary doesn't work within \ExplSyntax*.
+\usetikzlibrary{calc}
+\ExplSyntaxOn
+
+\RequirePackage[\g_edumath_amsoptions_tl]{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{cancel}
+\RequirePackage{esvect}
+\RequirePackage{gauss}
+\RequirePackage{polynom}
+\RequirePackage{thmtools}
+\RequirePackage[only, lightning]{stmaryrd}
+\RequirePackage{xlop}
+
+
+\bool_if:NT \g_edumath_qtree_bool {
+  \ExplSyntaxOff
+  \RequirePackage{tikz-qtree}
+  \ExplSyntaxOn
+}
+
+
+\tl_const:Nx \c_colon_tl { \token_to_str:N : }
+
+\DeclareDocumentCommand  \edumathsetup { m } {
+  \keys_set:nn {edumath} {#1}
+}
+
+\DeclareDocumentCommand  \edumathoption { m m } {
+  \keys_set:nn {edumath} {#1=#2}
+}
+
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{1.2ex plus 0.2ex minus 0.1ex}
+  \setlength{\abovedisplayshortskip}{1ex plus 0.2ex minus 0.2ex}
+  \setlength{\belowdisplayskip}{1.2ex plus 0.2ex minus 0.1ex}
+  \setlength{\belowdisplayshortskip}{1ex plus 0.2ex minus 0.2ex}
+}
+
+\bool_if:NT \g_edumath_commasep_bool {
+  \RequirePackage{icomma}
+}
+
+
+\DeclareDocumentEnvironment {aligntr} { s } {
+  \IfBooleanTF {#1} {
+    \csname alignat*\endcsname{2}
+  }{
+    \alignat{2}
+  }
+}{
+  \IfBooleanTF {#1} {
+  \csname endalignat*\endcsname
+  }{
+  \endalignat
+  }
+}
+
+% Hack, because xparse doesn't generate starred environments:
+\cs_new:cpn {aligntr*} {\aligntr*}
+\cs_new_eq:cN {endaligntr*} \endaligntr
+
+\DeclareDocumentCommand \tr { } {&& \mid}
+
+\bool_if:NT \g_edumath_qtree_bool {
+\tikzset{
+  edge~from~parent/.style={
+    draw,
+    edge~from~parent~path={
+        (\tikzparentnode.north) -| (\tikzchildnode)
+    }
+  }
+}
+
+\tikzset{
+  bet/.style = {
+    grow'=up,
+    every~internal~node/.style={
+        draw,
+        circle,
+        inner~sep=0pt,
+        minimum~size=2ex
+    }
+  },
+  betroot/.style={
+    draw=none,
+    inner~sep=0pt
+  },
+  betr/.style={
+    draw,
+    rectangle,
+    inner~sep=2pt
+  }
+}
+
+\tikzset{
+  level~distance=3.5ex,
+  sibling~distance=2ex,
+  frontier/.style={distance~from~root=10.5ex}
+}
+}
+
+\bool_if:nT {
+  \bool_if_p:N \g_edumath_thmbox_bool &&
+  (!\bool_if_p:N \g_edumath_thmimpnumbered_bool || !\bool_if_p:N \g_edumath_thmunimpnumbered_bool)
+} {
+  \msg_error:nnnn {edumath} {option-dep-enable} {`thmbox'} {`thmimpnumbered', `thmunimpnumbered'}
+}
+
+\skip_new:N \g__edumath_thmafterskip_skip
+\skip_new:N \g__edumath_thmbeforeskip_skip
+
+\skip_set:Nn \g__edumath_thmafterskip_skip {0.5\baselineskip-\parskip}
+\skip_set:Nn \g__edumath_thmbeforeskip_skip {0.5\baselineskip}
+
+\seq_new:N \g__edumath_thmimp_seq
+
+\seq_gput_right:Nn \g__edumath_thmimp_seq {definition}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+
+\seq_new:N \g__edumath_thmunimp_seq
+
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {example}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {exampleexe}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {hint}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {remark}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {solution}
+
+\cs_new:Npn \edumath_theoremstyleimp:n #1 {
+\declaretheoremstyle[%
+  spaceabove=\g__edumath_thmbeforeskip_skip, spacebelow=\g__edumath_thmafterskip_skip,
+  headfont=\g_edumath_thmimplabelstyle_tl\color{\g_edumath_thmlabelfg_tl},
+  notefont=\g_edumath_thmimpnotestyle_tl, notebraces={\!:\hspace{0.5em}}{},
+  bodyfont=\g_edumath_thmimpbodystyle_tl,
+  headpunct={},
+  postheadspace=0.75em,
+  numbered=#1
+]{important}
+}
+
+\cs_new:Npn \edumath_theoremstyleunimp:n #1 {
+\declaretheoremstyle[%
+  spaceabove=\g__edumath_thmbeforeskip_skip, spacebelow=\g__edumath_thmafterskip_skip,
+  headfont=\g_edumath_thmunimplabelstyle_tl\color{\g_edumath_thmlabelfg_tl},
+  notefont=\g_edumath_thmunimpnotestyle_tl, notebraces={\hspace{0.2em}(}{)},
+  bodyfont=\g_edumath_thmunimpbodystyle_tl,
+  headpunct={:},
+  postheadspace=0.25em,
+  numbered=#1
+]{unimportant}
+}
+
+\bool_if:NTF \g_edumath_thmimpnumbered_bool {
+  \edumath_theoremstyleimp:n {yes}
+}{
+  \edumath_theoremstyleimp:n {no}
+}
+
+\bool_if:NTF \g_edumath_thmunimpnumbered_bool {
+  \edumath_theoremstyleunimp:n {yes}
+}{
+  \edumath_theoremstyleunimp:n {no}
+}
+
+\bool_if:NT \g_edumath_amsthm_bool {
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+    \declaretheorem[style=important, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+    \declaretheorem[style=unimportant, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+  }
+}
+
+
+
+\bool_if:NT \g_edumath_framedthm_bool {
+
+  \cs_new:Npn \edumath_framedthmimp:nx #1 #2 {
+    \declaretheorem[%
+    style=important,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    #2
+    shaded={%
+      bgcolor=\g_edumath_thmframebg_tl,%
+      textwidth=\linewidth-1em-2pt,%
+      margin=0.5em,%
+      leftmargin=0em,%
+      rightmargin=0em,%
+      rulecolor=\g_edumath_thmframefg_tl,%
+      rulewidth=1pt
+    },
+    preheadhook=,
+    postheadhook=,
+    ]{#1fthm}
+  }
+
+  \cs_new:Npn \edumath_framedthmunimp:nx #1 #2 {
+    \declaretheorem[%
+    style=unimportant,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    #2
+    shaded={%
+      bgcolor=\g_edumath_thmframebg_tl,%
+      textwidth=\linewidth-1em-2pt,%
+      margin=0.5em,%
+      leftmargin=0em,%
+      rightmargin=0em,%
+      rulecolor=\g_edumath_thmframefg_tl,%
+      rulewidth=1pt
+    },
+    preheadhook=,
+    postheadhook=,
+    ]{#1fthm}
+  }
+
+
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+
+    \bool_if:NTF \g_edumath_thmimpnumbered_bool {
+      \edumath_framedthmimp:nx {#1}{sharenumber=#1,}
+    }{
+      \edumath_framedthmimp:nx {#1}{}
+    }
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+
+    \bool_if:NTF \g_edumath_thmunimpnumbered_bool {
+      \edumath_framedthmunimp:nx {#1}{sharenumber=#1,}
+    }{
+      \edumath_framedthmunimp:nx {#1}{}
+    }
+  }
+}
+
+
+\bool_if:NT \g_edumath_framedthm_bool {
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+
+   \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+      \vspace{-0.3\baselineskip}%
+      \vspace{-0.5\parskip}%
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+      \dim_set:Nn \g_edumath_temp_dim \parindent
+      \IfNoValueTF {##1} {
+        \begin{\use:n {#1 fthm}}%
+      }{
+        \begin{\use:n {#1 fthm}}[##1]
+      }
+      \setlength{\parskip}{\g_edumath_temp_skip}
+      \setlength{\parindent}{\g_edumath_temp_dim}
+      \vspace{-\parskip}%
+    }{
+      \end{\use:n {#1 fthm}}%
+      %\vspace{-0.3\baselineskip}%
+      \vspace{-0.5\parskip}%
+    }
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+
+    \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+      \vspace{-0.3\baselineskip}%
+      %\vspace{0.5\parskip}%
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+      \dim_set:Nn \g_edumath_temp_dim \parindent
+      \IfNoValueTF {##1} {
+        \begin{\use:n {#1 fthm}}%
+      }{
+        \begin{\use:n {#1 fthm}}[##1]
+      }
+      \setlength{\parskip}{\g_edumath_temp_skip}
+      \setlength{\parindent}{\g_edumath_temp_dim}
+      \vspace{-\parskip}%
+    }{
+      \end{\use:n {#1 fthm}}%
+      %\vspace{-0.3\baselineskip}%
+      %\vspace{0.5\parskip}%
+    }
+  }
+}
+
+\bool_if:NT \g_edumath_thmbox_bool {
+
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+  \declaretheorem[%
+    style=important,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=S,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bs}
+
+  \declaretheorem[%
+    style=important,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=M,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bm}
+
+  \declaretheorem[%
+    style=important,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=L,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bl}
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+ \declaretheorem[%
+    style=unimportant,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=S,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bs}
+
+ \declaretheorem[%
+    style=unimportant,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=M,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bm}
+
+ \declaretheorem[%
+    style=unimportant,
+    name=\use:c {g_edumath_thm #1 label_tl},
+    sharenumber=#1,
+    thmbox=L,
+    preheadhook={
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+    },
+    postheadhook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+    },
+    postfoothook={
+      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+    }
+  ]{#1bl}
+  }
+
+  \setlength{\thmbox@leftmargin}{1.5em}
+
+}%
+
+\bool_if:NT \g_edumath_specialsets_bool {
+\DeclareDocumentCommand \N { } {\ensuremath{\mathbb{N}}}
+\DeclareDocumentCommand \Z { } {\ensuremath{\mathbb{Z}}}
+\DeclareDocumentCommand \Q { } {\ensuremath{\mathbb{Q}}}
+\DeclareDocumentCommand \R { } {\ensuremath{\mathbb{R}}}
+\DeclareDocumentCommand \I { } {\ensuremath{\mathbb{I}}}
+\DeclareDocumentCommand \C { } {\ensuremath{\mathbb{C}}}
+\DeclareDocumentCommand \L { } {\ensuremath{\mathbb{L}}}
+}
+
+\DeclareDocumentCommand \vec { m } {\vv{#1}}
+
+\DeclareDocumentCommand \vect { m } {\begin{pmatrix} #1 \end{pmatrix}}
+
+\DeclareDocumentCommand \rowswapfromlabel { m } {#1}
+\DeclareDocumentCommand \rowswaptolabel { m } {#1}
+
+\DeclareDocumentEnvironment {gmatrix*} { O{2pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}%
+}{%
+  \end{gmatrix}
+}
+
+\DeclareDocumentEnvironment {gmatrixp*} { O{4pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}[p]%
+}{%
+  \end{gmatrix}
+}
+
+\DeclareDocumentEnvironment {gmatrixv*} { O{4pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}[v]%
+}{%
+  \end{gmatrix}
+}
+
+\DeclareDocumentCommand \mvsep { } {
+  % From localghost@golatex
+  \hspace{0.25em}\kern-\tabcolsep\vrule height\arraystretch\ht\strutbox depth\arraystretch\dp\strutbox\kern-\tabcolsep\hspace{0.25em}
+}
+
+\opset{voperation=top}                % Vertikale Ausrichtung der Rechnung
+\opset{voperator=bottom}              % Rechenzeichen in unterer Zeile
+\opset{carrysub=true}                 % Übertrag bei Subtraktion
+\opset{decimalsepsymbol={,}}          % Dezimaltrenner
+\opset{shiftintermediarysymbol=0}     % Mult: Nullen zum Auffüllen
+\opset{displayshiftintermediary=all}  % Mult: Zeilen mit Nullen auffüllen
+\opset{displayintermediary=all}       % Mult: Auch Nullzeilen anzeigen
+\opset{shiftdecimalsep=divisor}       % Div: Nur Nachkommastellen des Divisiors beseitigen
+
+\polyset{style=C, div=:}
+
+\DeclareDocumentCommand \qtext { m } {\ensuremath{\quad\text{#1}\quad}}
+\DeclareDocumentCommand \qqtext { m } {\ensuremath{\qquad\text{#1}\qquad}}
+
+\DeclareDocumentCommand \qund {  } {\qtext{und}}
+\DeclareDocumentCommand \qqund {  } {\qqtext{und}}
+
+\DeclareDocumentCommand \qoder {  } {\qtext{oder}}
+\DeclareDocumentCommand \qqoder {  } {\qqtext{oder}}
+
+\DeclareDocumentCommand \qmath { m } {\ensuremath{\quad #1 \quad}}
+\DeclareDocumentCommand \qqmath { m } {\ensuremath{\qquad #1 \qquad}}
+
+\DeclareDocumentCommand \qRightarrow {  } {\qmath{\Rightarrow}}
+\DeclareDocumentCommand \qrightarrow {  } {\qmath{\rightarrow}}
+\DeclareDocumentCommand \qLeftarrow {  } {\qmath{\Leftarrow}}
+\DeclareDocumentCommand \qleftarrow {  } {\qmath{\leftarrow}}
+\DeclareDocumentCommand \qLeftrightarrow {  } {\qmath{\Leftrightarrow}}
+\DeclareDocumentCommand \qleftrightarrow {  } {\qmath{\leftrightarrow}}
+
+\DeclareDocumentCommand \qqRightarrow {  } {\qqmath{\Rightarrow}}
+\DeclareDocumentCommand \qqrightarrow {  } {\qqmath{\rightarrow}}
+\DeclareDocumentCommand \qqLeftarrow {  } {\qqmath{\Leftarrow}}
+\DeclareDocumentCommand \qqleftarrow {  } {\qqmath{\leftarrow}}
+\DeclareDocumentCommand \qqLeftrightarrow {  } {\qqmath{\Leftrightarrow}}
+\DeclareDocumentCommand \qqleftrightarrow {  } {\qqmath{\leftrightarrow}}
+
+\DeclareDocumentCommand \abs { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\lvert #2 \rvert}
+  }{
+    \ensuremath{\left| #2 \right|}
+  }
+}
+
+\DeclareDocumentCommand \absvec { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\abs*{\vec{#2}}}
+  }{
+    \ensuremath{\abs{\vec{#2}}}
+  }
+}
+
+\DeclareDocumentCommand \norm { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\lVert #2 \rVert}
+  }{
+    \ensuremath{\left\lVert #2 \right\rVert}
+  }
+}
+
+\DeclareDocumentCommand \normvec { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\norm*{\vec{#2}}}
+  }{
+    \ensuremath{\norm{\vec{#2}}}
+  }
+
+}
+
+\DeclareDocumentCommand \qf { m m m } {
+  \ensuremath \frac{- #2 \pm \sqrt{#2^2 - 4 #1 #3}}{2 #1}
+}
+
+\DeclareDocumentCommand \qfvar { m m m } {
+  \ensuremath \frac{#1 \pm \sqrt{#2}}{#3}
+}
+
+\DeclareDocumentCommand \qfr { m m } {
+  \ensuremath -\frac{#1}{2} \pm \sqrt{\left(\frac{#1}{2}\right)^2 - #2}
+}
+
+\DeclareDocumentCommand \qfrvar { m m } {
+  \ensuremath #1 \pm \sqrt{#2}
+}
+
+\DeclareDocumentCommand \linepvar { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
+  \ensuremath
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \IfBooleanTF {#1} {
+    \vec{x} = #3 + #5 #4
+  }{
+    \vec{x} = \vec{#3} + #5 \vec{#4}
+  }
+}
+
+\DeclareDocumentCommand \linepvec { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} =
+    \vect{
+      #3 \c_math_subscript_token 1 \\
+  #3 \c_math_subscript_token 2 \\
+  #3 \c_math_subscript_token 3
+    } +
+    #5
+    \vect{
+      #4 \c_math_subscript_token 1 \\
+  #4 \c_math_subscript_token 2 \\
+  #4 \c_math_subscript_token 3
+    }
+}{
+  \vec{x} = \vect{#3} + #5 \vect{#4}
+}
+}
+
+\DeclareDocumentCommand \planepvar { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} = #3 + #6 #4 + #7 #5
+  }{
+    \vec{x} = \vec{#3} + #6 \vec{#4} + #7 \vec{#5}
+  }
+}
+
+\DeclareDocumentCommand \planepvec { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} =
+    \vect{
+      #3 \c_math_subscript_token 1 \\
+  #3 \c_math_subscript_token 2 \\
+  #3 \c_math_subscript_token 3
+    } +
+    #6
+    \vect{
+      #4 \c_math_subscript_token 1 \\
+  #4 \c_math_subscript_token 2 \\
+  #4 \c_math_subscript_token 3
+    } +
+    #7
+    \vect{
+      #5 \c_math_subscript_token 1 \\
+  #5 \c_math_subscript_token 2 \\
+  #5 \c_math_subscript_token 3
+    }
+}{
+  \vec{x} = \vect{#3} + #6 \vect{#4} + #7 \vect{#5}
+}
+}
+
+\DeclareDocumentCommand \planenvar { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \left( \vec{x} - #3 \right) \cdot #4 = 0
+  }{
+    \left( \vec{x} - \vec{#3} \right) \cdot \vec{#4} = 0
+  }
+}
+
+\DeclareDocumentCommand \planenvec { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+  \left[
+    \vec{x} -
+  \vect{
+    #3 \c_math_subscript_token 1 \\
+    #3 \c_math_subscript_token 2 \\
+    #3 \c_math_subscript_token 3
+    }
+  \right] \cdot
+  \vect{
+    #4 \c_math_subscript_token 1 \\
+    #4 \c_math_subscript_token 2 \\
+    #4 \c_math_subscript_token 3
+  } = 0
+}{
+  \left[ \vec{x} - \vect{#3} \right] \cdot \vect{#4} = 0
+}
+}
+
+\DeclareDocumentCommand \planfigurLines { m } {
+
+  \tl_clear:N \__edumath_planfigur_temp
+
+  \tl_if_in:nnT {#1} {a} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (b) -- (c);}
+  }
+
+  \tl_if_in:nnT {#1} {b} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (a) -- (c);}
+  }
+
+  \tl_if_in:nnT {#1} {c} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (a) -- (b);}
+  }
+
+  \tl_use:N \__edumath_planfigur_temp
+}
+
+\DeclareExpandableDocumentCommand \planfigurAngles { m } {
+  \tl_if_in:nnT {#1} {a} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(a) + (0 \c_colon_tl 0.7)$) arc (0 \c_colon_tl 40 \c_colon_tl 0.7) ($(a) + (20 \c_colon_tl 0.5)$) node {$\alpha$};}
+  }
+  \tl_if_in:nnT {#1} {b} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(b) + (120 \c_colon_tl 0.7)$) arc (120 \c_colon_tl 180 \c_colon_tl 0.7) ($(b) + (150 \c_colon_tl 0.45)$) node {$\beta$};}
+  }
+  \tl_if_in:nnT {#1} {c} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(c) + (220 \c_colon_tl 0.7)$) arc (220 \c_colon_tl 300 \c_colon_tl 0.7) ($(c) + (263 \c_colon_tl 0.4)$) node {$\gamma$};}
+  }
+
+  \tl_use:N \__edumath_planfigur_temp
+}
+
+\ExplSyntaxOff
+
+\DeclareDocumentCommand \planfigur { O{1.0} m m } {
+  \begin{tikzpicture}[scale=#1, line join=round, thick]
+
+    \coordinate (a) at (0,0);
+    \coordinate (b) at (3,0);
+    \coordinate (c) at (2.02, 1.7);
+
+    \draw (a) -- node[below] {$c$} (b) -- node[above right] {$a$} (c) -- node[above left] {$b$} (a) -- cycle;
+
+    \draw (a) node[left] {$A$};
+    \draw (b) node[right] {$B$};
+    \draw (c) node[above] {$C$};
+
+    \begin{scope}[color=red, fill=red!25, very thick]
+      \planfigurLines{#2}
+      \planfigurAngles{#3}
+    \end{scope}
+
+\end{tikzpicture}
+}
+\ExplSyntaxOn
+
+\DeclareDocumentCommand \corr {  } {\ensuremath{\mathrel{\hat{=}}}}
+\DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
+\DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}
+\DeclareDocumentCommand \iu {  } {\ensuremath{\mathrm{i}}}
+\DeclareDocumentCommand \minusp {  } {\ensuremath{\hphantom{-}}}
+\DeclareDocumentCommand \sep {  } {\,\vert\,}
+\DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
+\DeclareDocumentCommand \textlightning {  } {\ensuremath{\lightning}}
+
+\newlength{\templength}
+\newcommand{\tempcommand}{}
+\newcounter{tempcounter}
+
+\endinput
+
+

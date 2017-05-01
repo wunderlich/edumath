@@ -1,0 +1,3859 @@
+%% edumath package for mathematics in educational contexts
+%%
+%% Copyright (C) 2012-2017 by Daniel Wunderlich <code@wu-web.de>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The current maintainer of this work is Daniel Wunderlich.
+%% 
+%% This work consists of the file edumath.tex and the derived files:
+%%  * edumath.sty
+%%  * edumath.pdf
+\PassOptionsToPackage{intlimits}{amsmath}
+\PassOptionsToPackage{qtree, thmbox, thmimpnumbered=true, thmunimpnumbered=true}{edumath}
+
+\documentclass[load]{skdoc}
+
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+
+\usepackage{booktabs}
+\usepackage{datetime}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{fancyvrb}
+\usepackage{filecontents}
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{units}
+\usepackage{xspace}
+
+\usepackage{hyperref}
+\usepackage{hologo,booktabs,xcoffins,calc}
+\usepackage[style=authoryear]{biblatex}
+\usepackage{csquotes}
+\usepackage{varioref, cleveref}
+
+\let\SI\relax
+\usepackage{siunitx}
+\DeclareSIUnit\point{pt}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\ExplSyntaxOn
+\cs_set_protected_nopar:Npn\ExplHack{
+    \char_set_catcode_letter:n{ 58 }
+    \char_set_catcode_letter:n{ 95 }
+}
+\ExplSyntaxOff
+
+
+%---------------------------------------
+% Packages, macro and environment stubs
+% Required for the first run of pdflatex
+%---------------------------------------
+\ExplSyntaxOn
+\file_if_exist:nF {edumath.sty} {
+\ExplSyntaxOff
+\usepackage{cancel}
+\usepackage{gauss}
+\usepackage{polynom}
+\usepackage{thmtools}
+\usepackage{xlop}
+
+\usepackage{tikz-qtree}
+\usetikzlibrary{calc}
+
+\DeclareDocumentCommand \abs { s m } {}
+\DeclareDocumentCommand \absvec { s m } {}
+
+\DeclareDocumentCommand \corr {  } {}
+\DeclareDocumentCommand \ds {  } {}
+\DeclareDocumentCommand \diff {  } {}
+
+\DeclareDocumentCommand \edumathsetup { m } {}
+\DeclareDocumentCommand \edumathoption { m m } {}
+
+\DeclareDocumentCommand \iu {  } {}
+
+\DeclareDocumentCommand \N { } {}
+\DeclareDocumentCommand \Z { } {}
+\DeclareDocumentCommand \Q { } {}
+\DeclareDocumentCommand \R { } {}
+\DeclareDocumentCommand \I { } {}
+\DeclareDocumentCommand \C { } {}
+\DeclareDocumentCommand \L { } {}
+
+\DeclareDocumentCommand \linepvar { s O{} O{} O{} O{} } {}
+\DeclareDocumentCommand \linepvec { s O{} O{} O{} O{} } {}
+
+\DeclareDocumentCommand \minusp { } {}
+\DeclareDocumentCommand \mvsep { } {}
+
+\DeclareDocumentCommand \norm { s m } {}
+\DeclareDocumentCommand \normvec { s m } {}
+
+\DeclareDocumentCommand \planepvar { s O{} O{} O{} O{} O{} O{} } {}
+\DeclareDocumentCommand \planepvec { s O{} O{} O{} O{} O{} O{} } {}
+\DeclareDocumentCommand \planenvar { s O{} O{} O{} } {}
+\DeclareDocumentCommand \planenvec { s O{} O{} O{} } {}
+
+\DeclareDocumentCommand \planfigurLines { m } {}
+\DeclareExpandableDocumentCommand \planfigurAngles { m } {}
+\DeclareDocumentCommand \planfigur { O{1.0} m m } {}
+
+\DeclareDocumentCommand \qf { m m m } {}
+\DeclareDocumentCommand \qfvar { m m m } {}
+\DeclareDocumentCommand \qfr { m m } {}
+\DeclareDocumentCommand \qfrvar { m m } {}
+
+\DeclareDocumentCommand \qtext { m } {}
+\DeclareDocumentCommand \qqtext { m } {}
+
+\DeclareDocumentCommand \qund {  } {}
+\DeclareDocumentCommand \qqund {  } {}
+
+\DeclareDocumentCommand \qoder {  } {}
+\DeclareDocumentCommand \qqoder {  } {}
+
+\DeclareDocumentCommand \qmath { m } {}
+\DeclareDocumentCommand \qqmath { m } {}
+
+\DeclareDocumentCommand \qRightarrow {  } {}
+\DeclareDocumentCommand \qrightarrow {  } {}
+\DeclareDocumentCommand \qLeftarrow {  } {}
+\DeclareDocumentCommand \qleftarrow {  } {}
+\DeclareDocumentCommand \qLeftrightarrow {  } {}
+\DeclareDocumentCommand \qleftrightarrow {  } {}
+
+\DeclareDocumentCommand \qqRightarrow {  } {}
+\DeclareDocumentCommand \qqrightarrow {  } {}
+\DeclareDocumentCommand \qqLeftarrow {  } {}
+\DeclareDocumentCommand \qqleftarrow {  } {}
+\DeclareDocumentCommand \qqLeftrightarrow {  } {}
+\DeclareDocumentCommand \qqleftrightarrow {  } {}
+
+\DeclareDocumentCommand \sep {  } {}
+\DeclareDocumentCommand \solset { m } {}
+
+\DeclareDocumentCommand \textlightning {  } {}
+\DeclareDocumentCommand \tr { } {}
+
+\DeclareDocumentCommand \vec { m } {}
+\DeclareDocumentCommand \vect { m } {}
+
+\DeclareDocumentCommand \rowswapfromlabel { m } {}
+\DeclareDocumentCommand \rowswaptolabel { m } {}
+
+\DeclareDocumentEnvironment {aligntr} { s } {\alignat{2}}{\endalignat}
+
+\ExplSyntaxOn
+\cs_new:cpn {aligntr*} {\aligntr*}
+\cs_new_eq:cN {endaligntr*} \endaligntr
+\ExplSyntaxOff
+
+\DeclareDocumentEnvironment {gmatrix*} { O{2pt} } {\begin{gmatrix}}{\end{gmatrix}}
+
+\DeclareDocumentEnvironment {gmatrixp*} { O{4pt} } {\begin{gmatrix}[p]}{\end{gmatrix}}
+
+\DeclareDocumentEnvironment {gmatrixv*} { O{4pt} } {\begin{gmatrix}[v]}{\end{gmatrix}}
+
+\tikzset{
+  bet/.style = {},
+  betroot/.style={},
+  betr/.style={}
+}
+
+\declaretheoremstyle[%
+]{important}
+
+\declaretheoremstyle[%
+]{unimportant}
+
+\ExplSyntaxOn
+\seq_new:N \g__edumath_thmimp_seq
+
+\seq_gput_right:Nn \g__edumath_thmimp_seq {definition}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+
+\seq_new:N \g__edumath_thmunimp_seq
+
+%\seq_gput_right:Nn \g__edumath_thmunimp_seq {example}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {exampleexe}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {hint}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {remark}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {solution}
+
+\seq_map_inline:Nn \g__edumath_thmimp_seq {
+  \declaretheorem[style=important, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+}
+
+\seq_map_inline:Nn \g__edumath_thmunimp_seq {
+  \declaretheorem[style=unimportant, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+}
+
+  \cs_new:Npn \edumath_framedthmimp:nx #1 #2 {
+    \declaretheorem[%
+    ]{#1fthm}
+  }
+
+  \cs_new:Npn \edumath_framedthmunimp:nx #1 #2 {
+    \declaretheorem[%
+    ]{#1fthm}
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+    \edumath_framedthmimp:nx {#1}{}
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+    \edumath_framedthmunimp:nx {#1}{}
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+
+   \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+        \begin{\use:n {#1 fthm}}%
+    }{
+      \end{\use:n {#1 fthm}}%
+    }
+  }
+
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+
+    \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+      \begin{\use:n {#1 fthm}}[##1]
+    }{
+      \end{\use:n {#1 fthm}}%
+    }
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+  \declaretheorem[%
+  ]{#1bs}
+
+  \declaretheorem[%
+  ]{#1bm}
+
+  \declaretheorem[%
+  ]{#1bl}
+  }
+
+ \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+ \declaretheorem[%
+  ]{#1bs}
+
+ \declaretheorem[%
+  ]{#1bm}
+
+ \declaretheorem[%
+  ]{#1bl}
+  }
+
+\ExplSyntaxOff
+
+}
+
+%---------------------------------------
+% Packages, macro and environment stubs
+% END
+%---------------------------------------
+
+% Geometry
+\geometry{left=4cm, top=2.5cm, right=2.5cm, bottom=2.5cm, includefoot}
+
+% Fancyvrb
+\fvset{frame=single, rulecolor=\color{coderule}}
+
+% Font
+\usepackage{sourcesanspro}
+%\usepackage[default]{sourceserifpro}
+
+% Math-Font
+\usepackage[libertine, varbb]{newtxmath}
+
+
+% Fontsize
+\KOMAoption{fontsize}{10}
+
+% Colors
+
+% Original colors of skdoc:
+%\definecolorset{RGB}{}{}{
+%    section,145,0,0;
+%    intlink,140,35,24;
+%    keydesc,140,35,24;
+%    scriptcolor,140,35,24;
+%    sharp,250,105,0;
+%    bright,198,229,217;
+%    extlink,2,10,61;
+%    macrodesc,73,10,61;
+%    macroimpl,73,10,61;
+%    optioncolor,73,10,61;
+%    opt,73,10,61;
+%    meta,11,72,107
+%}
+
+\definecolor{section}{RGB}{145,0,0}
+
+\definecolor{extlink}{RGB}{145,0,0}
+\definecolor{intlink}{RGB}{145,0,0}
+
+\definecolor{macrodesc}{RGB}{145,0,0}
+\definecolor{macroimpl}{RGB}{145,0,0}
+
+\definecolor{opt}{RGB}{145,0,0}
+\definecolor{optioncolor}{RGB}{145,0,0}
+
+\definecolor{meta}{RGB}{120,120,120}
+
+% New colors (not used in skdoc)
+\definecolor{itemize}{RGB}{145,0,0}
+\definecolor{csref}{RGB}{145,0,0}            % used by \cs
+\definecolor{envref}{RGB}{145,0,0}           % used by \env
+\definecolor{optref}{RGB}{145,0,0}           % used by \opt
+\definecolor{pkgref}{RGB}{145,0,0}           % used by \pkg
+\definecolor{coderule}{RGB}{145,0,0}         % used by fancyvrb
+\definecolor{previewrule}{RGB}{140,140,140}  % used by \pdfinput
+
+
+% Multilanguage support
+\providecommand\locale{en}
+\ExplSyntaxOn
+
+\tl_new:N \g_edumath_warningname
+\tl_gset:Nn \g_edumath_warningname {Warning}
+
+\cs_generate_variant:Nn \tl_if_eq:nnT { xnT }
+\cs_generate_variant:Nn \tl_if_eq:nnTF { xnTF }
+\cs_generate_variant:Nn \tl_if_eq_p:NN { xn }
+\cs_generate_variant:Nn \tl_if_eq_p:NN { XN }
+
+\cs_generate_variant:Nn \tl_if_in:nnT { xnT }
+\cs_generate_variant:Nn \tl_if_in:nnT { nxT }
+\cs_generate_variant:Nn \tl_if_in:nnTF { xnTF }
+\cs_generate_variant:Nn \tl_if_in:nnTF { nxTF }
+
+
+\tl_if_eq:xnT {\locale} {de} {
+  \usepackage{ngerman}
+  \AtBeginDocument{
+    \cs_gset:Npn\abstractname{Zusammenfassung}
+    \cs_gset:Npn\appendixname{Anhang}
+    \cs_gset:Npn\bibname{Bibliographie}
+    \cs_gset:Npn\contentsname{Inhalt}
+    \cs_gset:Npn\figurename{Abbildung}
+    \cs_gset:Npn\glossaryname{Glossar}
+    \cs_gset:Npn\refname{Referenzen}
+    \cs_gset:Npn\tablename{Tabelle}
+    \tl_gset:Nn \sectionname {Abschnitt}
+    \tl_gset:Nn \partname {Teil}
+    \tl_gset:Nn \g_edumath_sectionname {Abschnitt}
+    \tl_gset:Nn \g_edumath_examplename {Beispiel}
+    \tl_gset:Nn \g_edumath_bugname {Bug}
+    \tl_gset:Nn \g_edumath_noticename {Hinweis}
+    \tl_gset:Nn \g_edumath_todoname {Todo}
+    \tl_gset:Nn \g_edumath_warningname {Warnung}
+  }
+}
+
+\tl_if_eq:xnT {\locale} {en} {
+  \AtBeginDocument{
+    \tl_gset:Nn \g_edumath_sectionname {Section}
+    \tl_gset:Nn \g_edumath_examplename {Example}
+    \tl_gset:Nn \g_edumath_bugname {Bug}
+    \tl_gset:Nn \g_edumath_noticename {Notice}
+    \tl_gset:Nn \g_edumath_todoname {Todo}
+    \tl_gset:Nn \g_edumath_warningname {Warning}
+  }
+}
+
+\tl_if_eq:xnT {\locale} {en} {
+  \AtBeginDocument{
+    \tl_gset:Nn \g_edumath_examplename {Example}
+  }
+}
+
+\cs_new:Npn \__edumath_use_language:nn #1 #2 {
+  \tl_if_eq:xnT {\locale} {#1} {
+	  #2}
+}
+
+\DeclareExpandableDocumentCommand \localeDE { +m } {
+  \__edumath_use_language:nn {de} {#1}
+}
+
+
+\DeclareDocumentCommand \localeEN { +m } {
+  \__edumath_use_language:nn {en} {#1}
+}
+
+\DeclareDocumentCommand \endcode { } {
+  \relax
+}
+
+\DeclareDocumentCommand \skipcode { +u \endcode } {
+  \relax
+}
+
+\DeclareDocumentCommand \startcode { m } {
+  \bool_if:nT {!\str_if_eq_p:nV {#1} {\locale}} {\skipcode}
+}
+
+\DeclareDocumentCommand \codeinput { m } {
+  \vspace{0.75\baselineskip}
+	\noindent \begin{minipage}{\linewidth}
+	\VerbatimInput{#1.tex}
+	
+	\vspace{-\baselineskip}
+	\vspace{-4.5pt}
+  \setlength{\fboxsep}{1.5pt}
+  \noindent
+  \colorbox{coderule}{\textcolor{white}{
+    \scriptsize\texttt{\LaTeX}
+  }}
+	\end{minipage}
+}
+
+\DeclareDocumentCommand \pdfinput { O{\linewidth-2\fboxsep} m } {
+  \par
+  \IfFileExists{#2.pdf}{
+	  \noindent
+	  \begin{minipage}{\linewidth}
+		  \setlength{\fboxsep}{1.5pt}
+		  \hspace*{0pt}\hfill
+		  \colorbox{previewrule}{\textcolor{white}{
+		    \scriptsize\texttt{PDF}}
+		  }
+		  \hspace*{-2\fboxrule}%\hspace*{-0.5em}
+		  
+		  \par
+		  \vspace*{-2.5\fboxrule}
+		  \setlength{\fboxsep}{5pt}
+		  \noindent\fcolorbox{previewrule}{white}{
+		    \makebox[\linewidth-2\fboxsep][l]{
+  	  	  \includegraphics[width=#1]{#2.pdf}
+  	  	}
+		  }
+	  \end{minipage}
+		\vspace{\baselineskip}
+  }{
+    \Warning{Die~Graphik~\texttt{#2.pdf}~ist~nicht~vorhanden.~Erzeuge~die~ Graphiken~der~Dokumentation~durch~\texttt{make~all}.}
+  }
+}
+
+
+
+\DeclareDocumentEnvironment {codefilecontent} { s O{\linewidth-2\fboxsep} m } {
+  \IfBooleanTF{#1} {
+    \VerbatimOut{#3-nopreview.tex}
+  }{
+    \VerbatimOut{#3.tex}
+  }
+} {
+  \endVerbatimOut
+  
+  \IfBooleanTF{#1} {
+    \codeinput{#3-nopreview}
+  }{
+    \codeinput{#3}
+  }
+  
+  \par
+  \IfBooleanTF{#1} {
+    \vspace{0.5\baselineskip}
+  }{
+	  \pdfinput[#2]{#3}
+  }
+}
+
+
+% Macros for referenfing other content
+\ExplSyntaxOff % Needs to be switched off, because ~ doesn't work in expl3
+\DeclareDocumentCommand \sees { m } {%
+  (s.\,\sectionname~\ref{#1})\xspace
+}
+
+\DeclareDocumentCommand \seef { m } {%
+  (s.\,\figurename~\ref{#1})\xspace
+}
+
+\DeclareDocumentCommand \seet { m } {%
+  (s.\,\tablename~\ref{#1})\xspace
+}
+
+\DeclareDocumentCommand \seea { m } {%
+  (s.\,\appendixname~\ref{#1})\xspace
+}
+\ExplSyntaxOn
+
+
+% Hack, because xparse doesn't generate starred environments:
+\cs_new:cpn {codefilecontent*} {\codefilecontent*}
+\cs_new_eq:cN {endcodefilecontent*} \endcodefilecontent
+
+
+% Git support
+\tl_new:N \g_edumath_gitrepo
+\tl_gset:Nn \g_edumath_gitrepo {wunderlich/edumath}
+
+\tl_new:N \g_edumath_gitrepourl
+\tl_gset:Nn \g_edumath_gitrepourl {https://github.com/wunderlich/edumath/}
+
+\DeclareDocumentCommand \gitIssue { m } {
+  {\ttfamily \href{\tl_use:N \g_edumath_gitrepourl issues/#1.html}{\g_edumath_gitrepo / \# #1}}\xspace
+}
+
+% Reimplementing inline referencing from skdoc concerning color
+\makeatletter
+
+\DeclareDocumentCommand \cs { s m } {
+    \IfBooleanTF{#1}{
+      \texttt{\char`\\#2}
+    }{
+      \textcolor{csref}{\texttt{\char`\\#2}}
+    }
+    \bool_if:NF\g__skdoc_no_index_bool{
+        \IfBooleanTF{#1}{}{\index@macro{#2}}
+    }
+}
+
+\DeclareDocumentCommand \env { s m } {
+    \IfBooleanTF{#1}{
+      \texttt{#2}
+    }{
+      \textcolor{envref}{\texttt{#2}}
+    }
+    \bool_if:NF\g__skdoc_no_index_bool{
+        \IfBooleanTF{#1}{}{\index@environment{#2}}
+    }
+}
+
+\DeclareDocumentCommand \opt { s m } {
+    \IfBooleanTF{#1}{
+      \texttt{#2}
+    }{
+      \textcolor{optref}{\texttt{#2}}
+    }
+    \bool_if:NF\g__skdoc_no_index_bool{
+        \IfBooleanTF{#1}{}{\index@option{#2}}
+    }
+}
+
+\DeclareDocumentCommand \pkg { s m } {
+    \IfBooleanTF{#1}{
+      \textsf{#2}
+    }{
+      \textcolor{pkgref}{\textsf{#2}}
+    }
+    \bool_if:NF\g__skdoc_no_index_bool{
+        \IfBooleanTF{#1}{}{\index@package{#2}}
+    }
+}
+
+\makeatother
+
+% Reimplementing example environment from skdoc for multilingual support
+\makeatletter
+
+\DeclareDocumentEnvironment{example}{ O{en} }{
+%  \tl_if_eq:xnTF {\locale} {#1} {
+  \tl_if_in:nxTF {#1} {\locale} {
+    \bool_gset_true:N\g__skdoc_in_example_bool%
+    \minisec{\g_edumath_examplename{}:}%
+    \int_zero_new:c{skdoc@output@skdoc@private@example@line}%
+    \tl_if_exist:cTF{skdoc@output@skdoc@private@example}{
+        \tl_clear:c{skdoc@output@skdoc@private@example}
+    }{
+        \tl_new:c{skdoc@output@skdoc@private@example}
+    }
+    \dim_set:Nn\l_tmpa_dim{ \textwidth/2
+                           -\c__skdoc_example_margin_dim
+                           -\c__skdoc_example_linewidth_dim/2}
+    \coffin_clear:N\l__skdoc_example_code_coffin
+    \vcoffin_set:Nnw\l__skdoc_example_code_coffin{\l_tmpa_dim}
+    \skdoc@verbatim{skdoc@private@example}
+  }{
+    \comment
+  }
+}{
+  \tl_if_in:nxTF {#1} {\locale} {
+    \endskdoc@verbatim
+    \vcoffin_set_end:
+    \coffin_clear:N\l__skdoc_example_result_coffin
+    \vcoffin_set:Nnw\l__skdoc_example_result_coffin{\l_tmpa_dim}
+    \iow_open:Nn\skdoc@output{\jobname.skdoc.tmp}
+    \iow_now:Nx\skdoc@output{\tl_to_str:c{skdoc@output@skdoc@private@example}}
+    \iow_close:N\skdoc@output
+    \input{\jobname.skdoc.tmp}
+    \vcoffin_set_end:
+    \coffin_clear:N\l__skdoc_example_divider_coffin
+    \dim_set:Nn\l_tmpa_dim{
+        \dim_max:nn{\coffin_ht:N\l__skdoc_example_code_coffin}%
+                   {\coffin_ht:N\l__skdoc_example_result_coffin}
+        + 2\c__skdoc_example_margin_dim}
+    \hcoffin_set:Nn\l__skdoc_example_divider_coffin{
+        \color{lightgray}
+        \hspace*{\c__skdoc_example_margin_dim}
+        \rule{\c__skdoc_example_linewidth_dim}{\l_tmpa_dim}
+        \hspace*{\c__skdoc_example_margin_dim}
+    }
+    \coffin_clear:N\l_tmpa_coffin
+    \coffin_set_eq:NN\l_tmpa_coffin\l__skdoc_example_divider_coffin
+    \coffin_join:NnnNnnnn\l_tmpa_coffin{l}{vc}%
+                         \l__skdoc_example_result_coffin{r}{vc}%
+                         {0pt}{0pt}
+    \coffin_join:NnnNnnnn\l_tmpa_coffin{r}{vc}%
+                         \l__skdoc_example_code_coffin{l}{vc}%
+                         {0pt}{0pt}
+    \coffin_typeset:Nnnnn\l_tmpa_coffin{T}{l}{0pt}{0pt}
+    \vspace*{\c__skdoc_example_margin_dim}\par
+    \bool_gset_false:N\g__skdoc_in_example_bool%
+ }{
+   \endcomment
+ }
+}
+
+
+\makeatother
+
+% New Commands:
+
+\DeclareDocumentCommand \Bug { +m } {
+  \vspace{\baselineskip}
+  \par\noindent
+  \group_begin:
+  \color{section}
+  \fbox{
+    \begin{minipage}[c]{\linewidth-2\fboxsep-2\fboxrule}
+      \textsf{\textbf{\g_edumath_bugname{}:}}~
+      #1
+    \end{minipage}
+  }
+  \vspace{\baselineskip}
+  \group_end:
+  \par
+}
+
+
+\DeclareDocumentCommand \BugGit { +m } {
+  \Bug{\gitIssue{#1}}
+}
+
+\DeclareDocumentCommand \Notice { +m } {
+  \vspace{0.5\baselineskip}
+  \par\noindent
+  \textsf{\textbf{\g_edumath_noticename{}:}}~ 
+  \itshape
+    #1
+  \upshape
+  \vspace{0.5\baselineskip}
+  \par
+}
+
+\DeclareDocumentCommand \Todo { +m } {
+  \vspace{\baselineskip}
+  \par\noindent
+  \group_begin:
+  \color{lightgray}
+  \fbox{
+    \begin{minipage}[c]{\linewidth-2\fboxsep-2\fboxrule}
+      \textsf{\textbf{\g_edumath_todoname{}:}}~
+      #1
+    \end{minipage}
+  }
+  \vspace{\baselineskip}
+  \group_end:
+  \par
+}
+
+\DeclareDocumentCommand \Warning { +m } {
+  \vspace{\baselineskip}
+  \par\noindent
+  \fbox{
+    \begin{minipage}[c]{\linewidth-2\fboxsep-2\fboxrule}
+      \textsf{\textbf{\g_edumath_warningname{}:}}~
+      #1
+    \end{minipage}
+  }
+  \vspace{\baselineskip}
+  \par
+}
+
+\ExplSyntaxOff
+
+\DeclareDocumentCommand \NoticeStylethemeDE { s } {
+  \IfBooleanTF {#1} {
+    \Notice{Diese Optionen können durch Stylethemes überschrieben werden.}
+  }{
+    \Notice{Diese Option kann durch Stylethemes überschrieben werden.}
+  }
+}
+
+\DeclareDocumentCommand \NoticeColorthemeDE { s } {
+  \IfBooleanTF {#1} {
+    \Notice{Diese Optionen können durch Colorthemes überschrieben werden.}
+  }{
+    \Notice{Diese Option kann durch Colorthemes überschrieben werden.}
+  }
+}
+
+\DeclareDocumentCommand \NoticeLoadBeginDE { s } {
+  \IfBooleanTF {#1} {
+    \Notice{Diese Optionen müssen bereits mit dem Laden des Packages (\Macro{usepackage}) angegeben werden.}
+  }{
+    \Notice{Diese Option muss bereits mit dem Laden des Packages (\Macro{usepackage}) angegeben werden.}
+  }
+}
+
+% Lists
+\setlist{%
+  partopsep=0ex,
+  topsep=0.5\baselineskip - \parskip,
+  itemsep=0.5\baselineskip - \parskip,
+  parsep=\parskip,
+  leftmargin=1.5em,
+	}
+	
+\setlist[itemize, 1]{label=\color{itemize}\rule[0.3ex]{0.7ex}{0.7ex}}
+\setlist[itemize, 2]{label=\color{itemize}\rule[0.5ex]{0.7ex}{0.4ex}}
+\setlist[itemize, 3]{label=\color{itemize}\rule[0.55ex]{0.7ex}{0.2ex}}
+
+
+% Hide the implementation
+\OnlyDescription
+
+% Bibliography entries
+%\begin{filecontents}{edumath.bib}
+%    @online{koma,
+%        author = {Markus Kohm},
+%        title = {koma-script -- A bundle of versatile classes and packages},
+%        year = {2012},
+%        url = {http://www.ctan.org/pkg/koma-script}
+%    }
+%\end{filecontents}
+%\addbibresource{edumath.bib}
+
+
+% Declare the target files
+\SelfPreambleTo{\mypreamble}
+\DeclareFile[key=pkg,preamble=\mypreamble]{edumath.sty}
+
+
+% This is where the documentation begins
+
+\usepackage[scaled=0.8]{beramono}
+
+
+% Change & version info
+\version{0.1 (Build: \pdfdate)}
+\changes{0.1}{%
+  \localeEN{Initial version}%
+  \localeDE{Initiale Version}%
+}
+
+% Metadata
+\package[ctan=edumath,vcs=https://github.com/wunderlich/edumath]{edumath}
+
+\localeEN{\title{The \textbf{\thepackage} package}}%
+\localeDE{\title{Das \textbf{\thepackage} Package}}%
+
+\author{Daniel Wunderlich}
+\email{code@wu-web.de}
+
+
+\begin{document}
+
+% First page
+\maketitle
+\begin{abstract}
+\localeEN{This package provides commands and environments commonly used in educational contexts of mathematics. Frequently required packages are loaded. Commands and environments are defined, which simplify the use of \LaTeX\ in the described context.
+
+\medskip
+\thepackage\ refers to notations usually used in Germany (Baden-Württemberg in particular).
+
+\medskip
+\color{section} \textbf{Warning:} The \thepackage\ package is currently under development. All functionality, settings and macros as well as file names can change in later versions and may be incomplete! The English documentation doesn't exist either. It is experimental and not ready for production use.}
+%
+\localeDE{Dieses Package stellt Kommandos und Umgebungen zur Verfügung, welche häufig beim Einsatz von \LaTeX\ im Kontext der Bildung in Mathematik benötigt werden. Zum einen werden häufig benötigte Packages geladen. Zum anderen werden Makros und Umgebungen erstellt, welche den Einsatz von \LaTeX\ im beschriebenen Zusammenhang vereinfachen sollen.
+
+\medskip
+\thepackage\ bezieht sich hierbei auf Notationen, wie sie in Deutschland (insb. Baden-Württemberg) üblich sind.
+
+\medskip
+\color{section} \textbf{Warnung:} Das \thepackage\ Package befindet sich in der Entwicklung. Alle 
+Funktionen, Einstellungen und Makros sowie Dateinamen können sich in späteren 
+Versionen ändern oder können unvollständig sein. Auch die Dokumentation ist noch nicht vollständig. Sie ist noch nicht für den 
+produktiven Einsatz bereit.
+}
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+
+\localeEN{\part{Introduction}}
+
+\localeDE{\part{Einleitung}}
+
+\localeEN{\section{About \thepackage}}
+
+\localeEN{
+  If you want to use \LaTeX\ in educational institutions (notably schools) in contexts of mathematics, many recurring contents and formulas are needed. Typical examples are specials sets (e.\,g. $\N$, $\Q$, $\R$, \dots) or the labeling of equivalence transformations:
+  \begin{aligntr*}
+    4x + 10 &= 18 \tr -10 \\
+    4x &= 8 \tr :4 \\
+    x &= 2
+  \end{aligntr*}
+  By using \thepackage\ commands and environments are provided which simplify the creation of such contents. Some of them originate from existing packages, some are newly defined.
+
+  The origin of this \thepackage\ is Germany (Baden-Württemberg), for which reason the local notation is used.
+}
+
+\localeDE{\section{Über \thepackage}}
+
+\localeDE{
+  Möchte man \LaTeX\ in Bildungseinrichtungungen (insb. Schulen) im Kontext der Ausbildung in Mathematik verwenden, benötigt man viele wiederkehrende Inhalte und Formeln. Typische Beispiele sind spezielle Mengen (z.\,B. $\N$, $\Q$, $\R$, \dots) oder die Beschriftung von Äquivalenzumformungen:
+  \begin{aligntr*}
+    4x + 10 &= 18 \tr -10 \\
+    4x &= 8 \tr :4 \\
+    x &= 2
+  \end{aligntr*}
+  Durch \thepackage\ werden Makros und Umgebungen zur Verfügung gestellt, welche die Erstellung dieser Inhalte vereinfacht. Einige von ihnen entstammen existierenden Packages, welche geladen werden, einige werden neu definiert.
+  
+  Der Ursprung des Packages liegt in Deutschland (Baden-Württemberg), weshalb die dort übliche Notation verwendet wird.
+}
+
+\localeDE{
+\section{Über diese Dokumentation}
+
+TODO: Aufbau
+
+Diese Dokumentation verwendet verschiedene Schriftarten und -stile zur Auszeichnung unterschiedlicher Komponenten. Tabelle~\ref{tab:components} zeigt diese Arten der Auszeichnungen.
+
+\begin{table}[h!tp]
+  \centering
+  \caption{Auszeichnung durch Schriftarten und -stile dieser Dokumentation.}
+  \label{tab:components}
+  \medskip
+  \begin{tabular}{ll} \toprule
+    \textsf{Schrift} & \textsf{Beschreibung} \\ \midrule
+    \pkg*{package} & Package \\
+    \opt*{option} & Option \\
+    \cs*{macro} & Makro\footnotemark \\
+    \env*{umgebung} & Umgebung \\
+    \meta{argument} & Argument (allgemein) \\
+    \marg{argument} & Notwendiges Argument \\
+    \oarg{argument} & Optionales Argument \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\footnotetext{{Es wird versucht, in dieser Dokumentation ausschließlich den Begriff \emph{Makro} zu verwenden. Die Begriffe \emph{Befehl}, \emph{Funktion} und \emph{Kommando} sind -- sollten sie wider Erwarten doch verwendet werden -- als Synonyme zu verstehen.}}
+%
+\Notice{TikZ-Optionen werden in dieser Dokumentation wie alle anderen Optionen behandelt.}
+
+Bei Beispielen wird der \LaTeX-Quelltext auf der rechten Seite dargestellt, links die resultierende PDF-Ausgabe:%
+}
+
+\begin{example}[de]
+\[
+  \int_a^b f(x) \diff x
+\]
+\end{example}
+
+\newpage
+\localeDE{\part{Installation}}
+
+\localeDE{\section{Voraussetzungen}}
+
+\localeDE{
+Das \thepackage\ Package benötigt folgende Packages:
+
+\begin{multicols}{5}\raggedcolumns
+{\sffamily 
+\noindent amsmath\\
+amssymb\\
+amsthm\\
+calc\\
+cancel\\
+esvect\\
+etoolbox\\
+expl3\\
+gauss\\
+icomma*\\
+l3keys2e\\
+polynom\\
+tikz\\
+tikz-qtree*\\
+thmtools*\\
+stmaryrd\\
+xlop\\
+xparse\\
+}
+\end{multicols}
+\noindent\textsf{* optional}
+ 
+\bigskip
+Alle Packages sind über \emph{CTAN} erhältlich -- sie können z.\,B. unter Linux über \emph{TeX Live}, unter Windows über \emph{MiKTeX} und unter MacOSX über \emph{MacTeX} bezogen werden.
+}
+
+
+\localeDE{\section{Installation}}
+
+\localeDE{\Todo{Installationsanleitung schreiben.}}
+
+%Die manuelle Installation von Packages bzw. Dokumentenklassen wird an vielen Stellen im Internet erläutert. Deshalb wird sie hier nur sehr kompakt beschrieben. Bei Problemen bieten diverse Websiten Hilfestellung.
+% 
+%\subsection{Linux (Ubuntu 12.04/Linux Mint 13)}
+%
+%\begin{enumerate}
+%  \item Per Kommandozeile in den Ordner navigieren, indem sich die heruntergeladene Datei \verb+edu.cls+ befindet.
+%  \item Einen Ordner für die Dokumentenklasse im \TeX-Verzeichnisbaum erstellen:
+%  \begin{verbatim}
+%sudo mkdir /usr/share/texmf/tex/latex/edu
+%  \end{verbatim}\vspace{-\baselineskip}
+%  \item Nun wird die Datei \verb+edu.cls+ in den neuen Ordner kopiert:
+%  \begin{verbatim}
+%sudo cp edu.cls /usr/share/texmf/tex/latex/edu/
+%  \end{verbatim}\vspace{-\baselineskip}
+%    \item Abschließend muss der \TeX-Verzeichnisbaum neu aufgebaut werden:
+%  \begin{verbatim}
+%sudo mktexlsr
+%  \end{verbatim}\vspace{-\baselineskip}
+%\end{enumerate}
+%
+% 
+%\subsection{Windows\,7}
+%
+%\begin{enumerate}
+%  \item Bei einer Standardinstalltion von MiKTeX~2.9 unter Windows\,7 zuerst den Ordner
+%  \begin{verbatim}
+%C:\Program Files (x86)\MiKTeX 2.9\tex\latex\edu
+%  \end{verbatim}
+%  \vspace{-\baselineskip}
+%  erstellen.
+%  \item Dann die Datei \verb+edu.cls+ in diesen Ordner verschieben.
+%  \item Das Programm \verb+Settings+ von MiKTeX öffnen:
+%  \begin{center}
+%    \itshape Startmenü $\rightarrow$ Alle Programme $\rightarrow$ MiKTeX 2.9 $\rightarrow$ Maintenance $\rightarrow$ Settings
+%  \end{center}
+%  \item Über die Schaltfläche \emph{Refresh~FNDB} wird die neue Datei eingelesen.
+% \end{enumerate}
+
+
+
+\newpage
+\localeEN{
+  \part{Documentation}
+  \label{sec:doc}
+  
+  \Todo{Write English documentation.}
+}
+
+\localeDE{
+  \part{Dokumentation}
+  \label{sec:doc}
+}
+
+\localeDE{\section{Package laden und Optionen wählen}}
+
+\localeDE{
+\thepackage\ wird wie allen gängigen Packages durch \Macro\usepackage{edumath} geladen. Auch Optionen können auf bekannte Weise gewählt werden: \Macro\usepackage[\meta{Optionen}]{edumath}, z.\,B. \Macro\usepackage[commasep=false, thmframefg=red]{edumath}.
+}
+
+\localeDE{
+\DescribeMacro\edumathoption{\meta{Option}}{\meta{Wert}}
+\DescribeMacro\edumathsetup{\meta{Option}=\meta{Wert}-Liste}
+%
+Viele Optionen können auch nach dem Laden von \thepackage\ angepasst werden. Bei einzelnen Optionen kann dies durch \Macro\edumathoption realisiert werden, z.\,B. \Macro\edumathoption{thmframefg}{red}. Möchte man mehrere Optionen anpassen, ist \Macro\edumathsetup vorzuziehen. Die Zuweisungen werden durch ein Komma getrennt, z.\,B. \Macro\edumathsetup{thmframefg=red, thmframebf=white}.
+
+\Warning{Einige Optionen \emph{müssen} bereits beim Laden des Packages (also durch \Macro\usepackage) gesetzt werden. In Abschnitt~\ref{sec:doc-opt} ist dies jeweils durch einen Hinweis vermerkt.}
+}
+
+
+\localeDE{\section{Grundlegendes}}
+
+\localeDE{
+\subsection{Dezimaltrenner}
+
+Standardmäßig wird durch \thepackage\ der Punkt als Dezimaltrenner durch das Komma ersetzt, wie es im Deutschen üblich ist.
+}
+
+\begin{example}[de]
+$123,45$
+\end{example}
+
+\localeDE{
+  Dieses Verhalten kann durch die Option \opt{commasep} unterbunden werden. Es wird durch das Package \pkg{icomma} realisiert.
+}
+
+\localeDE{
+\subsection{Abstand vor und nach abgesetzten Formeln}
+
+Aus ökologischen und ökonomischen Gründen wird der Abstand vor und nach abgesetzten Formeln durch \thepackage\ reduziert.
+}
+
+\localeDE{
+\subsection{\pkg{amsmath} Optionen}
+
+Möchte man Optionen an das Package \pkg{amsmath}, welches von \thepackage\ automatisch geladen wird, weitergeben, kann dies durch die Option \opt{amsoptions} getan werden. Das Laden könnte dann z.\,B. so aussehen: \cs*{usepackage[amsoptions=\{nonamelimits,intlimits\}]\{edumath\}}.
+}
+
+
+\localeDE{\section{Symbole und Operatoren}}
+
+\localeDE{
+\DescribeMacro\corr
+%
+Das Entspricht-Zeichen.
+}
+
+\begin{example}[de]
+\[
+  \SI{1}{m} \corr \SI{1}{cm}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\diff
+%
+Der Differentialoperator $\diff$ der Integral- und Differentialrechnung sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\diff ein aufrechtes "`d"' erzeugt werden. 
+}
+
+\begin{example}[de]
+\[
+  \int f(x) \diff x
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\iu
+%
+Die imaginäre Einheit $\iu$ der komplexen Zahlen sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\iu (vom engl. \emph{imaginary unit}) ein aufrechtes "`i"' erzeugt werden. 
+}
+
+\begin{example}[de]
+\[
+  z = a + b \iu
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\textlightning
+%
+Stellt einen Widerspruchspfeil im Textmodus zur Verfügung.
+}
+
+\begin{example}[de]
+Dies führt zum Widerspruch. \textlightning
+\end{example}
+
+
+\localeDE{\section{Spezielle Mengen}}
+
+\localeDE{
+\DescribeMacro\N
+\DescribeMacro\Z
+\DescribeMacro\Q
+\DescribeMacro\R
+\DescribeMacro\I
+\DescribeMacro\C
+\DescribeMacro\L
+%
+Folgende gängige spezielle Mengen können durch kurze Makros erstellt werden: natürliche, ganze, rationale, irrationale und komplexe Zahlen. Darüber hinaus steht ein Symbol für die Lösungsmenge von Gleichungen zur Verfügung.
+}
+
+\begin{example}[de]
+\[
+  \N, \Z, \Q, \R, \I, \C, \L
+\]
+\end{example}
+
+\localeDE{
+Die Erzeugung dieser Makros kann durch die Option \opt{specialsets} unterbunden werden.
+}
+
+\localeDE{
+\DescribeMacro\solset{<Elemente>}
+%
+Beim Lösen von Gleichungen und Gleichungssystemen soll häufig die Lösungsmenge angegeben werden. Dies kann durch \Macro\solset getätigt werden.
+}
+
+\begin{example}[de]
+\[
+  \solset{1; 2; 3}
+\]
+\end{example}
+
+
+\localeDE{\section{Streichungen}}
+
+\localeDE{
+Um Streichungen (z.\,B. beim Kürzen eines Bruches) darzustellen, lädt \thepackage\ das Package \pkg{cancel}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{cancel} verwiesen, hier lediglich ein Beispiel:
+}
+
+\begin{example}[de]
+\[
+	\frac{2x^3 - 4x^5}{2x^2} = 
+	\frac{\cancel{2x^2} \cdot (x - 2x^3)}
+	  {\cancel{2x^2}}
+\]
+\end{example}
+
+
+\localeDE{\section{Schriftliches Rechnen}}
+
+\localeDE{
+\thepackage\ das Package \pkg{xlop}, durch welches schriftliche Rechnungen einfach gesetzt werden können. Es wird hierzu, sofern möglich, an die deutsche Notation angepasst. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{xlop} verwiesen, hier lediglich ein Beispiel:
+}
+
+\begin{example}[de]
+Addition:
+\[
+  \opadd{12,3}{4,56}
+\]
+
+Subtraktion:
+\[
+  \opsub{12,3}{4,56}
+\]
+
+Multiplikation:
+\[
+  \opmul{12,3}{4,56}
+\]
+
+Division:
+\[
+  \opdiv{408}{12}
+\]
+\end{example}
+
+
+\localeDE{\section{Äquivalenzumformungen}}
+
+\localeDE{
+\DescribeEnv[<Gleichung(en)>]{aligntr}
+%
+Diese Umgebung ermöglicht das einfache setzen von Äquivalenzumformungen einer Gleichung (\texttt{tr} von engl. \emph{transformation}). Wie in bekannten Umgebungen wie \env*{align} muss hierzu vor Gleichheitszeichen ein \texttt{\&} stehen. Die Beschreibung der Umformung wird durch das neue Macro \Macro{tr} am Ende einer Zeile begonnen. Danach wird wie gewohnt der Zeilenumbruch durch \texttt{\textbackslash\textbackslash} eingeleitet.
+
+Die Sternvariante unterdrückt die automatische Nummerierung der Zeilen.
+}
+
+\begin{example}[de]
+\begin{aligntr}
+  4x + 10 &= 18 \tr -10 \\
+  4x &= 8 \tr :4 \\
+  x &= 2
+\end{aligntr}
+
+\begin{aligntr*}
+  4x + 10 &= 18 \tr -10 \\
+  4x &= 8 \tr :4 \\
+  x &= 2
+\end{aligntr*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\tr
+%
+Dient der Einleitung der Beschreibung einer (Äquivalenz)Umformung (engl. \emph{transformation}) einer Gleichung innerhalb von \env{aligntr}. 
+}
+
+
+\localeDE{\section{Rechenbäume}}
+
+\localeDE{
+  Rechenbäume können mithilfe des Packages \pkg{tizk-qtree} erstellt werden. Dieses wird nach Bedarf durch die Option \opt{qtree} geladen. Zusätzlich werden die TikZ-Styles \opt{bet} (vom engl. \emph{binary expression tree} -- \emph{Binärer Rechenbaum}) für das entsprechende \env*{tizkpicture}, \opt{betroot} für den Wurzelknoten (vom engl. \emph{root} -- \emph{Wurzel}) und \opt{betr} für rechteckige Knoten (vom engl. \emph{rectangular}) definiert.
+  
+  Weitere Informationen zur Erstellung derartiger Bäume erhält man in der Dokumentation von \pkg{tikz-qtree}.
+  
+  \Notice{\pkg{tikz-qtree} ist inkompatibel zum Package \pkg*{strukex}, weswegen es nur optional geladen wird.}
+}
+
+
+
+\begin{example}[de]
+\begin{tikzpicture}[bet, 
+  frontier/.style=
+  {distance from root=14ex}]
+  \Tree [
+    .\node[betroot](betroot){}; [
+      .$\cdot$ 
+      [.\node[betr]{hoch 5}; 
+        [.$-$ $a$ $7$ ] 
+      ] 
+      [.$+$ $3$ $b$ ] 
+    ] 
+  ]
+  \draw[->] (betroot.north) 
+    -- (0, 0ex) node[below] {
+    $(a - 7)^5 \cdot (3 + b)$
+  };
+\end{tikzpicture}
+\end{example}
+
+
+\localeDE{\section{Funktionen}}
+
+\localeDE{
+\DescribeMacro\abs{<Term>}
+\DescribeMacro\abs*{<Term>}
+%
+Mit diesen Makros kann der Betrag (vom engl. \emph{absolute value}) eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+}
+
+\begin{example}[de]
+\[
+  \abs{-\frac{1}{2}}, \abs*{-5}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\norm{<Term>}
+\DescribeMacro\norm*{<Term>}
+%
+Mit diesen Makros kann die Norm eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+}
+
+\begin{example}[de]
+\[
+  \norm{-\frac{1}{2}}, \norm*{-5}
+\]
+\end{example}
+
+
+\localeDE{\section{Lösungsformeln für Quadratische Gleichungen}}
+
+\localeDE{
+\DescribeMacro\qf{<a>}{<b>}{<c>}
+\DescribeMacro\qfvar{<$\text{Term}_1$>}{<$\text{Term}_2$>}{<$\text{Term}_3$>}
+%
+Das Makro \Macro\qf kann verwendet werden, um die sog. abc-Formel oder Mitternachtsformel (vom engl. \emph{quadratic formula}) darzustellen. Hierbei sind \meta{a}, \meta{b} und \meta{c} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
+
+Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qfvar (vom engl. \emph{quadratic formula (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
+\[
+	\frac{\text{\meta{$\text{Term}_1$}} \pm \sqrt{\text{\meta{$\text{Term}_2$}}}}{\text{\meta{$\text{Term}_3$}}}
+\]
+}
+
+\begin{example}[de]
+\begin{align*}
+  x_{1/2} &= \qf{a}{b}{c} \\
+  x_{3/4} &= \qf{\cdot 1}{2}{\cdot 3} \\
+  x_{5/6} &= \qfvar{1}{2}{3}
+\end{align*}
+\end{example}
+
+\localeDE{
+\DescribeMacro\qfr{<p>}{<q>}
+\DescribeMacro\qfvar{<$\text{Term}_1$>}{<$\text{Term}_2$>}
+%
+Das Makro \Macro\qfr kann verwendet werden, um die sog. pq-Formel (vom engl. \emph{quadratic formula, reduced}) darzustellen. Hierbei sind \meta{p} und \meta{q} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
+
+Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qrfvar (vom engl. \emph{quadratic formula, reduced (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
+\[
+	\text{\meta{$\text{Term}_1$}} \pm \sqrt{\text{\meta{$\text{Term}_2$}}}
+\]
+}
+
+\begin{example}[de]
+\begin{align*}
+  x_{1/2} &= \qfr{p}{q} \\
+  x_{3/4} &= \qfr{1}{2} \\
+  x_{5/6} &= \qfrvar{1}{2}
+\end{align*}
+\end{example}
+
+
+
+\localeDE{\section{Umgebungen für Sätze, Definitionen etc.}} \label{sec:doc-theorems}
+
+\localeDE{\subsection{Grundlegendes}}
+
+\localeDE{
+Durch \thepackage\ können drei verschiedene Arten von Umgebungen für Sätze, Definitionen etc. (sog. Theorem-Umgebungen) erzeugt werden: im Stil von \pkg{amsthm}, umrahmte und/oder mit Hintergrundfarbe versehene Theoreme und Theoreme im Stil von \pkg{thmbox}. Die Erzeugung der jeweiligen Theorem-Umgebungen kann durch die Optionen \opt{amsthm}, \opt{framedthm} und \opt{thmbox} gesteuert werden \sees{ssec:doc-opt-theorem}.
+
+Theoreme sind eingeteilt in "`wichtige"' (engl. \emph{important}) und "`unwichtige"' (engl. \emph{unimportant}) Theoreme, welche sich in ihrer Darstellung unterscheiden \seet{tab:theorems}.
+
+\begin{table}[h!tp]
+  \centering
+  \caption{"`Wichtige"' und "`unwichtige"' Theoremumgebungen}
+  \label{tab:theorems}
+  \medskip
+  \begin{tabular}{llll} \toprule
+    \multicolumn{2}{c}{\textsf{Wichtig}} & \multicolumn{2}{c}{\textsf{Unwichtig}} \\ \midrule
+    \textsf{Umgebung} & \textsf{Bedeutung} & \textsf{Umgebung} & \textsf{Bedeutung} \\ \midrule
+    \env{definition} & Definition & \env{example} & Beispiel \\
+    \env{defitheo} & Definition/Satz & \env{exampleexe} & Beispielaufgabe \\
+    \env{theorem} & Satz & \env{hint} & Hinweis \\
+    \env{calcrule} & Regel & \env{remark} & Bemerkung \\
+    &  & \env{solution} & Lösung \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Auf Wunsch werden Theoreme ("`kategorieweise"') nummeriert. Dieses Verhalten kann über die Optionen \opt{thmimpnumbered} (wichtige Theoreme) und \opt{thmunimpnumbered} (unwichtige Theoreme) aktiviert werden.
+
+Für Theoreme stehen eine Vielzahl weiterer Optionen zur Konfiguration ihrer Darstellung zur Verfügung. So lässt sich z.\,B. ihre Schrift gestalten, Farben anpassen und die Beschriftung der Umgebungen (Satz, Definition etc.) verändern. Hierzu sei an dieser Stelle auf Abschnitt~\ref{ssec:doc-opt-theorem} verwiesen.
+}
+
+
+
+\localeDE{\subsection{\pkg{amsthm} Darstellung}}
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{definition}[<Name>]
+\DescribeEnv[<Inhalt>]{defitheo}[<Name>]
+\DescribeEnv[<Inhalt>]{theorem}[<Name>]
+\DescribeEnv[<Inhalt>]{calcrule}[<Name>]
+%
+Die \pkg{amsthm} Darstellung ist sehr reduziert. Theorem-Umgebungen werden lediglich durch einen Absatzumbruch vom restlichen Inhalt getrennt und serifenlos und fett beschriftet -- es findet sonst keine andere gestalterische Trennung statt. Optional können die Theoreme durch \meta{Name} benannt werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
+
+\Notice{Auch technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
+}
+
+\begin{example}[de]
+\begin{definition}[Primzahl]
+  Eine Primzahl ist eine natürliche 
+  Zahl, die größer als 1 und 
+  ausschließlich durch sich selbst 
+  und durch 1 teilbar ist.  
+\end{definition}
+
+\begin{defitheo}[Gegenwahrscheinlichkeit]
+  Zu jedem Ereignis $E$ existiert ein 
+  \emph{Gegenereignis} $\overline{E}$, 
+  das alle Ergebnisse enthält, die $E$ nicht 
+  enthält. Es gilt: 
+  $P(E) = 1 - P\left(\overline{E}\right)$.
+\end{defitheo}
+
+\begin{theorem}[Innenwinkelsummensatz]
+  Die Summe der Innenwinkel eines Dreiecks 
+  beträgt $180^\circ$.
+\end{theorem}
+
+\begin{calcrule}
+  Für Zehnerpotenzen gilt:
+    \[
+      a \cdot 10^p \pm b \cdot 10^p 
+      = (a \pm b) \cdot 10^{p}
+    \] 
+\end{calcrule}
+\end{example}
+
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{example}[<Name>]
+\DescribeEnv[<Inhalt>]{exampleexe}[<Name>]
+\DescribeEnv[<Inhalt>]{hint}[<Name>]
+\DescribeEnv[<Inhalt>]{remark}[<Name>]
+\DescribeEnv[<Inhalt>]{solution}[<Name>]
+%
+Die unwichtigen Theorem-Umgebungen im Stile von \pkg{amsthm} werden lediglich durch einen (oder mehrere) eigenen Absatz und eine serifenlose Beschriftung gekenntzeichnet.
+
+\Notice{Auch technischen Gründen fehlt das Beispiel zur \env*{example} Umgebung.}
+}
+
+\begin{example}[de]
+\begin{exampleexe}
+  Es gilt: $\frac{1}{2} + \frac{1}{2} = 1$ 
+\end{exampleexe}
+
+\begin{hint}
+  An dieser Stelle muss $x \neq 0$ gelten!
+\end{hint}
+
+\begin{remark}[Reelle Zahlen]
+  Die Eigenschaft gilt für $x \in \R$.
+\end{remark}
+
+\begin{solution}
+  $P(E) = \frac{1}{2} \cdot \frac{1}{4} 
+  = \frac{1}{8}$.
+\end{solution}
+\end{example}
+
+
+\localeDE{\subsection{Umrahmte Darstellung}}
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{definitionf}[<Name>]
+\DescribeEnv[<Inhalt>]{defitheof}[<Name>]
+\DescribeEnv[<Inhalt>]{theoremf}[<Name>]
+\DescribeEnv[<Inhalt>]{calcrulef}[<Name>]
+%
+In dieser Variante werden Theorem-Umgebungen eingerahmt und/oder mit Hintergrundfarbe dargestellt. Optional können die Theoreme durch \meta{Name} benannt werden. Die Farben von Rahmen und Hintergrund können durch die Optionen \opt{thmframefg} und \opt{thmframebg} angepasst werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
+
+\Notice{Auch technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
+}
+
+\begin{example}[de]
+\begin{definitionf}[Primzahl]
+  Eine Primzahl ist eine natürliche 
+  Zahl, die größer als 1 und 
+  ausschließlich durch sich selbst 
+  und durch 1 teilbar ist.  
+\end{definitionf}
+
+\begin{defitheof}[Gegenwahrscheinlichkeit]
+  Zu jedem Ereignis $E$ existiert ein 
+  \emph{Gegenereignis} $\overline{E}$, 
+  das alle Ergebnisse enthält, die $E$ nicht 
+  enthält. Es gilt: 
+  $P(E) = 1 - P\left(\overline{E}\right)$.
+\end{defitheof}
+
+\begin{theoremf}[Innenwinkelsummensatz]
+  Die Summe der Innenwinkel eines Dreiecks 
+  beträgt $180^\circ$.
+\end{theoremf}
+
+\begin{calcrulef}
+  Für Zehnerpotenzen gilt:
+    \[
+      a \cdot 10^p \pm b \cdot 10^p 
+      = (a \pm b) \cdot 10^{p}
+    \] 
+\end{calcrulef}
+\end{example}
+
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{examplef}[<Name>]
+\DescribeEnv[<Inhalt>]{exampleexef}[<Name>]
+\DescribeEnv[<Inhalt>]{hintf}[<Name>]
+\DescribeEnv[<Inhalt>]{remarkf}[<Name>]
+\DescribeEnv[<Inhalt>]{solutionf}[<Name>]
+%
+Die unwichtigen Theorem-Umgebungen unterscheiden sich in dieser Darstellung dadurch von den wichtigen, dass ihre Beschriftung nicht fett gesetzt wird.
+
+\Notice{Auch technischen Gründen fehlt das Beispiel zur \env*{example} Umgebung.}
+}
+
+\begin{example}[de]
+\begin{exampleexef}
+  Es gilt: $\frac{1}{2} + \frac{1}{2} = 1$ 
+\end{exampleexef}
+
+\begin{hintf}
+  An dieser Stelle muss $x \neq 0$ gelten!
+\end{hintf}
+
+\begin{remarkf}[Reelle Zahlen]
+  Die Eigenschaft gilt für $x \in \R$.
+\end{remarkf}
+
+\begin{solutionf}
+  $P(E) = \frac{1}{2} \cdot \frac{1}{4} 
+  = \frac{1}{8}$.
+\end{solutionf}
+\end{example}
+
+
+\localeDE{\subsection{\pkg{thmbox} Darstellung}}
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{definitionbs}[<Name>]
+\DescribeEnv[<Inhalt>]{definitionbm}[<Name>]
+\DescribeEnv[<Inhalt>]{definitionbl}[<Name>]
+\DescribeEnv[<Inhalt>]{defitheobs}[<Name>]
+\DescribeEnv[<Inhalt>]{defitheobm}[<Name>]
+\DescribeEnv[<Inhalt>]{defitheobl}[<Name>]
+\DescribeEnv[<Inhalt>]{theorembs}[<Name>]
+\DescribeEnv[<Inhalt>]{theorembm}[<Name>]
+\DescribeEnv[<Inhalt>]{theorembl}[<Name>]
+\DescribeEnv[<Inhalt>]{calcrulebs}[<Name>]
+\DescribeEnv[<Inhalt>]{calcrulebm}[<Name>]
+\DescribeEnv[<Inhalt>]{calcrulebl}[<Name>]
+%
+In der \pkg{thmbox} Darstellung stehen für jede Theorem-Umgebung drei Varianten zur verfügung, welche sich durch die Endung unterscheiden: \env*{*bs} (vom engl. \emph{boxed small}), \env*{*bm} (vom engl. \emph{boxed medium}) und \env*{*bl} (vom engl. \emph{boxed large}), welche sich durch Anzahl der umrahmten Seiten den Umgebung unterscheiden (links; links und unten; links; unten und rechts). Optional können die Theoreme durch \meta{Name} benannt werden. Es folgen Beispiele der unterschiedlichen Umrandungen für Definitionen. Alle anderen Theorem-Umgebungen werden analog verwendet.
+
+\Notice{Auch technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
+}
+
+\begin{example}[de]
+\begin{definitionbs}[Primzahl]
+  Eine Primzahl ist eine natürliche 
+  Zahl, die größer als 1 und 
+  ausschließlich durch sich selbst 
+  und durch 1 teilbar ist.  
+\end{definitionbs}
+
+\begin{definitionbm}[Primzahl]
+  Eine Primzahl ist eine natürliche 
+  Zahl, die größer als 1 und 
+  ausschließlich durch sich selbst 
+  und durch 1 teilbar ist.  
+\end{definitionbm}
+
+\begin{definitionbl}[Primzahl]
+  Eine Primzahl ist eine natürliche 
+  Zahl, die größer als 1 und 
+  ausschließlich durch sich selbst 
+  und durch 1 teilbar ist.  
+\end{definitionbl}
+\end{example}
+
+
+\localeDE{
+\DescribeEnv[<Inhalt>]{examplebs}[<Name>]
+\DescribeEnv[<Inhalt>]{examplebm}[<Name>]
+\DescribeEnv[<Inhalt>]{examplebl}[<Name>]
+\DescribeEnv[<Inhalt>]{exampleexebs}[<Name>]
+\DescribeEnv[<Inhalt>]{exampleexebm}[<Name>]
+\DescribeEnv[<Inhalt>]{exampleexebl}[<Name>]
+\DescribeEnv[<Inhalt>]{hintbs}[<Name>]
+\DescribeEnv[<Inhalt>]{hintbm}[<Name>]
+\DescribeEnv[<Inhalt>]{hintbl}[<Name>]
+\DescribeEnv[<Inhalt>]{remarkbs}[<Name>]
+\DescribeEnv[<Inhalt>]{remarkbm}[<Name>]
+\DescribeEnv[<Inhalt>]{remarkbl}[<Name>]
+\DescribeEnv[<Inhalt>]{solutionbs}[<Name>]
+\DescribeEnv[<Inhalt>]{solutionbm}[<Name>]
+\DescribeEnv[<Inhalt>]{solutionbl}[<Name>]
+%
+Die unwichtigen Theorem-Umgebungen unterscheiden sich in dieser Darstellung nicht von den wichtigen Theorem-Umgebungen. Es folgen Beispiele der unterschiedlichen Umrandungen für Beispielaufgaben. Alle anderen Theorem-Umgebungen werden analog verwendet.
+}
+
+\begin{example}[de]
+\begin{exampleexebs}
+  $\frac{1}{2} + \frac{1}{2} = 1$ 
+\end{exampleexebs}
+
+\begin{exampleexebm}
+  $\frac{1}{2} + \frac{1}{2} = 1$ 
+\end{exampleexebm}
+
+\begin{exampleexebl}
+  $\frac{1}{2} + \frac{1}{2} = 1$ 
+\end{exampleexebl}
+\end{example}
+
+
+\localeDE{\section{Elementare Geometrie}}
+
+\localeDE{\subsection{Punkte}}
+
+\localeDE{
+\DescribeMacro\sep
+%
+Bei der Angabe eines Punktes können durch \Macro\sep die im Deutschen gebräuchlichen, vertikalen Striche zur Trennung der Koordinaten verwendet werden.
+}
+
+\begin{example}[de]
+$P(1 \sep 2 \sep 3)$
+\end{example}
+
+
+\localeDE{\subsection{Dreieck-Planfiguren}}
+
+\localeDE{
+\DescribeMacro\planfigur[<Maßstab>]{<Seiten>}{<Winkel>}
+%
+Die Planfigur einer geometrischen Figur wird verwendet, um gegebene Größen (Seiten und Winkel) zu visualisieren. In \thepackage\ können komfortabel Planfiguren von Dreiecken gezeichnet werden. Wie gehen hierbei von der folgenden Benennung aus:
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.75, line join=round, thick]
+	
+	    \coordinate (a) at (0,0);
+	    \coordinate (b) at (3,0);
+	    \coordinate (c) at (2.02, 1.7);
+	
+	    \draw (a) -- node[below] {$c$} (b) -- node[above right] {$a$} (c) -- node[above left] {$b$} (a) -- cycle;
+	
+	    \draw (a) node[left] {$A$};
+	    \draw (b) node[right] {$B$};
+	    \draw (c) node[above] {$C$};
+	    
+	    \draw ($(a) + (0:0.7)$) arc (0:40:0.7);
+	    \draw ($(b) + (120:0.7)$) arc (120:180:0.7);
+	    \draw ($(c) + (220:0.7)$) arc (220:300:0.7) ($(c) + (263:0.4)$);
+	    
+	%    \draw ($(a) + (0:0.7)$) arc (0:40:0.7) ($(a) + (20:0.5)$) node {$\alpha$};
+	%    \draw ($(b) + (120:0.7)$) arc (120:180:0.7) ($(b) + (150:0.45)$) node {$\beta$};
+	%    \draw ($(c) + (220:0.7)$) arc (220:300:0.7) ($(c) + (263:0.4)$) node {$\gamma$};
+	\end{tikzpicture}
+\end{center}
+
+Bei der Verwendung von \Macro\planfigur müssen zuerst die gegebenen \meta{Seiten} angegeben werden, z.\,B. \{ac\} für die Seiten $a$ und $c$. Die Winkel werden in \Macro\planfigur ebenfalls durch Kleinbuchstaben benannt. So steht \texttt{a} für den Winkel an $A$, \texttt{b} für den an $B$ und \texttt{c} für den an $C$.
+
+Optional kann durch \meta{Maßstab} angegeben werden, wobei 1,0 für 100\,\% steht.
+}
+
+\begin{example}[de]
+\planfigur{}{}
+
+\planfigur{ac}{bc}
+
+\planfigur[0.85]{b}{abc}
+\end{example}
+
+
+\localeDE{\section{Polynomdivision}}
+
+\localeDE{
+Um Polynomdivisionen auf verschiedene Arten einfach darstellen zu können, lädt \thepackage\ das Package \pkg{polynom}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. \pkg{polynom} wird entsprechend der deutschen Notation konfiguriert. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{polynom} verwiesen, hier lediglich ein Beispiel:
+}
+
+\begin{example}[de]
+\[
+  \polylongdiv{2x^2-x-10}{x+2}
+\]
+\end{example}
+
+
+\localeDE{\section{Analytische Geometrie}}
+
+\localeDE{\subsection{Gauß'sches Eliminationsverfahren}}
+
+\localeDE{
+Um das Gauß'sche Eliminationsverfahren in \LaTeX\ setzen zu können, kann das Package \pkg{gauss} verwendet werden, welches standardmäßig durch \thepackage\ geladen wird. Detaillierte Informationen hierzu enthält die entsprechende Dokumentation. Zusätzlich werden jedoch einige Anpassungen getroffen und Umgebungen erstellt.
+
+\localeDE{\subsubsection{Gleichungssystem}} \label{sssec:doc-geo-equations}}
+
+\localeDE{
+Erster Schritt beim Textsatz des Gauß'schen Eliminationsverfahren ist die Erstellung des Gleichungssystems. Hierzu stehen verschiedene Umgebungen zur Verfügung.
+
+\DescribeEnv[<Matrix>]{gmatrix}
+\DescribeEnv[<Matrix>]{gmatrix*}[<Zeilenabstand>]
+%
+Diese Makros setzen Gleichungen ohne Zusätze analog zu \env*{matrix} aus \pkg*{amsmath}. Im schulischen Kontext eignen sie sich hauptsächlich dazu, Gleichungssysteme mit Angabe der Unbekannten zu setzen. Während sich \env{gmatrix} unverändert zu \pkg{gauss} verhält, wird in \env{gmatrix*} der Spaltenabstand automatisch auf \SI{2}{pt} verringert (was sich bei der Angabe von Rechenzeichen anbietet) und kann optional durch \meta{Zeilenabstand} beliebig angepasst werden.
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrix}
+    1 & 2 & 3 \\ 4 & 5 & 6
+  \end{gmatrix}
+\]
+\[  
+  \begin{gmatrix*}
+    1 & 2 & 3 \\ 4 & 5 & 6
+  \end{gmatrix*}
+\]
+\[  
+  \begin{gmatrix*}
+    ~ & 4x & + & 3y &=&   & 10 \\
+    - & 2x & - & 5y &=& - & 19
+  \end{gmatrix*}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeEnv[<Matrix>]{gmatrixp*}[<Zeilenabstand>]
+%
+Möchte man bei der Darstellung des Gauß'schen Eliminationsverfahren die Matrixschreibweise ohne Angabe der Unbekannten verwenden, kann man die Umgebung \env{gmatrixp*} verwenden. Diese setzt den Abstand zwischen den Spalten auf \SI{4}{pt}, was durch \meta{Zeilenabstand} angepasst werden kann.
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrixp*}
+    1 & 2 & 3 \\ 4 & 5 & 6
+  \end{gmatrixp*}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeEnv[<Matrix>]{gmatrixv*}[<Zeilenabstand>]
+%
+Analog zu \env{gmatrixp*} kann durch \env*{gmatrixv*} ein Gleichungssystem gesetzt werden, welches links und rechts durch einen vertikalen Strich begrenzt ist.
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrixv*}
+    1 & 2 & 3 \\ 4 & 5 & 6
+  \end{gmatrixv*}
+\]
+\end{example}
+
+\localeDE{
+\DescribeMacro\mvsep
+%
+Es ist gängig, die rechte und linke Seite eines Gleichungssystems in der Matrixdarstellung durch eine vertikale Linie zu trennen. Hierzu kann \Macro\mvsep (vom engl. \emph{matrix vertical separator}) verwendet werden. Es muss in einer eigenen Spalte für die Trennlinie verwendet werden, also von \texttt{\&} eingeschlossen werden.
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrixp*}
+    1 & 2 & \mvsep & 3 \\ 
+    4 & 5 & \mvsep & 6
+  \end{gmatrixp*}
+\]
+\end{example}
+
+\localeDE{
+\DescribeMacro\minusp
+%
+Beim Auftreten von negativen Einträgen in einer Matrix ist es häufig erwünscht, die Ziffern bündig untereinander zu setzen. In Anlehnung an \cs*{phantom} erzeugt \Macro\minusp einen horizontalen Abstand von der Breite eines Minus ($-$).
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrixp*}
+    \minusp 1 & -2 & \mvsep & 3 \\ 
+    -4 & \minusp 5 & \mvsep & 6
+  \end{gmatrixp*}
+\]
+\end{example}
+
+
+\localeDE{\subsubsection{Umformungen}}
+
+\localeDE{
+
+Die Notation der Umformungen eines Gleichungssystems werden ausführlich in der Dokumentation des Packages \pkg{gauss} thematisiert. Deshalb beschränkt sich diese Dokumentation an dieser Stelle auf ein Beispiel:
+}
+
+\begin{example}[de]
+\[
+  \begin{gmatrixp*}
+    1 & 2 & 3 & 4 \\
+    0 & 0 & 5 & 6 \\ 
+    7 & 8 & 9 & 0
+    \rowops
+    \swap{0}{1}
+    \mult{0}{\cdot (-7)}
+    \add{0}{2}
+  \end{gmatrixp*}	
+\]
+\end{example}
+
+
+\localeDE{\subsection{Vektoren}}
+
+\localeDE{
+\DescribeMacro\vec{<Term>}
+\DescribeMacro\vect{<Spalte>}
+%
+Aufgrund der flexibleren und ansprechenderen Darstellung verwendet \thepackage\ für Vektorvariablen das Paket \pkg{esvect}. Durch \Macro\vec (vom engl. \emph{vector}) können diese erstellt werden. Zusätzlich können Zeilenvektoren durch \Macro\vect erstellt werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden.
+}
+
+\begin{example}[de]
+$\vec{a} = \vec{AB} = \vect{1 \\ 2 \\ 3}$
+\end{example}
+
+
+\localeDE{
+Bei der Arbeit mit Vektoren kann das Makro \Macro\minusp \sees{sssec:doc-geo-equations} hilfreich sein, um bei negativen Komponenten Ziffern bündig untereinander zu setzen:
+}
+
+\begin{example}[de]
+$\vec{a} = \vect{-1 \\ \minusp 2 \\ -3}$
+\end{example}
+
+
+\localeDE{\subsection{Vektorfunktionen}}
+
+\localeDE{
+\DescribeMacro\absvec{<Term>}
+\DescribeMacro\absvec*{<Term>}
+%
+Setzt den \meta{Term} als Vektor in Betragsstriche. Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+}
+
+\begin{example}[de]
+\[
+  \absvec{b}, \absvec*{b}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\normvec{<Term>}
+\DescribeMacro\normvec*{<Term>}
+%
+Setzt den \meta{Term} als Vektor in Normstriche. Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+}
+
+\begin{example}[de]
+\[
+  \normvec{b}, \normvec*{b}
+\]
+\end{example}
+
+
+
+\localeDE{\subsection{Geraden}}
+
+\localeDE{
+\DescribeMacro\linepvar[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
+\DescribeMacro\linepvar*[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
+%
+Durch \Macro\linepvar können Geraden in Parameterform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{line, parametric (variable)}). Optional können der \meta{Name} der Geraden und die Namen von \meta{Stützvektor-Variable}, \meta{Richtungsvektor-Variable} und der \meta{Parameter} der Geraden angegeben werden.
+
+In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
+
+Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Optionen \opt{linepname}, \opt{linepsupport}, \opt{linepdir} und \opt{lineppar} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\begin{align*}
+  & \linepvar \\
+  & \linepvar[g_1] \\ 
+  & \linepvar[g_2][a][b] \\
+  & \linepvar[g_3][a][b][s] \\
+  & \linepvar*[g_4][a][b][t]
+\end{align*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\linepvec[<Name>][<Stützvektor>][<Richtungsvektor>][<Parameter>]
+\DescribeMacro\linepvec*[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
+%
+Sollen in einer Geradengleichung in Parameterform die Vektoren angegeben werden, kann \Macro\linepvec verwendet werden (vom engl. \emph{line, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{Richtungsvektor} und \meta{Parameter} der Geraden angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+
+In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und die \meta{Richtungsvektor-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
+
+ Ein Verzicht auf die Angabe von \meta{Stützvektor} und \meta{Richtungsvektor} ist möglich, jedoch in den meisten Fällen nicht dienlich. Grundsätzlich wird beim Verzicht aller Argumente auf die Standardwerte der Optionen \opt{linepname}, \opt{linepsupport}, \opt{linepdir} und \opt{lineppar} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\setlength{\jot}{5pt}
+\begin{align*}
+  & \linepvec[g_1][1 \\ 2][3 \\ 4] \\
+  & \linepvec[g_2][1 \\ 2][3 \\ 4][s] \\
+  & \linepvec*[g_3] \\
+  & \linepvec*[g_4][a][b][t]
+\end{align*}
+\end{example}
+
+
+
+\localeDE{\subsection{Ebenen}}
+
+
+\localeDE{
+\DescribeMacro\planepvar[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
+\DescribeMacro\planepvar*[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
+%
+Durch \Macro\planepvar können Ebenen in Parameterform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, parametric (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable}, \meta{$\text{Spannvektor}_1$-Variable}, \meta{$\text{Spannvektor}_2$-Variable} und die \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden.
+
+In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
+
+Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Optionen \opt{planepname}, \opt{planepsupport}, \opt{planepdiri}, \opt{planepdirii}, \opt{planeppari} und \opt{planepparii} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\begin{align*}
+  & \planepvar \\
+  & \planepvar[E_1] \\ 
+  & \planepvar[E_2][s][a][b] \\
+  & \planepvar[E_3][s][a][b]%
+      [\alpha][\beta] \\
+  & \planepvar*[E_4][s][a][b]%
+      [\alpha][\beta]
+\end{align*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\planepvec[<Name>][<Stützvektor>][<$\text{Spannvektor}_1$>][<$\text{Spannvektor}_2$>][<$\text{Parameter}_1$>][<$\text{Parameter}_2$>]
+\DescribeMacro\planepvec*[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
+%
+Sollen in einer Ebenengleichung in Parameterform die Vektoren angegeben werden, kann \Macro\planepvec verwendet werden (vom engl. \emph{plane, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{$\text{Spannvektor}_1$}, \meta{$\text{Spannvektor}_2$}, \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+
+In der Sternvariante können Namen für die \meta{Stützvektor-Variable}, die \meta{$\text{Spannvektor}_1$-Variable} und die \meta{$\text{Spannvektor}_2$-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
+
+ Ein Verzicht auf die Angabe von \meta{Stützvektor}, \meta{$\text{Spannvektor}_1$} und \meta{$\text{Spannvektor}_2$} ist möglich, jedoch in den meisten Fällen nicht dienlich. Grundsätzlich wird beim Verzicht aller Argumente auf die Standardwerte der Optionen \opt{planepname}, \opt{planepsupport}, \opt{planepdiri}, \opt{planepdirii}, \opt{planeppari} und \opt{planepparii} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\setlength{\jot}{5pt}
+\begin{align*}
+  & \planepvec[E_1][1 \\ 2][3 \\ 4]%
+      [5 \\ 6] \\
+  & \planepvec[E_2][1 \\ 2][3 \\ 4]%
+      [5 \\ 6][\alpha][\beta] \\
+  & \planepvec*[E_3] \\
+  & \planepvec*[E_4][a][b][c]%
+      [\alpha][\beta]
+\end{align*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\planenvar[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
+\DescribeMacro\planepvar*[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
+%
+Durch \Macro\planenvar können Ebenen in Normalenform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, normal (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable} und \meta{Normalenvektor-Variable} der Ebene angegeben werden.
+
+In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
+
+Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Optionen \opt{planenvarname}, \opt{planenvarsupport} und \opt{planenvarnormal} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\begin{align*}
+  & \planenvar \\
+  & \planenvar[E_1] \\ 
+  & \planenvar[E_2][s] \\ 
+  & \planenvar[E_3][s][a] \\ 
+  & \planenvar*[E_4][s][a]
+\end{align*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\planenvec[<Name>][<Stützvektor>][<Normalenvektor>]
+\DescribeMacro\planenvec*[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
+%
+Sollen in einer Ebenengleichung in Normalenform die Vektoren angegeben werden, kann \Macro\planenvec verwendet werden (vom engl. \emph{plane, normal (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor} und der \meta{Normalenvektor} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+
+In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und der \meta{Normalenvektor-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
+
+ Ein Verzicht auf die Angabe von \meta{Stützvektor} und \meta{Normalenvektor} ist möglich, jedoch in den meisten Fällen nicht dienlich. Grundsätzlich wird beim Verzicht aller Argumente auf die Standardwerte der Optionen \opt{planenvarname}, \opt{planenvarsupport} und \opt{planenvarnormal} zurückgegriffen \sees{ssec:doc-opt-analytic-geometry}.
+}
+
+\begin{example}[de]
+\setlength{\jot}{5pt}
+\begin{align*}
+  & \planenvec[E_1][1 \\ 2][3 \\ 4] \\
+  & \planenvec*[E_2] \\
+  & \planenvec*[E_3][a][b]
+\end{align*}
+\end{example}
+
+
+\localeDE{\section{Pfeileinschübe}}
+
+\localeDE{
+\DescribeMacro\qRightarrow
+\DescribeMacro\qrightarrow
+\DescribeMacro\qLeftarrow
+\DescribeMacro\qleftarrow
+\DescribeMacro\qLeftrightarrow
+\DescribeMacro\qleftrightarrow
+%
+Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entsprechend eines \cs*{quad} ein:
+}
+
+\begin{example}[de]
+\begin{align*}
+  a \qRightarrow b \\
+  a \qrightarrow b \\
+  a \qLeftarrow b \\
+  a \qleftarrow b \\
+  a \qLeftrightarrow b \\
+  a \qleftrightarrow b 
+\end{align*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\qqRightarrow
+\DescribeMacro\qqrightarrow
+\DescribeMacro\qqLeftarrow
+\DescribeMacro\qqleftarrow
+\DescribeMacro\qqLeftrightarrow
+\DescribeMacro\qqleftrightarrow
+%
+Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entsprechend eines \cs*{qquad} ein:
+}
+
+\begin{example}[de]
+\begin{align*}
+  a \qqRightarrow b \\
+  a \qqrightarrow b \\
+  a \qqLeftarrow b \\
+  a \qqleftarrow b \\
+  a \qqLeftrightarrow b \\
+  a \qqleftrightarrow b 
+\end{align*}
+\end{example}
+
+
+\localeDE{\section{Text- und Formeleinschübe}}
+
+\localeDE{
+\DescribeMacro\qtext{<Text>}
+\DescribeMacro\qqtext{<Text>}
+%
+Ermöglicht im Mathemodus das Einfügen eines \meta{Text}, der zu beiden Seiten von einem Abstand (bei \Macro\qtext ist dies \cs*{quad}, bei \Macro\qqtext ist es \cs*{qquad}) umgeben ist.
+}
+
+\begin{example}[de]
+\begin{gather*}
+  x_1 = 0 \qtext{oder} x_2 = 5 \\
+  x_1 = 0 \qqtext{oder} x_2 = 5
+\end{gather*}
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\qmath{<Formel>}
+\DescribeMacro\qqmath{<Formel>}
+%
+Ermöglicht im Text- und Mathemodus das Einfügen einer \meta{Formel}, der zu beiden Seiten von einem Abstand (bei \Macro\qmath ist dies \cs*{quad}, bei \Macro\qqmath ist es \cs*{qquad}) umgeben ist.
+}
+
+\begin{example}[de]
+Denn \qmath{x^2 > 0} gilt immer.
+
+Denn \qqmath{x^2 > 0} gilt immt. 
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\qund
+\DescribeMacro\qqund
+\DescribeMacro\qoder
+\DescribeMacro\qqoder
+%
+Abkürzungen für \Macro\qtext{und}, \Macro\qqtext{und}, \Macro\qtext{oder} und \Macro\qqtext{oder}.
+}
+
+\begin{example}[de]
+\begin{gather*}
+  x_1 = 0 \qoder x_2 = 5 \\
+  x_1 = 0 \qqoder x_2 = 5 \\
+  x > 5 \qund x < 10 \\
+  x > 5 \qqund x < 10 
+\end{gather*}
+\end{example}
+
+
+\localeDE{\section{Formatierung}}
+
+\localeDE{
+\DescribeMacro\ds
+%
+Als Abkürzung für \cs*{displaystyle} ermöglicht dieses Makro die Aktivierung des Displaystyles in einer Inline-Formel:
+}
+
+\begin{example}[de]
+Kein Displaystyle: $\lim_{x \rightarrow 0} 
+\int_x^0 \frac{1}{t} \diff t$
+
+\medskip
+
+Displaystyle: $\ds \lim_{x \rightarrow 0} 
+\int_x^0 \frac{1}{t} \diff t$
+\end{example}
+
+
+
+\localeDE{
+\section{Optionen} \label{sec:doc-opt}
+
+Die Optionen von \thepackage\ werden thematisch gruppiert beschrieben. Neben dem links geschriebenen Namen der Option folgen mögliche Werte und rechtsbündig der Standardwert in Klammern.
+}
+
+
+\localeDE{\subsection{Hinweise zu Farboptionen}}
+
+\localeDE{
+Farboptionen liegen meist in ein oder zwei Varianten vor. Eine Variante gibt die Vordergrundfarbe an und endet auf \opt*{fg} (vom engl. \emph{foreground}), die andere auf \opt*{bg} (vom engl. \emph{background}). Beispiele sind \opt{thmframefg} und \opt{thmframebg}.
+
+Standardfarben oder durch Optionen übergebene Farben können durch Colorthemes überschrieben werden.
+}
+
+
+\localeDE{\subsection{Grundlegendes}}
+
+\localeDE{
+\Option{commasep}\WithValues{true, false}\AndDefault{true}
+Mithilfe dieser Option kann bestimmt werden, ob das Komma als Dezimaltrenner verwendet werden soll. Andernfalls geschieht dies durch einen Punkt.
+
+\NoticeLoadBeginDE
+}
+
+
+\localeDE{
+\Option{amsoptions}\WithValues{\meta{Optionen}}\AndDefault{intlimits}
+Möchte man gezielt Optionen an das Package \pkg{amsmath} übergeben, sollte dies durch diese Option geschehen.
+
+\NoticeLoadBeginDE
+}
+
+
+\localeDE{
+\Option{specialsets}\WithValues{true, false}\AndDefault{true}
+Durch diese Option kann die Erzeugung von Makros für spezielle Mengen ($\N$, $\Q$, $\R$ \dots) (de)aktivier
+t werden.
+
+\NoticeLoadBeginDE
+}
+
+
+\localeDE{
+\Option{qtree}\WithValues{true, false}\AndDefault{false}
+\pkg{tikz-qtree} ist inkompatibel zum Package \pkg*{strukex}, weswegen es durch diese Option manuell geladen werden kann.
+
+\NoticeLoadBeginDE
+}
+
+
+\localeDE{\subsection{Umgebungen für Sätze, Definitionen etc.} \label{ssec:doc-opt-theorem}}
+
+\localeDE{
+\Option{amsthm}\WithValues{true, false}\AndDefault{true}
+\Option{framedthm}\WithValues{true, false}\AndDefault{true}
+\Option{thmbox}\WithValues{true, false}\AndDefault{false}
+Durch diese Optionen kann angegeben werden, ob gängige deutsche \env{theorem}-Umgebungen (\emph{Satz}, \emph{Definition}, \emph{Beispiel}, \dots) erstellt werden sollen. \opt*{amsthm} erzeugt Theoreme im Stil von \pkg{amsthm}, \opt{framedthm} Theoreme, die umrahmt und farbig hinterlegt sein können. Beide Möglichkeiten werden durch das Package \pkg{thmtools} realisiert.
+
+Durch die Option \opt{thmbox} werden Theoreme im Stile von \pkg{thmbox} erzeugt.
+
+\NoticeLoadBeginDE*
+
+\Warning{\opt{thmbox} erfordert zwingend nummerierte Theoreme. Deshalb müssen in diesem Fall \opt{thmimpnumbered} und \opt{thmunimpnumbered} manuell auf \opt*{true} gesetzt werden.}
+}
+
+\localeDE{
+\Option{thmimpnumbered}\WithValues{true, false}\AndDefault{false}
+\Option{thmunimpnumbered}\WithValues{true, false}\AndDefault{false}
+Durch diese Optionen kann angegeben werden, ob wichtige Theoreme (\opt*{thmimpnumbered}) (vom engl. \emph{important}) und/oder unwichtige Theoreme (\opt*{thmunimpnumbered}) (vom engl. \emph{unimportant}) nummeriert werden sollen.
+
+\NoticeLoadBeginDE*
+}
+
+\localeDE{
+\Option{thmlabelfg}\WithValues{\meta{Farbe}}\AndDefault{black}
+Durch diese Option kann die Farbe für die Theorembeschriftung (\emph{Satz}, \emph{Definition}, \dots) angegeben werden.
+
+\NoticeColorthemeDE
+}
+
+\localeDE{
+\Option{thmframefg}\WithValues{\meta{Farbe}}\AndDefault{darkgray}
+\Option{thmframebg}\WithValues{\meta{Farbe}}\AndDefault{lightgray!60}
+Durch diese Optionen können Rahmenfarbe (\opt*{thmframefg}) und die Hintergrundfarbe (\opt*{thmframebg}) von umrahmten Theoremen angegeben werden.
+
+\NoticeColorthemeDE*
+}
+
+\localeDE{
+\Option{thmimplabelstyle}\WithValues{\meta{Format}}\AndDefault{\cs*{sffamily}\cs*{bfseries}}
+\Option{thmimpnotestyle}\WithValues{\meta{Format}}\AndDefault{\cs*{sffamily}\cs*{bfseries}}
+\Option{thmimpbodystyle}\WithValues{\meta{Format}}\AndDefault{}
+Durch diese Optionen kann die Formatierung wichtiger (vom engl. \emph{important}) Theoreme bestimmt werden: Beschriftung (\opt*{thmimplabelstyle}), Name (\opt*{thmimpnotestyle}) und ihr Inhalt (\opt*{thmimpbodystyle}).
+
+\NoticeLoadBeginDE*
+}
+
+\localeDE{
+\Option{thmunimplabelstyle}\WithValues{\meta{Format}}\AndDefault{\cs*{sffamily}\cs*{bfseries}}
+\Option{thmunimpnotestyle}\WithValues{\meta{Format}}\AndDefault{\cs*{sffamily}}
+\Option{thmunimpbodystyle}\WithValues{\meta{Format}}\AndDefault{}
+Durch diese Optionen kann die Formatierung unwichtiger (vom engl. \emph{unimportant}) Theoreme bestimmt werden: Beschriftung (\opt*{thmunimplabelstyle}), Name (\opt*{thmunimpnotestyle}) und ihr Inhalt (\opt*{thmunimpbodystyle}).
+
+\NoticeLoadBeginDE*
+}
+
+\localeDE{
+\Option{thmdefinitionlabel}\WithValues{\meta{Name}}\AndDefault{Definition}
+\Option{thmdefitheolabel}\WithValues{\meta{Name}}\AndDefault{Definition/Satz}
+\Option{thmtheoremlabel}\WithValues{\meta{Name}}\AndDefault{Satz}
+\Option{thmcalcrulelabel}\WithValues{\meta{Name}}\AndDefault{Regel}
+\Option{thmexamplelabel}\WithValues{\meta{Name}}\AndDefault{Beispiel}
+\Option{thmexampleexelabel}\WithValues{\meta{Name}}\AndDefault{Beispielaufgabe}
+\Option{thmhintlabel}\WithValues{\meta{Name}}\AndDefault{Hinweis}
+\Option{thmremarklabel}\WithValues{\meta{Name}}\AndDefault{Bemerkung}
+\Option{thmsolutionlabel}\WithValues{\meta{Name}}\AndDefault{L\"osung}
+Durch diese Optionen können die Beschriftungen der vordefinierten Theoreme angegeben werden.
+}
+
+
+\localeDE{\subsection{Analytische Geometrie} \label{ssec:doc-opt-analytic-geometry}}
+
+\localeDE{
+\Option{linepname}\WithValues{\meta{Name}}\AndDefault{g}
+\Option{linepsupport}\WithValues{\meta{Stützvektor-Variable}}\AndDefault{p}
+\Option{linepdir}\WithValues{\meta{Richtungsvektor-Variable}}\AndDefault{u}
+\Option{lineppar}\WithValues{\meta{Parameter}}\AndDefault{r}
+Durch diese Optionen können die Standardwerte einer Geraden in Parameterform (\Macro\linepvar und \Macro\linepvec) gesetzt werden.
+}
+
+\localeDE{
+\Option{planepname}\WithValues{\meta{Name}}\AndDefault{E}
+\Option{planepsupport}\WithValues{\meta{Stützvektor-Variable}}\AndDefault{p}
+\Option{planepdiri}\WithValues{\meta{$\text{Spannvektor}_1$-Variable}}\AndDefault{u}
+\Option{planepdirii}\WithValues{\meta{$\text{Spannvektor}_2$-Variable}}\AndDefault{v}
+\Option{planeppari}\WithValues{\meta{$\text{Parameter}_1$-Variable}}\AndDefault{r}
+\Option{planepparii}\WithValues{\meta{$\text{Parameter}_2$-Variable}}\AndDefault{s}
+Durch diese Optionen können die Standardwerte einer Ebene in Parameterform (\Macro\planepvar und \Macro\lplanepvec) gesetzt werden.
+}
+
+\localeDE{
+\Option{planenvarname}\WithValues{\meta{Name}}\AndDefault{E}
+\Option{planenvarsupport}\WithValues{\meta{Stützvektor-Variable}}\AndDefault{p}
+\Option{planenvarnormal}\WithValues{\meta{Stützvektor-Variable}}\AndDefault{n}
+Durch diese Optionen können die Standardwerte einer Ebene in Normalenform (\Macro\planenvar und \Macro\lplanenvec) gesetzt werden.
+}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\Implementation\ExplHack
+
+\section{Implementierung}
+
+
+\subsection{Basic Packages}
+
+Die folgenden Packages werden zur Erstellung und Bearbeitung der Optionen verwendet:
+
+\begin{MacroCode}{pkg}
+\RequirePackage{expl3, l3keys2e}
+\RequirePackage{xparse}
+
+\ProvidesExplPackage{edumath}
+  {2017/05/01}
+  {0.1}
+  {Math package for educational institutions}
+
+\end{MacroCode}
+
+
+\subsection{Messages}
+
+Messages for future use:
+
+\begin{MacroCode}{pkg}
+\msg_new:nnn {edumath} {option-dep-enable} {If\ you\ enable\ the\ option\ #1,\ you\ have\ to\ enable\ the\ following\ option(s):\ #2.}
+
+\end{MacroCode}
+
+
+\subsection{Variants}
+
+\begin{MacroCode}{pkg}
+\cs_generate_variant:Nn \tl_if_eq:nnT { V }
+\cs_generate_variant:Nn \tl_if_eq:nnF { V }
+\cs_generate_variant:Nn \tl_if_eq:nnTF { V }
+
+\cs_generate_variant:Nn \tl_if_eq:nnT { v }
+\cs_generate_variant:Nn \tl_if_eq:nnF { v }
+\cs_generate_variant:Nn \tl_if_eq:nnTF { v }
+
+\end{MacroCode}
+
+
+\subsection{Temporary variables}
+
+\begin{macro*}{\g_edumath_temp_dim}
+\begin{macro*}{\g_edumath_temp_skip}
+Variables for temporary usage.
+\begin{MacroCode}{pkg}
+\dim_new:N \g_edumath_temp_dim
+\skip_new:N \g_edumath_temp_skip
+
+\end{MacroCode}
+\end{macro*}
+\end{macro*}
+
+
+\subsection{Parskip}
+
+\begin{macro*}{\g_edumath_temp_skip}
+Variable to store the documents parskip (at the beginning of the document).
+\begin{MacroCode}{pkg}
+\dim_new:N \g_edumath_parskip_dim
+\skip_new:N \g_edumath_parskip_skip
+
+\AtBeginDocument{
+  \dim_set:Nn \g_edumath_parskip_dim \parskip
+  \skip_set:Nn \g_edumath_parskip_skip \parskip
+}
+
+\end{MacroCode}
+\end{macro*}
+
+
+
+
+
+\subsection{Optionen}
+
+\subsubsection{Patches}
+
+\begin{macro}{\__edumath_keys_initial:n}[1]{<key = value list>}
+Da die Zuweisung initialer Werte in relativen Einheiten (em, ex etc.) bei \cs*{key}-Option durch \cs*{.initial} nicht funktioniert, werden diese mithilfe dieses Hilsmakros am Dokumentenanfang zugewiesen.
+\begin{MacroCode}{pkg}
+\cs_new:Npn \__edumath_keys_initial:n #1 {
+  \AtBeginDocument{
+    \keys_set:nn {edumath} {#1}
+  }
+}
+
+\end{MacroCode}
+\end{macro}
+
+\begin{macro}{\@usetl}[1]{<token list>}
+\pkg{tikz}-Optionen können (noch?) nicht in \LaTeX3 eingebettet, d.\,h. innerhalb von \cs{ExplSyntaxOn} und \cs{ExplSyntaxOff} verwendet werden. Mithilfe dieses Makros können durch \cs{keys_define} definierte Optionen dennoch in \pkg{tikz} verwendet werden.
+\begin{MacroCode}{pkg}
+\DeclareExpandableDocumentCommand \@usetl { m m } {
+  \tl_use:c {g_edumath_#1_#2}
+}
+
+\end{MacroCode}
+\end{macro}
+
+Im Folgenden werden die Optionen nach Kategorie deklariert.
+
+
+
+\subsubsection{Mathematik}
+
+\begin{option}{commasep}
+\begin{option}{amsoptions}
+Basic math options:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  commasep .bool_gset:N = \g_edumath_commasep_bool,  % Comma as separator
+  commasep .initial:n = true,
+  amsoptions .tl_gset:N = \g_edumath_amsoptions_tl,  % Pass options to amsmath-package
+  amsoptions .initial:n = intlimits,
+  specialsets .bool_gset:N = \g_edumath_specialsets_bool,        % Create macros special sets
+  specialsets .initial:n = true,
+  qtree .bool_gset:N = \g_edumath_qtree_bool,        % Because of the incompatibility of tikz-qtree and struktex, it is not loaded by default.
+  qtree .initial:n = false,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+
+\begin{option}{amsthm}
+\begin{option}{framedthm}
+\begin{option}{thmbox}
+\begin{option}{thmimpnumbered}
+\begin{option}{thmunimpnumbered}
+Basic math options:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  amsthm .bool_gset:N = \g_edumath_amsthm_bool,                      % Predefine amsthm theorems
+  amsthm .initial:n = true,
+  framedthm .bool_gset:N = \g_edumath_framedthm_bool,                % Predefine thmbox theorems
+  framedthm .initial:n = true,
+  thmbox .bool_gset:N = \g_edumath_thmbox_bool,                      % Predefine framed theorems
+  thmbox .initial:n = false,
+  thmimpnumbered .bool_gset:N = \g_edumath_thmimpnumbered_bool,      % Number important theorems
+  thmimpnumbered .initial:n = false,
+  thmunimpnumbered .bool_gset:N = \g_edumath_thmunimpnumbered_bool,  % Number unimportant theorems
+  thmunimpnumbered .initial:n = false,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+
+
+
+
+
+\begin{option}{thmlabelfg}
+\begin{option}{thmframestyle}
+\begin{option}{thmframefg}
+\begin{option}{thmframebg}
+
+Basic style options of theorem-like environments:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  thmlabelfg .tl_gset:N = \g_edumath_thmlabelfg_tl,        % Color of theorem labels
+  thmlabelfg .initial:n = black,
+  thmframefg .tl_gset:N = \g_edumath_thmframefg_tl,        % Color of framed theorem frame.
+  thmframefg .initial:n = darkgray,
+  thmframebg .tl_gset:N = \g_edumath_thmframebg_tl,        % Color of framed theorem background.
+  thmframebg .initial:n = lightgray!50,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+
+
+\begin{option}{thmimplabelstyle}
+\begin{option}{thmimpnotestyle}
+\begin{option}{thmimpbodystyle}
+Style of important theorems:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  thmimplabelstyle .tl_gset:N = \g_edumath_thmimplabelstyle_tl,  % Style of heads
+  thmimplabelstyle .initial:n = \sffamily\bfseries,
+  thmimpnotestyle .tl_gset:N = \g_edumath_thmimpnotestyle_tl,  % Style of notes
+  thmimpnotestyle .initial:n = \sffamily\bfseries,
+  thmimpbodystyle .tl_gset:N = \g_edumath_thmimpbodystyle_tl,  % Style of bodies
+  thmimpbodystyle .initial:n =,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+
+
+\begin{option}{thmunimplabelstyle}
+\begin{option}{thmunimpnotestyle}
+\begin{option}{thmunimpbodystyle}
+Style of unimportant theorems:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  thmunimplabelstyle .tl_gset:N = \g_edumath_thmunimplabelstyle_tl,  % Style of heads
+  thmunimplabelstyle .initial:n = \sffamily,
+  thmunimpnotestyle .tl_gset:N = \g_edumath_thmunimpnotestyle_tl,  % Style of notes
+  thmunimpnotestyle .initial:n = \sffamily,
+  thmunimpbodystyle .tl_gset:N = \g_edumath_thmunimpbodystyle_tl,  % Style of bodies
+  thmunimpbodystyle .initial:n =,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+
+\begin{option}{thmdefinitionlabel}
+\begin{option}{thmdefitheolabel}
+\begin{option}{thmtheoremlabel}
+\begin{option}{thmcalcrulelabel}
+\begin{option}{thmexamplelabel}
+\begin{option}{thmexampleexelabel}
+\begin{option}{thmhintlabel}
+\begin{option}{thmremarklabel}
+\begin{option}{thmsolutionlabel}
+Labels of theorems:
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  thmdefinitionlabel .tl_gset:N = \g_edumath_thmdefinitionlabel_tl, 
+  thmdefinitionlabel .initial:n = Definition,
+  thmdefitheolabel .tl_gset:N = \g_edumath_thmdefitheolabel_tl,
+  thmdefitheolabel .initial:n = Definition/Satz,
+  thmtheoremlabel .tl_gset:N = \g_edumath_thmtheoremlabel_tl,
+  thmtheoremlabel .initial:n = Satz,
+  thmcalcrulelabel .tl_gset:N = \g_edumath_thmcalcrulelabel_tl,
+  thmcalcrulelabel .initial:n = Regel,
+  thmexamplelabel .tl_gset:N = \g_edumath_thmexamplelabel_tl,
+  thmexamplelabel .initial:n = Beispiel,
+  thmexampleexelabel .tl_gset:N = \g_edumath_thmexampleexelabel_tl,
+  thmexampleexelabel .initial:n = Beispielaufgabe,
+  thmhintlabel .tl_gset:N = \g_edumath_thmhintlabel_tl,
+  thmhintlabel .initial:n = Hinweis,
+  thmremarklabel .tl_gset:N = \g_edumath_thmremarklabel_tl,
+  thmremarklabel .initial:n = Bemerkung,
+  thmsolutionlabel .tl_gset:N = \g_edumath_thmsolutionlabel_tl,
+  thmsolutionlabel .initial:n = L\"osung,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+
+
+\begin{option}{linepname}
+\begin{option}{linepsupport}
+\begin{option}{linepdir}
+\begin{option}{lineppar}
+TODO
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  linepname .tl_gset:N = \g_edumath_linepname_tl,    % Line in parametrical form with vector variable: Name
+  linepname .initial:n = g,
+  linepsupport .tl_gset:N = \g_edumath_linepsupport_tl,    % Line in parametrical form with vector variable: Support vector
+  linepsupport .initial:n = p,
+  linepdir .tl_gset:N = \g_edumath_linepdir_tl,    % Line in parametrical form with vector variable: Directional vector
+  linepdir .initial:n = u,
+  lineppar .tl_gset:N = \g_edumath_lineppar_tl,    % Line in parametrical form with vector variable: Parameter 1
+  lineppar .initial:n = r,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+
+
+\begin{option}{planepname}
+\begin{option}{planepsupport}
+\begin{option}{planepdiri}
+\begin{option}{planepdirii}
+\begin{option}{planeppari}
+\begin{option}{planepparii}
+TODO
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  planepname .tl_gset:N = \g_edumath_planepname_tl,    % Plane in parametrical form with vector variable: Name
+  planepname .initial:n = E,
+  planepsupport .tl_gset:N = \g_edumath_planepsupport_tl,    % Plane in parametrical form with vector variable: Support vector
+  planepsupport .initial:n = p,
+  planepdiri .tl_gset:N = \g_edumath_planepdiri_tl,    % Plane in parametrical form with vector variable: Directional vector 1
+  planepdiri .initial:n = u,
+  planepdirii .tl_gset:N = \g_edumath_planepdirii_tl,    % Plane in parametrical form with vector variable: Directional vector 2
+  planepdirii .initial:n = v,
+  planeppari .tl_gset:N = \g_edumath_planeppari_tl,    % Plane in parametrical form with vector variable: Parameter 1
+  planeppari .initial:n = r,
+  planepparii .tl_gset:N = \g_edumath_planepparii_tl,    % Plane in parametrical form with vector variable: Parameter 2
+  planepparii .initial:n = s,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+\end{option}
+
+
+\begin{option}{planenvarname}
+\begin{option}{planenvarsupport}
+\begin{option}{planenvarnormal}
+TODO
+\begin{MacroCode}{pkg}
+\keys_define:nn {edumath} {
+  planenvarname .tl_gset:N = \g_edumath_planenvarname_tl,    % Plane in normal form with vector variable: Name
+  planenvarname .initial:n = E,
+  planenvarsupport .tl_gset:N = \g_edumath_planenvarsupport_tl,    % Plane in normal form with vector variable: Support vector
+  planenvarsupport .initial:n = p,
+  planenvarnormal .tl_gset:N = \g_edumath_planenvarnormal_tl,    % Plane in normal form with vector variable: Normal vector
+  planenvarnormal .initial:n = n,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+\end{option}
+
+
+
+
+\subsubsection{Optionen verarbeiten}
+
+\begin{MacroCode}{pkg}
+%\ProcessOptions              % LaTeX-Basics (for \PassOptionsTopkg)
+\ProcessKeysOptions{edumath}  % l3keys2e options
+
+\end{MacroCode}
+
+
+\subsection{Packages laden}
+
+Informationen der einzelnen Packages sind der jeweiligen Dokumentation zu entnehmen.
+
+
+
+\subsubsection{Grundlegende Packages}
+
+\begin{MacroCode}{pkg}
+\RequirePackage{calc}
+\RequirePackage{etoolbox}
+
+\end{MacroCode}
+
+
+
+\subsubsection{TikZ}
+
+\begin{MacroCode}{pkg}
+\RequirePackage{tikz}
+
+\ExplSyntaxOff  % Important! \usetikzlibrary doesn't work within \ExplSyntax*.
+\usetikzlibrary{calc}
+\ExplSyntaxOn
+
+\end{MacroCode}
+
+
+\subsubsection{Mathematik}
+
+\begin{MacroCode}{pkg}
+\RequirePackage[\g_edumath_amsoptions_tl]{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{cancel}
+\RequirePackage{esvect}
+\RequirePackage{gauss}
+\RequirePackage{polynom}
+\RequirePackage{thmtools}
+\RequirePackage[only, lightning]{stmaryrd}
+\RequirePackage{xlop}
+
+
+\end{MacroCode}
+
+
+Because of the incompatibility of \textsf{tikz-qtree} and \textsf{struktex}, it is not loaded by default.
+
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_qtree_bool {
+  \ExplSyntaxOff
+  \RequirePackage{tikz-qtree}
+  \ExplSyntaxOn
+}
+
+
+\end{MacroCode}
+
+
+\begin{macro*}{\c_colon_tl}
+Define a token list which can be used as a colon in \textsf{TikZ} within \cs*{\ExplSyntaxOn} and \cs*{\ExplSyntaxOff}.
+\begin{MacroCode}{pkg}
+\tl_const:Nx \c_colon_tl { \token_to_str:N : }
+
+\end{MacroCode}
+\end{macro*}
+
+
+
+
+\subsection{Einrichtung des \textsf{edumath}-Packages}
+
+\begin{macro}{\edumathsetup}[1]{<key>=<val> list}
+\begin{macro}{\edumathoption}[2]{<key>}{<val>}
+Wrapper für \cs{setkeys} zum Setzen der Optionen.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand  \edumathsetup { m } {
+  \keys_set:nn {edumath} {#1}
+}
+
+\DeclareDocumentCommand  \edumathoption { m m } {
+  \keys_set:nn {edumath} {#1=#2}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+
+%\subsection{Einrichtung des \textsf{edumath}-Packages}
+%
+%Wrapper für \cs{setkeys} zum Setzen der Optionen.
+%\begin{MacroCode}{pkg}
+%\cs_new:Npn \edumath_setpar: {
+%  \bool_if:NTF \g_edumath_parindent_bool {
+%    \bool_if:NT \g_edumath_parskip_bool {
+%      \KOMAoptions{parskip=half}
+%    }
+%    \setlength{\parindent}{1em} % Important: After \KOMAoptions{parskip=half}
+%  }{
+%    \bool_if:NT \g_edumath_parskip_bool {
+%      \KOMAoptions{parskip=half}
+%    }
+%    \setlength{\parindent}{0em}
+%  }
+%}
+%
+%\end{MacroCode}
+
+
+
+
+\subsection{Mathematik}
+
+\subsubsection{Längen anpassen}
+
+Zum Einsparen von Platz, werden Abstände vor und nach Gleichungen 
+verkleinert.
+
+\begin{MacroCode}{pkg}
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{1.2ex plus 0.2ex minus 0.1ex}
+  \setlength{\abovedisplayshortskip}{1ex plus 0.2ex minus 0.2ex}
+  \setlength{\belowdisplayskip}{1.2ex plus 0.2ex minus 0.1ex}
+  \setlength{\belowdisplayshortskip}{1ex plus 0.2ex minus 0.2ex}
+}
+
+\end{MacroCode}
+
+
+\subsubsection{Komma als Dezimaltrenner}
+
+Abhängig von der Option \opt{commasep} wird mithilfe des Packages \pkg{icomma} das Komma als Dezimaltrenner verwendet.
+
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_commasep_bool {
+  \RequirePackage{icomma}
+}
+
+\end{MacroCode}
+
+
+\subsubsection{Gleichungsumgebungen}
+
+\begin{environment}{aligntr}
+\begin{environment}{aligntr*}
+Gleichungsumgebung zum Setzen von Äquivalenzumformungen 
+(Transformations). Verwendet intern \env*{alignat}. Als Trenner für 
+Umformungen sollte \cs{tr} verwendet werden. Die Sternvariante erzeugt 
+Gleichungen ohne Nummerierung.
+\begin{MacroCode}{pkg}
+
+\DeclareDocumentEnvironment {aligntr} { s } {
+  \IfBooleanTF {#1} {
+    \csname alignat*\endcsname{2}
+  }{
+    \alignat{2}
+  }
+}{
+  \IfBooleanTF {#1} {
+  \csname endalignat*\endcsname
+  }{
+  \endalignat
+  }
+}
+
+% Hack, because xparse doesn't generate starred environments:
+\cs_new:cpn {aligntr*} {\aligntr*}
+\cs_new_eq:cN {endaligntr*} \endaligntr
+
+\end{MacroCode}
+\end{environment}
+\end{environment}
+
+\begin{macro}{\tr}
+Dient als Trenner für Umformungen in \env*{aligntr}.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \tr { } {&& \mid}
+
+\end{MacroCode}
+\end{macro}
+
+
+\subsubsection{Rechenbäume}
+
+Rechenbäume können mithilfe des Packages \textsf{tikz-qtree} erstellt werden. Dieses wir hier geladen und konfiguriert.
+
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_qtree_bool {  
+	\tikzset{
+	  edge~from~parent/.style={
+	    draw,
+	    edge~from~parent~path={
+	        (\tikzparentnode.north) -| (\tikzchildnode)
+	    }
+	  }
+	}
+	
+	\tikzset{
+	  bet/.style = {
+	    grow'=up, 
+	    every~internal~node/.style={
+	        draw,
+	        circle,
+	        inner~sep=0pt,
+	        minimum~size=2ex
+	    }
+	  },
+	  betroot/.style={
+	    draw=none,
+	    inner~sep=0pt
+	  },
+	  betr/.style={
+	    draw,
+	    rectangle,
+	    inner~sep=2pt
+	  }
+	}
+	
+	\tikzset{
+	  level~distance=3.5ex, 
+	  sibling~distance=2ex, 
+	  frontier/.style={distance~from~root=10.5ex}
+	}
+}
+
+\end{MacroCode}
+
+
+
+
+\subsubsection{Theorem-Umgebungen}
+
+First, check option-dependencies:
+
+\begin{MacroCode}{pkg}
+\bool_if:nT {
+  \bool_if_p:N \g_edumath_thmbox_bool && 
+  (!\bool_if_p:N \g_edumath_thmimpnumbered_bool || !\bool_if_p:N \g_edumath_thmunimpnumbered_bool)
+} {
+  \msg_error:nnnn {edumath} {option-dep-enable} {`thmbox'} {`thmimpnumbered', `thmunimpnumbered'}
+}
+
+\end{MacroCode}
+
+
+\begin{macro}{\g__edumath_thmafterskip_skip}
+\begin{macro}{\g__edumath_thmbeforeskip_skip}
+\begin{macro}{\g__edumath_thmimp_seq}
+\begin{macro}{\g__edumath_thmunimp_seq}
+Zuerst werden benötigte Längen definiert. After that, sequences with the different names of the theorems are defined.
+\begin{MacroCode}{pkg}
+\skip_new:N \g__edumath_thmafterskip_skip
+\skip_new:N \g__edumath_thmbeforeskip_skip
+
+\skip_set:Nn \g__edumath_thmafterskip_skip {0.5\baselineskip-\parskip}
+\skip_set:Nn \g__edumath_thmbeforeskip_skip {0.5\baselineskip}
+
+\seq_new:N \g__edumath_thmimp_seq
+
+\seq_gput_right:Nn \g__edumath_thmimp_seq {definition}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+
+\seq_new:N \g__edumath_thmunimp_seq
+
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {example}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {exampleexe}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {hint}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {remark}
+\seq_gput_right:Nn \g__edumath_thmunimp_seq {solution}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+Now, the theorem styles are defined. For this purpose, two control sequences \cs{__edumath_theoremstyleimp:n} and \cs{__edumath_theoremstyleimp:n} are defined, which take an argument for numbered theorems (\texttt{yes} or \texttt{no}).
+
+Depending on the options \opt{theoremstyleimp} and \opt{theoremstyleunimp} the theoremstyles are declared.
+
+\begin{macro}{\edumath_theoremstyleimp:n}[1]{<numbered yes|no>}
+\begin{macro}{\edumath_theoremstyleunimp:n}[1]{<numbered yes|no>}
+\begin{MacroCode}{pkg}
+\cs_new:Npn \edumath_theoremstyleimp:n #1 {
+	\declaretheoremstyle[%
+	  spaceabove=\g__edumath_thmbeforeskip_skip, spacebelow=\g__edumath_thmafterskip_skip,
+	  headfont=\g_edumath_thmimplabelstyle_tl\color{\g_edumath_thmlabelfg_tl},
+	  notefont=\g_edumath_thmimpnotestyle_tl, notebraces={\!:\hspace{0.5em}}{},
+	  bodyfont=\g_edumath_thmimpbodystyle_tl,
+	  headpunct={},
+	  postheadspace=0.75em,
+	  numbered=#1
+	]{important}
+}
+
+\cs_new:Npn \edumath_theoremstyleunimp:n #1 {
+	\declaretheoremstyle[%
+	  spaceabove=\g__edumath_thmbeforeskip_skip, spacebelow=\g__edumath_thmafterskip_skip,
+	  headfont=\g_edumath_thmunimplabelstyle_tl\color{\g_edumath_thmlabelfg_tl},
+	  notefont=\g_edumath_thmunimpnotestyle_tl, notebraces={\hspace{0.2em}(}{)},
+	  bodyfont=\g_edumath_thmunimpbodystyle_tl,
+	  headpunct={:},
+	  postheadspace=0.25em,
+	  numbered=#1
+	]{unimportant}
+}
+
+\bool_if:NTF \g_edumath_thmimpnumbered_bool {
+  \edumath_theoremstyleimp:n {yes}
+}{
+  \edumath_theoremstyleimp:n {no}
+}
+
+\bool_if:NTF \g_edumath_thmunimpnumbered_bool {
+  \edumath_theoremstyleunimp:n {yes}
+}{
+  \edumath_theoremstyleunimp:n {no}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+\begin{environment}{definition}[1]{[<definition name>]}
+\begin{environment}{defitheo}[1]{[<definition/theorem name>]}
+\begin{environment}{theorem}[1]{[<theorem name>]}
+\begin{environment}{calcrule}[1]{[<calculation rule name>]}
+\begin{environment}{example}[1]{[<example name>]}
+\begin{environment}{exampleexe}[1]{[<example exercise name>]}
+\begin{environment}{hint}[1]{[<hint name>]}
+\begin{environment}{remark}[1]{[<remark name>]}
+\begin{environment}{solution}[1]{[<solution name>]}
+Dann werden die Theoremumgebungen definiert. Zuerst die Standard-Umgebungen vom \pkg{amsthm}:
+
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_amsthm_bool {
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+    \declaretheorem[style=important, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+    \declaretheorem[style=unimportant, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
+  }
+}
+
+\end{MacroCode}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+
+
+
+\begin{macro}{\edumath_framedthmimp:nx}[2]{<theoremname>}{<sharenumber-option>}
+\begin{macro}{\edumath_framedthmunimp:nx}[2]{<theoremname>}{<sharenumber-option>}
+Nun werden die Theoremugebungen mit Hintergrund und/oder Rahmen (\pkg{thmtools} verwendet hierzu \pkg{shadethm}) definiert. Es wird mit einem Wrapper gearbeitet, um Abstände anzupassen.
+
+Two control sequences to build \cs{declaretheorem} for framed/shared theorems. \texttt{<theoremname>} should be one of the names of \cs{__edumath_thmimp}/\cs{__edumath_thmunimp}. \texttt{<sharenumber-option>} should be \texttt{sharenumber=X,}, where X can be replaced by a theorem name.
+
+After that, the control sequences are called for all names within \cs{__edumath_thmimp}/\cs{__edumath_thmunimp}.
+\begin{MacroCode}{pkg}
+
+
+\bool_if:NT \g_edumath_framedthm_bool {
+  
+  \cs_new:Npn \edumath_framedthmimp:nx #1 #2 {
+    \declaretheorem[%
+	    style=important,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    #2
+	    shaded={%
+	      bgcolor=\g_edumath_thmframebg_tl,%
+	      textwidth=\linewidth-1em-2pt,%
+	      margin=0.5em,%
+	      leftmargin=0em,%
+	      rightmargin=0em,%
+	      rulecolor=\g_edumath_thmframefg_tl,%
+	      rulewidth=1pt
+	    },
+	    preheadhook=,
+	    postheadhook=,
+    ]{#1fthm}
+  }
+  
+  \cs_new:Npn \edumath_framedthmunimp:nx #1 #2 {
+    \declaretheorem[%
+	    style=unimportant,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    #2
+	    shaded={%
+	      bgcolor=\g_edumath_thmframebg_tl,%
+	      textwidth=\linewidth-1em-2pt,%
+	      margin=0.5em,%
+	      leftmargin=0em,%
+	      rightmargin=0em,%
+	      rulecolor=\g_edumath_thmframefg_tl,%
+	      rulewidth=1pt
+	    },
+	    preheadhook=,
+	    postheadhook=,
+    ]{#1fthm}
+  }
+  
+  
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+    
+    \bool_if:NTF \g_edumath_thmimpnumbered_bool {
+      \edumath_framedthmimp:nx {#1}{sharenumber=#1,}
+    }{
+      \edumath_framedthmimp:nx {#1}{}
+    }
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+    
+    \bool_if:NTF \g_edumath_thmunimpnumbered_bool {
+      \edumath_framedthmunimp:nx {#1}{sharenumber=#1,}
+    }{
+      \edumath_framedthmunimp:nx {#1}{}
+    }
+  }
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+
+\begin{environment}{definitionfthm}[1]{[<definition name>]}
+\begin{environment}{defitheofthm}[1]{[<definition/theorem name>]}
+\begin{environment}{theoremfthm}[1]{[<theorem name>]}
+\begin{environment}{calcrulefthm}[1]{[<calculation rule name>]}
+\begin{environment}{examplefthm}[1]{[<example name>]}
+\begin{environment}{exampleexefthm}[1]{[<example exercise name>]}
+\begin{environment}{hintfthm}[1]{[<hint name>]}
+\begin{environment}{remarkfthm}[1]{[<remark name>]}
+\begin{environment}{solutionfthm}[1]{[<solution name>]}
+Now, the user commands are declared separately, to manipulate the spacing arount the theorems.
+\begin{MacroCode}{pkg}
+
+\bool_if:NT \g_edumath_framedthm_bool {
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+    
+   \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+      \vspace{-0.3\baselineskip}%
+      \vspace{-0.5\parskip}%
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+      \dim_set:Nn \g_edumath_temp_dim \parindent
+      \IfNoValueTF {##1} {
+        \begin{\use:n {#1 fthm}}%
+      }{
+        \begin{\use:n {#1 fthm}}[##1]
+      }
+      \setlength{\parskip}{\g_edumath_temp_skip}
+      \setlength{\parindent}{\g_edumath_temp_dim}
+      \vspace{-\parskip}%
+    }{
+      \end{\use:n {#1 fthm}}%
+      %\vspace{-0.3\baselineskip}%
+      \vspace{-0.5\parskip}%
+    }
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+    
+    \DeclareDocumentEnvironment {\use:n {#1 f}} { o } {
+      \vspace{-0.3\baselineskip}%
+      %\vspace{0.5\parskip}%
+      \skip_set:Nn \g_edumath_temp_skip \parskip
+      \dim_set:Nn \g_edumath_temp_dim \parindent
+      \IfNoValueTF {##1} {
+        \begin{\use:n {#1 fthm}}%
+      }{
+        \begin{\use:n {#1 fthm}}[##1]
+      }
+      \setlength{\parskip}{\g_edumath_temp_skip}
+      \setlength{\parindent}{\g_edumath_temp_dim}
+      \vspace{-\parskip}%
+    }{
+      \end{\use:n {#1 fthm}}%
+      %\vspace{-0.3\baselineskip}%
+      %\vspace{0.5\parskip}%
+    }
+  }  
+}
+
+\end{MacroCode}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+
+
+\begin{environment}{definitionbs}[1]{[<definition name>]}
+\begin{environment}{definitionbm}[1]{[<definition name>]}
+\begin{environment}{definitionbl}[1]{[<definition name>]}
+\begin{environment}{defitheobs}[1]{[<definition/theorem name>]}
+\begin{environment}{defitheobm}[1]{[<definition/theorem name>]}
+\begin{environment}{defitheobl}[1]{[<definition/theorem name>]}
+\begin{environment}{theorembs}[1]{[<theorem name>]}
+\begin{environment}{theorembm}[1]{[<theorem name>]}
+\begin{environment}{theorembl}[1]{[<theorem name>]}
+\begin{environment}{calcrulebs}[1]{[<calculation rule name>]}
+\begin{environment}{calcrulebm}[1]{[<calculation rule name>]}
+\begin{environment}{calcrulebl}[1]{[<calculation rule name>]}
+\begin{environment}{examplebs}[1]{[<example name>]}
+\begin{environment}{examplebm}[1]{[<example name>]}
+\begin{environment}{examplebl}[1]{[<example name>]}
+\begin{environment}{exampleexebs}[1]{[<example exercise name>]}
+\begin{environment}{exampleexebm}[1]{[<example exercise name>]}
+\begin{environment}{exampleexebl}[1]{[<example exercise name>]}
+\begin{environment}{hintbs}[1]{[<hint name>]}
+\begin{environment}{hintbm}[1]{[<hint name>]}
+\begin{environment}{hintbl}[1]{[<hint name>]}
+\begin{environment}{remarkbs}[1]{[<remark name>]}
+\begin{environment}{remarkbm}[1]{[<remark name>]}
+\begin{environment}{remarkbl}[1]{[<remark name>]}
+\begin{environment}{solutionbs}[1]{[<solution name>]}
+\begin{environment}{solutionbm}[1]{[<solution name>]}
+\begin{environment}{solutionbl}[1]{[<solution name>]}
+Es folgen die Theoremugebungen durch \pkg{thmbox} in allen Varianten. Seltsamerweise muss der Wert von \cs{thmbox@leftmargin} neu gesetzt werden, ansonsten kommt es zu Komplikationen bei \texttt{parskip=true}:
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_thmbox_bool {
+  
+  \seq_map_inline:Nn \g__edumath_thmimp_seq {
+	  \declaretheorem[%
+	    style=important,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=S,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bs}
+  
+	  \declaretheorem[%
+	    style=important,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=M,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bm}
+	    
+	  \declaretheorem[%
+	    style=important,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=L,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bl}
+  }
+  
+  \seq_map_inline:Nn \g__edumath_thmunimp_seq {
+	 \declaretheorem[%
+	    style=unimportant,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=S,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bs}
+	  
+	 \declaretheorem[%
+	    style=unimportant,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=M,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bm}
+	  
+	 \declaretheorem[%
+	    style=unimportant,
+	    name=\use:c {g_edumath_thm #1 label_tl},
+	    sharenumber=#1,
+	    thmbox=L,
+	    preheadhook={
+	      \skip_set:Nn \g_edumath_temp_skip \parskip
+        \dim_set:Nn \g_edumath_temp_dim \parindent
+	    },
+	    postheadhook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+        \hspace{-0.5em}
+	    },
+	    postfoothook={
+	      \setlength{\parskip}{\g_edumath_temp_skip}
+        \setlength{\parindent}{\g_edumath_temp_dim}
+	    }
+	  ]{#1bl}
+  }
+  
+  \setlength{\thmbox@leftmargin}{1.5em}
+
+}%
+
+\end{MacroCode}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
+
+
+
+\subsubsection{Symbole für spezielle Mengen}
+
+\begin{macro}{\N}
+\begin{macro}{\Z}
+\begin{macro}{\Q}
+\begin{macro}{\R}
+\begin{macro}{\I}
+\begin{macro}{\C}
+\begin{macro}{\L}
+Definiert Symbole für spezielle Mengen.
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_specialsets_bool {
+	\DeclareDocumentCommand \N { } {\ensuremath{\mathbb{N}}}
+	\DeclareDocumentCommand \Z { } {\ensuremath{\mathbb{Z}}}
+	\DeclareDocumentCommand \Q { } {\ensuremath{\mathbb{Q}}}
+	\DeclareDocumentCommand \R { } {\ensuremath{\mathbb{R}}}
+	\DeclareDocumentCommand \I { } {\ensuremath{\mathbb{I}}}
+	\DeclareDocumentCommand \C { } {\ensuremath{\mathbb{C}}}
+	\DeclareDocumentCommand \L { } {\ensuremath{\mathbb{L}}}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+
+\subsubsection{Vektoren}
+
+\begin{macro}{\vec}[1]{<expression>}
+Anderer Name für einen Vektor markiert durch einen Pfeil, der durch \cs*{vv} aus dem Package \pkg{esvect} erzeugt wird.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \vec { m } {\vv{#1}}
+
+\end{MacroCode}
+\end{macro}
+
+
+\begin{macro}{\vect}[1]{<expressions in matrix-syntax>}
+Verkürzte Erzeugung eines Spaltenvektors durch \env*{pmatrix}-Umgebung.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \vect { m } {\begin{pmatrix} #1 \end{pmatrix}}
+
+\end{MacroCode}
+\end{macro}
+
+
+\subsubsection{Gleichungssysteme/Gauß-Verfahren}
+
+In \pkg{gauss} sollen die Zeilenumformungen angezeigt werden:
+
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \rowswapfromlabel { m } {#1}
+\DeclareDocumentCommand \rowswaptolabel { m } {#1}
+
+\end{MacroCode}
+
+\begin{environment}{gmatrix*}[1]{[<arraycolsep>]}
+\begin{environment}{gmatrixp*}[1]{[<arraycolsep>]}
+\begin{environment}{gmatrixv*}[1]{[<arraycolsep>]}
+Declare starred versions of the \pkg{gauss}-environments with optional \cs{arraycolsep}.
+\begin{MacroCode}{pkg}
+\DeclareDocumentEnvironment {gmatrix*} { O{2pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}%
+}{%
+  \end{gmatrix}
+}
+
+\DeclareDocumentEnvironment {gmatrixp*} { O{4pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}[p]%
+}{%
+  \end{gmatrix}
+}
+
+\DeclareDocumentEnvironment {gmatrixv*} { O{4pt} } {%
+  \setlength{\arraycolsep}{#1}
+  \begin{gmatrix}[v]%
+}{%
+  \end{gmatrix}
+}
+
+\end{MacroCode}
+\end{environment}
+\end{environment}
+\end{environment}
+
+\begin{macro}{\vect}[1]{<expressions in matrix-syntax>}
+This command can be used to typeset a horizontal rule inside an array which spans over the whole height of the cell.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \mvsep { } {
+  % From localghost@golatex
+  \hspace{0.25em}\kern-\tabcolsep\vrule height\arraystretch\ht\strutbox depth\arraystretch\dp\strutbox\kern-\tabcolsep\hspace{0.25em}
+} 
+
+\end{MacroCode}
+\end{macro}
+
+
+\subsubsection{Schriftliche Grundrechenarten}
+
+Set up \textsf{xlop} to look as much as possible like the german school notation.
+
+\begin{MacroCode}{pkg}
+\opset{voperation=top}                % Vertikale Ausrichtung der Rechnung
+\opset{voperator=bottom}              % Rechenzeichen in unterer Zeile
+\opset{carrysub=true}                 % Übertrag bei Subtraktion
+\opset{decimalsepsymbol={,}}          % Dezimaltrenner
+\opset{shiftintermediarysymbol=0}     % Mult: Nullen zum Auffüllen
+\opset{displayshiftintermediary=all}  % Mult: Zeilen mit Nullen auffüllen
+\opset{displayintermediary=all}       % Mult: Auch Nullzeilen anzeigen
+\opset{shiftdecimalsep=divisor}       % Div: Nur Nachkommastellen des Divisiors beseitigen
+
+\end{MacroCode}
+
+
+
+
+\subsubsection{Polynomdivision}
+
+Polynomdivision wird durch \textsf{polynom} durchgeführt. Dieses Package wird an dieser Stelle konfiguriert.
+
+\begin{MacroCode}{pkg}
+\polyset{style=C, div=:}
+
+\end{MacroCode}
+
+\subsubsection{Typographie}
+
+\begin{macro}{\qtext}[1]{<text>}
+\begin{macro}{\qqtext}[1]{<text>}
+\begin{macro}{\qund}
+\begin{macro}{\qqund}
+\begin{macro}{\qoder}
+\begin{macro}{\qqoder}
+\begin{macro}{\qmath}[1]{<expression>}
+\begin{macro}{\qqmath}[1]{<expression>}
+\begin{macro}{\qRightarrow}
+\begin{macro}{\qrightarrow}
+\begin{macro}{\qLeftarrow}
+\begin{macro}{\qleftarrow}
+\begin{macro}{\qLeftrightarrow}
+\begin{macro}{\qleftrightarrow}
+\begin{macro}{\qqRightarrow}
+\begin{macro}{\qqrightarrow}
+\begin{macro}{\qqLeftarrow}
+\begin{macro}{\qqleftarrow}
+\begin{macro}{\qqLeftrightarrow}
+\begin{macro}{\qqleftrightarrow}
+Einfügen von Text/Formeln mit beidseitigem Abstand \cs*{quad} bzw. \cs{qquad} im Mathemodus.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \qtext { m } {\ensuremath{\quad\text{#1}\quad}}
+\DeclareDocumentCommand \qqtext { m } {\ensuremath{\qquad\text{#1}\qquad}}
+
+\DeclareDocumentCommand \qund {  } {\qtext{und}}
+\DeclareDocumentCommand \qqund {  } {\qqtext{und}}
+
+\DeclareDocumentCommand \qoder {  } {\qtext{oder}}
+\DeclareDocumentCommand \qqoder {  } {\qqtext{oder}}
+
+\DeclareDocumentCommand \qmath { m } {\ensuremath{\quad #1 \quad}}
+\DeclareDocumentCommand \qqmath { m } {\ensuremath{\qquad #1 \qquad}}
+
+\DeclareDocumentCommand \qRightarrow {  } {\qmath{\Rightarrow}}
+\DeclareDocumentCommand \qrightarrow {  } {\qmath{\rightarrow}}
+\DeclareDocumentCommand \qLeftarrow {  } {\qmath{\Leftarrow}}
+\DeclareDocumentCommand \qleftarrow {  } {\qmath{\leftarrow}}
+\DeclareDocumentCommand \qLeftrightarrow {  } {\qmath{\Leftrightarrow}}
+\DeclareDocumentCommand \qleftrightarrow {  } {\qmath{\leftrightarrow}}
+
+\DeclareDocumentCommand \qqRightarrow {  } {\qqmath{\Rightarrow}}
+\DeclareDocumentCommand \qqrightarrow {  } {\qqmath{\rightarrow}}
+\DeclareDocumentCommand \qqLeftarrow {  } {\qqmath{\Leftarrow}}
+\DeclareDocumentCommand \qqleftarrow {  } {\qqmath{\leftarrow}}
+\DeclareDocumentCommand \qqLeftrightarrow {  } {\qqmath{\Leftrightarrow}}
+\DeclareDocumentCommand \qqleftrightarrow {  } {\qqmath{\leftrightarrow}}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+
+\subsubsection{Betrag und Norm -- auch von Vektoren}
+
+\begin{macro}{\abs}[1]{<expression>}
+\begin{macro}{\absvec}[1]{<expression>}
+\begin{macro}{\abs*}[1]{<expression>}
+\begin{macro}{\absvec*}[1]{<expression>}
+\begin{macro}{\norm}[1]{<expression>}
+\begin{macro}{\normvec}[1]{<expression>}
+\begin{macro}{\norm*}[1]{<expression>}
+\begin{macro}{\normvec*}[1]{<expression>}
+Makros für (Vektor-)Beträge und (Vektor-)Normen. In den Sternvarianten skalieren die Klammern nicht.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \abs { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\lvert #2 \rvert}
+  }{
+    \ensuremath{\left| #2 \right|}
+  }
+}
+
+\DeclareDocumentCommand \absvec { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\abs*{\vec{#2}}}
+  }{
+    \ensuremath{\abs{\vec{#2}}}
+  }
+}
+
+\DeclareDocumentCommand \norm { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\lVert #2 \rVert}
+  }{
+    \ensuremath{\left\lVert #2 \right\rVert}
+  }
+}
+
+\DeclareDocumentCommand \normvec { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\norm*{\vec{#2}}}
+  }{
+    \ensuremath{\norm{\vec{#2}}}
+  }
+
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+
+\subsubsection{Special Equations/Formulas}
+
+\begin{macro}{\qf}
+\begin{macro}{\qfvar}
+\begin{macro}{\qfr}
+\begin{macro}{\qfrvar}
+Quadric equations:
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \qf { m m m } {
+  \ensuremath \frac{- #2 \pm \sqrt{#2^2 - 4 #1 #3}}{2 #1}
+}
+
+\DeclareDocumentCommand \qfvar { m m m } {
+  \ensuremath \frac{#1 \pm \sqrt{#2}}{#3}
+}
+
+\DeclareDocumentCommand \qfr { m m } {
+  \ensuremath -\frac{#1}{2} \pm \sqrt{\left(\frac{#1}{2}\right)^2 - #2}
+}
+
+\DeclareDocumentCommand \qfrvar { m m } {
+  \ensuremath #1 \pm \sqrt{#2}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+\begin{macro}{\linepvar}[4]{[<name>]}{[<support vector>]}{[<directional vector>]}{[<parameter>]}
+\begin{macro}{\linepvec}[4]{[<name>]}{[<support vector>]}{[<directional vector>]}{[<parameter>]}
+Lines in parametrical form:
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \linepvar { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
+  \ensuremath
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \IfBooleanTF {#1} {
+    \vec{x} = #3 + #5 #4
+  }{
+    \vec{x} = \vec{#3} + #5 \vec{#4}
+  }
+}
+
+\DeclareDocumentCommand \linepvec { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} = 
+    \vect{
+      #3 \c_math_subscript_token 1 \\ 
+		  #3 \c_math_subscript_token 2 \\ 
+		  #3 \c_math_subscript_token 3 
+    } + 
+    #5
+    \vect{
+      #4 \c_math_subscript_token 1 \\ 
+		  #4 \c_math_subscript_token 2 \\ 
+		  #4 \c_math_subscript_token 3 
+    }
+	}{
+	  \vec{x} = \vect{#3} + #5 \vect{#4}
+	}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+\begin{macro}{\planepvar}[6]{[<name>]}{[<support vector>]}{[<directional vector 1>]}{[<directional vector 2>]}{[<parameter 1>]}{[<parameter 2>]}
+\begin{macro}{\planepvec}[6]{[<name>]}{[<support vector>]}{[<directional vector 1>]}{[<directional vector 2>]}{[<parameter 1>]}{[<parameter 2>]}
+Planes in parametrical form:
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \planepvar { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} = #3 + #6 #4 + #7 #5
+  }{
+    \vec{x} = \vec{#3} + #6 \vec{#4} + #7 \vec{#5}
+  }
+}
+
+\DeclareDocumentCommand \planepvec { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \vec{x} = 
+    \vect{
+      #3 \c_math_subscript_token 1 \\ 
+		  #3 \c_math_subscript_token 2 \\ 
+		  #3 \c_math_subscript_token 3 
+    } + 
+    #6
+    \vect{
+      #4 \c_math_subscript_token 1 \\ 
+		  #4 \c_math_subscript_token 2 \\ 
+		  #4 \c_math_subscript_token 3 
+    } + 
+    #7
+    \vect{
+      #5 \c_math_subscript_token 1 \\ 
+		  #5 \c_math_subscript_token 2 \\ 
+		  #5 \c_math_subscript_token 3 
+    }
+	}{
+	  \vec{x} = \vect{#3} + #6 \vect{#4} + #7 \vect{#5}
+	}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+\begin{macro}{\planenvar}[3]{[<name>]}{[<support vector>]}{[<normal vector>]}
+\begin{macro}{\planenvec}[3]{[<name>]}{[<support vector>]}{[<normal vector>]}
+Planes in normal form:
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \planenvar { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
+  \tl_if_empty:nF {#2} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+    \left( \vec{x} - #3 \right) \cdot #4 = 0
+  }{
+    \left( \vec{x} - \vec{#3} \right) \cdot \vec{#4} = 0
+  }
+}
+
+\DeclareDocumentCommand \planenvec { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
+  \tl_if_empty:nF {#1} {
+    #2:
+  }
+  \ensuremath
+  \IfBooleanTF {#1} {
+	  \left[ 
+	    \vec{x} - 
+		  \vect{
+		    #3 \c_math_subscript_token 1 \\ 
+		    #3 \c_math_subscript_token 2 \\ 
+		    #3 \c_math_subscript_token 3
+	    } 
+	  \right] \cdot 
+	  \vect{
+	    #4 \c_math_subscript_token 1 \\ 
+	    #4 \c_math_subscript_token 2 \\ 
+	    #4 \c_math_subscript_token 3
+	  } = 0
+	}{
+	  \left[ \vec{x} - \vect{#3} \right] \cdot \vect{#4} = 0
+	}
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+\subsubsection{Planfiguren}
+
+\begin{macro}{\planfigurLines}[1]{<edges to highlight>}
+\begin{macro}{\planfigurAngles}[1]{<angles to highlight>}
+These commands are used to draw the highlighted elements (edges, angles) of the following \Macro\planfigur. They are necessary because of the incompatibility between \textsf{expl3} and \textsf{tikz}.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \planfigurLines { m } {
+
+  \tl_clear:N \__edumath_planfigur_temp
+  
+  \tl_if_in:nnT {#1} {a} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (b) -- (c);}
+  }
+  
+  \tl_if_in:nnT {#1} {b} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (a) -- (c);}
+  }
+  
+  \tl_if_in:nnT {#1} {c} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw (a) -- (b);}
+  }
+  
+  \tl_use:N \__edumath_planfigur_temp
+}
+
+\DeclareExpandableDocumentCommand \planfigurAngles { m } {
+  \tl_if_in:nnT {#1} {a} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(a) + (0 \c_colon_tl 0.7)$) arc (0 \c_colon_tl 40 \c_colon_tl 0.7) ($(a) + (20 \c_colon_tl 0.5)$) node {$\alpha$};}
+  }
+  \tl_if_in:nnT {#1} {b} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(b) + (120 \c_colon_tl 0.7)$) arc (120 \c_colon_tl 180 \c_colon_tl 0.7) ($(b) + (150 \c_colon_tl 0.45)$) node {$\beta$};}
+  }
+  \tl_if_in:nnT {#1} {c} {
+    \tl_put_right:Nn \__edumath_planfigur_temp {\draw ($(c) + (220 \c_colon_tl 0.7)$) arc (220 \c_colon_tl 300 \c_colon_tl 0.7) ($(c) + (263 \c_colon_tl 0.4)$) node {$\gamma$};}
+  }
+  
+  \tl_use:N \__edumath_planfigur_temp
+}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+\begin{macro}{\planfigur}[2]{<edges to highlight>}{<angles to highlight>}
+Draws a "`planfigur"' (sketch) of a triangle, where the given edges and angles are highlighted.
+\begin{MacroCode}{pkg}
+\ExplSyntaxOff
+
+\DeclareDocumentCommand \planfigur { O{1.0} m m } {
+  \begin{tikzpicture}[scale=#1, line join=round, thick]
+
+    \coordinate (a) at (0,0);
+    \coordinate (b) at (3,0);
+    \coordinate (c) at (2.02, 1.7);
+
+    \draw (a) -- node[below] {$c$} (b) -- node[above right] {$a$} (c) -- node[above left] {$b$} (a) -- cycle;
+
+    \draw (a) node[left] {$A$};
+    \draw (b) node[right] {$B$};
+    \draw (c) node[above] {$C$};
+
+    \begin{scope}[color=red, fill=red!25, very thick]
+      \planfigurLines{#2}
+      \planfigurAngles{#3}
+    \end{scope}
+
+\end{tikzpicture}
+}
+\ExplSyntaxOn
+
+\end{MacroCode}
+\end{macro}
+
+
+
+
+
+\subsubsection{Verschiedenes}
+
+\begin{macro}{\corr}
+\begin{macro}{\ds}
+\begin{macro}{\der}
+\begin{macro}{\i}
+\begin{macro}{\minusp}
+\begin{macro}{\sep}
+\begin{macro}{\solset}
+\begin{macro}{\textlightning}
+Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \corr {  } {\ensuremath{\mathrel{\hat{=}}}}
+\DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
+\DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}
+\DeclareDocumentCommand \iu {  } {\ensuremath{\mathrm{i}}}
+\DeclareDocumentCommand \minusp {  } {\ensuremath{\hphantom{-}}}
+\DeclareDocumentCommand \sep {  } {\,\vert\,}    
+\DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
+\DeclareDocumentCommand \textlightning {  } {\ensuremath{\lightning}}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
+
+
+
+\subsection{Sonstiges}
+
+Various additional common commands.
+
+\begin{macro}{\templength}
+\begin{macro}{tempcounter}
+Length/command/counter for temporary usage.
+\begin{MacroCode}{pkg}
+\newlength{\templength}
+\newcommand{\tempcommand}{}
+\newcounter{tempcounter}
+
+\end{MacroCode}
+\end{macro}
+\end{macro}
+
+
+\begin{MacroCode}{pkg}
+\endinput
+
+\end{MacroCode}
+
+
+%  \begin{thebibliography}{mm}
+%    \bibitem{cancel} \textsc{Donald Arseneau}: \emph{cancel}. \url{http://www.ctan.org/pkg/cancel}.
+%    \bibitem{ulsy} \textsc{Ulrich Goldschmitt}: \emph{ulsy}. \url{http://www.ctan.org/pkg/ulsy}.
+%    \bibitem{booktabs} \textsc{Simon Fear} und \textsc{Danie Els} \emph{listings}. \url{http://www.ctan.org/pkg/booktabs}.
+%    \bibitem{polynom} \textsc{Carsten Heinz}: \emph{polynom}. \url{http://www.ctan.org/pkg/polynom}.
+%    \bibitem{listings} \textsc{Carsten Heinz} und \textsc{Brooks Moses} \emph{listings}. \url{http://www.ctan.org/pkg/listings}.
+%    \bibitem{koma} \textsc{Markus Kohm}: \emph{KOMA-Script}. \url{http://www.ctan.org/pkg/koma-script}.
+%    \bibitem{pdfpages} \textsc{Andreas Matthias}: \emph{pdfpages}. \url{http://www.ctan.org/pkg/pdfpages}.
+%    \bibitem{multicol} \textsc{Frank Mittelbach}: \emph{multicol}. \url{http://www.ctan.org/pkg/multicol}.
+%    \bibitem{lato} \textsc{Mohamed El Morabity}: \emph{lato}. \url{http://www.ctan.org/pkg/lato}.
+%    \bibitem{units} \textsc{Axel Reichert}: \emph{units}. \url{http://www.ctan.org/pkg/units}.
+%    \bibitem{esvect} \textsc{Eddie Saudrais}: \emph{esvect}. \url{http://www.ctan.org/pkg/esvect}.
+%    \bibitem{icomma} \textsc{Walter Schmidt}: \emph{icomma}. \url{http://www.ctan.org/pkg/icomma}.
+%    \bibitem{fonts} \textsc{Walter Schmidt}: \emph{psnfss}. \url{http://www.ctan.org/pkg/pifont}.
+%    \bibitem{tikz} \textsc{Till Tantau}: \emph{tikz}. \url{http://www.texample.net/tikz/}.
+%    \bibitem{eurosym} \textsc{Henrik Theiling}: \emph{eurosym}. \url{http://www.ctan.org/pkg/eurosym}.
+%  \end{thebibliography}
+
+
+
+
+\Finale
+
+
+\PrintChanges
+
+\PrintIndex
+\printbibliography
+
+\end{document}
