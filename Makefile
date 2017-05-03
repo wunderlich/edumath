@@ -45,7 +45,7 @@ install-local: all
 	install -m 0644 edumath.tex $(TEXMFHOME)/source/latex/edumath/edumath.tex
 	install -m 0644 edumath.pdf $(TEXMFHOME)/doc/latex/edumath/edumath.pdf
 	install -m 0644 edumath-de.pdf $(TEXMFHOME)/doc/latex/edumath/edumath-de.pdf
-	install -m 0644 README $(TEXMFHOME)/doc/latex/edumath/README
+	install -m 0644 README.md $(TEXMFHOME)/doc/latex/edumath/README.md
 	mktexlsr
 
 install-global: all
@@ -56,7 +56,7 @@ install-global: all
 	sudo install -m 0644 edumath.tex $(TEXMFMAIN)/source/latex/edumath/edumath.tex
 	sudo install -m 0644 edumath.pdf $(TEXMFMAIN)/doc/latex/edumath/edumath.pdf
 	sudo install -m 0644 edumath-de.pdf $(TEXMFMAIN)/doc/latex/edumath/edumath-de.pdf
-	sudo install -m 0644 README $(TEXMFMAIN)/doc/latex/edumath/README
+	sudo install -m 0644 README.md $(TEXMFMAIN)/doc/latex/edumath/README.md
 	sudo mktexlsr
 
 edumath.tds.zip: all

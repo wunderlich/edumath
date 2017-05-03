@@ -75,6 +75,7 @@
 
 \DeclareDocumentCommand \abs { s m } {}
 \DeclareDocumentCommand \absvec { s m } {}
+\DeclareDocumentCommand \absvect { s m } {}
 
 \DeclareDocumentCommand \corr {  } {}
 \DeclareDocumentCommand \ds {  } {}
@@ -101,6 +102,7 @@
 
 \DeclareDocumentCommand \norm { s m } {}
 \DeclareDocumentCommand \normvec { s m } {}
+\DeclareDocumentCommand \normvect { s m } {}
 
 \DeclareDocumentCommand \planepvar { s O{} O{} O{} O{} O{} O{} } {}
 \DeclareDocumentCommand \planepvec { s O{} O{} O{} O{} O{} O{} } {}
@@ -793,9 +795,7 @@
 
 \medskip
 \color{section} \textbf{Warnung:} Das \thepackage\ Package befindet sich in der Entwicklung. Alle 
-Funktionen, Einstellungen und Makros sowie Dateinamen können sich in späteren 
-Versionen ändern oder können unvollständig sein. Auch die Dokumentation ist noch nicht vollständig. Sie ist noch nicht für den 
-produktiven Einsatz bereit.
+Funktionen, Einstellungen und Makros sowie Dateinamen können sich in späteren Versionen ändern oder können unvollständig sein. Auch die Dokumentation ist noch nicht vollständig. Sie ist noch nicht für den produktiven Einsatz bereit.
 }
 \end{abstract}
 
@@ -804,9 +804,9 @@ produktiven Einsatz bereit.
 \newpage
 
 
-\localeEN{\part{Introduction}}
+\localeEN{\part{Introduction} \label{part:intro}}
 
-\localeDE{\part{Einleitung}}
+\localeDE{\part{Einleitung} \label{part:intro}}
 
 \localeEN{\section{About \thepackage}}
 
@@ -817,7 +817,7 @@ produktiven Einsatz bereit.
     4x &= 8 \tr :4 \\
     x &= 2
   \end{aligntr*}
-  By using \thepackage\ commands and environments are provided which simplify the creation of such contents. Some of them originate from existing packages, some are newly defined.
+  By using \thepackage\ commands and environments are provided which simplify the creation of such contents. Some of them originate from existing packages, some are newly defined. With a large number of options \thepackage\ can be customized to the personal requirements.
 
   The origin of this \thepackage\ is Germany (Baden-Württemberg), for which reason the local notation is used.
 }
@@ -831,7 +831,7 @@ produktiven Einsatz bereit.
     4x &= 8 \tr :4 \\
     x &= 2
   \end{aligntr*}
-  Durch \thepackage\ werden Makros und Umgebungen zur Verfügung gestellt, welche die Erstellung dieser Inhalte vereinfacht. Einige von ihnen entstammen existierenden Packages, welche geladen werden, einige werden neu definiert.
+  Durch \thepackage\ werden Makros und Umgebungen zur Verfügung gestellt, welche die Erstellung dieser Inhalte vereinfacht. Einige von ihnen entstammen existierenden Packages, welche geladen werden, einige werden neu definiert. Durch eine Vielzahl von Optionen kann \thepackage\ unkompliziert an die eigenen Bedürfnisse angepasst werden.
   
   Der Ursprung des Packages liegt in Deutschland (Baden-Württemberg), weshalb die dort übliche Notation verwendet wird.
 }
@@ -839,7 +839,7 @@ produktiven Einsatz bereit.
 \localeDE{
 \section{Über diese Dokumentation}
 
-TODO: Aufbau
+Nach der Einleitung in diesem Teil und Informationen zur Installation in Teil~\ref{part:inst} beginnt die eigentliche Dokumentation in Teil~\ref{part:doc}. Dort werden zuerst einige grundlegende Aspekte von \thepackage\ und zentraler mathematischer Anpassungen vorgestellt. Anschließend werden alle Makros und Umgebungen thematisch sortiert erläutert -- dies umfasst den zentralen Teil dieser Dokumentation. Zuletzt werden die vielen Optionen des Packages in Abschnitt~\ref{sec:doc-opt} beschrieben, wobei diese häufig auch schon in den vorherigen Abschnitten angesprochen werden.
 
 Diese Dokumentation verwendet verschiedene Schriftarten und -stile zur Auszeichnung unterschiedlicher Komponenten. Tabelle~\ref{tab:components} zeigt diese Arten der Auszeichnungen.
 
@@ -875,7 +875,7 @@ Bei Beispielen wird der \LaTeX-Quelltext auf der rechten Seite dargestellt, link
 \end{example}
 
 \newpage
-\localeDE{\part{Installation}}
+\localeDE{\part{Installation}} \label{part:inst}
 
 \localeDE{\section{Voraussetzungen}}
 
@@ -958,14 +958,14 @@ Alle Packages sind über \emph{CTAN} erhältlich -- sie können z.\,B. unter Lin
 \newpage
 \localeEN{
   \part{Documentation}
-  \label{sec:doc}
+  \label{part:doc}
   
   \Todo{Write English documentation.}
 }
 
 \localeDE{
   \part{Dokumentation}
-  \label{sec:doc}
+  \label{part:doc}
 }
 
 \localeDE{\section{Package laden und Optionen wählen}}
@@ -1110,9 +1110,9 @@ Um Streichungen (z.\,B. beim Kürzen eines Bruches) darzustellen, lädt \thepack
 
 \begin{example}[de]
 \[
-	\frac{2x^3 - 4x^5}{2x^2} = 
-	\frac{\cancel{2x^2} \cdot (x - 2x^3)}
-	  {\cancel{2x^2}}
+  \frac{2x^3 - 4x^5}{2x^2} = 
+  \frac{\cancel{2x^2} \cdot (x - 2x^3)}
+    {\cancel{2x^2}}
 \]
 \end{example}
 
@@ -1780,6 +1780,20 @@ Setzt den \meta{Term} als Vektor in Betragsstriche. Hierbei skalieren in der nor
 \]
 \end{example}
 
+\localeDE{
+\DescribeMacro\absvect{<Spalte>}
+\DescribeMacro\absvect*{<Spalte>}
+%
+Durch \Macro\absvect kann auf einfache Weise der Betrag eines Vektors angegeben werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden. In der Sternvariante skalieren die Betragsstriche im Vergleich zur normalen Variante nicht.
+}
+
+\begin{example}[de]
+\[
+  \absvect{1 \\ 2 \\ 3}, 
+  \absvect*{1 \\ 2 \\ 3}
+\]
+\end{example}
+
 
 \localeDE{
 \DescribeMacro\normvec{<Term>}
@@ -1791,6 +1805,21 @@ Setzt den \meta{Term} als Vektor in Normstriche. Hierbei skalieren in der normal
 \begin{example}[de]
 \[
   \normvec{b}, \normvec*{b}
+\]
+\end{example}
+
+
+\localeDE{
+\DescribeMacro\normvect{<Spalte>}
+\DescribeMacro\normvect*{<Spalte>}
+%
+Durch \Macro\normvect kann auf einfache Weise die Norm eines Vektors angegeben werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden. In der Sternvariante skalieren die Normstriche im Vergleich zur normalen Variante nicht.
+}
+
+\begin{example}[de]
+\[
+  \normvect{1 \\ 2 \\ 3}, 
+  \normvect*{1 \\ 2 \\ 3}
 \]
 \end{example}
 
@@ -3474,12 +3503,16 @@ Einfügen von Text/Formeln mit beidseitigem Abstand \cs*{quad} bzw. \cs{qquad} i
 
 \begin{macro}{\abs}[1]{<expression>}
 \begin{macro}{\absvec}[1]{<expression>}
+\begin{macro}{\absvect}[1]{<expression>}
 \begin{macro}{\abs*}[1]{<expression>}
 \begin{macro}{\absvec*}[1]{<expression>}
+\begin{macro}{\absvect*}[1]{<expression>}
 \begin{macro}{\norm}[1]{<expression>}
 \begin{macro}{\normvec}[1]{<expression>}
+\begin{macro}{\normvect}[1]{<expression>}
 \begin{macro}{\norm*}[1]{<expression>}
 \begin{macro}{\normvec*}[1]{<expression>}
+\begin{macro}{\normvect*}[1]{<expression>}
 Makros für (Vektor-)Beträge und (Vektor-)Normen. In den Sternvarianten skalieren die Klammern nicht.
 \begin{MacroCode}{pkg}
 \DeclareDocumentCommand \abs { s m } {
@@ -3498,6 +3531,14 @@ Makros für (Vektor-)Beträge und (Vektor-)Normen. In den Sternvarianten skalier
   }
 }
 
+\DeclareDocumentCommand \absvect { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\abs*{\vect{#2}}}
+  }{
+    \ensuremath{\abs{\vect{#2}}}
+  }
+}
+
 \DeclareDocumentCommand \norm { s m } {
   \IfBooleanTF{#1} {
     \ensuremath{\lVert #2 \rVert}
@@ -3512,10 +3553,21 @@ Makros für (Vektor-)Beträge und (Vektor-)Normen. In den Sternvarianten skalier
   }{
     \ensuremath{\norm{\vec{#2}}}
   }
+}
 
+\DeclareDocumentCommand \normvect { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\norm*{\vect{#2}}}
+  }{
+    \ensuremath{\norm{\vect{#2}}}
+  }
 }
 
 \end{MacroCode}
+\end{macro}
+\end{macro}
+\end{macro}
+\end{macro}
 \end{macro}
 \end{macro}
 \end{macro}

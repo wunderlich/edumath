@@ -684,6 +684,14 @@
   }
 }
 
+\DeclareDocumentCommand \absvect { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\abs*{\vect{#2}}}
+  }{
+    \ensuremath{\abs{\vect{#2}}}
+  }
+}
+
 \DeclareDocumentCommand \norm { s m } {
   \IfBooleanTF{#1} {
     \ensuremath{\lVert #2 \rVert}
@@ -698,7 +706,14 @@
   }{
     \ensuremath{\norm{\vec{#2}}}
   }
+}
 
+\DeclareDocumentCommand \normvect { s m } {
+  \IfBooleanTF{#1} {
+    \ensuremath{\norm*{\vect{#2}}}
+  }{
+    \ensuremath{\norm{\vect{#2}}}
+  }
 }
 
 \DeclareDocumentCommand \qf { m m m } {
