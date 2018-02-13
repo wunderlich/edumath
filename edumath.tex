@@ -94,6 +94,7 @@
 \DeclareDocumentCommand \C { } {}
 \DeclareDocumentCommand \L { } {}
 
+\DeclareDocumentCommand \lightning {  } {}
 \DeclareDocumentCommand \linepvar { s O{} O{} O{} O{} } {}
 \DeclareDocumentCommand \linepvec { s O{} O{} O{} O{} } {}
 
@@ -103,6 +104,8 @@
 \DeclareDocumentCommand \norm { s m } {}
 \DeclareDocumentCommand \normvec { s m } {}
 \DeclareDocumentCommand \normvect { s m } {}
+
+\DeclareDocumentCommand \vectmultsol { m } {}
 
 \DeclareDocumentCommand \planepvar { s O{} O{} O{} O{} O{} O{} } {}
 \DeclareDocumentCommand \planepvec { s O{} O{} O{} O{} O{} O{} } {}
@@ -147,7 +150,6 @@
 \DeclareDocumentCommand \sep {  } {}
 \DeclareDocumentCommand \solset { m } {}
 
-\DeclareDocumentCommand \textlightning {  } {}
 \DeclareDocumentCommand \tr { } {}
 
 \DeclareDocumentCommand \vec { m } {}
@@ -289,24 +291,6 @@
 % Fontsize
 \KOMAoption{fontsize}{10}
 
-% Colors
-
-% Original colors of skdoc:
-%\definecolorset{RGB}{}{}{
-%    section,145,0,0;
-%    intlink,140,35,24;
-%    keydesc,140,35,24;
-%    scriptcolor,140,35,24;
-%    sharp,250,105,0;
-%    bright,198,229,217;
-%    extlink,2,10,61;
-%    macrodesc,73,10,61;
-%    macroimpl,73,10,61;
-%    optioncolor,73,10,61;
-%    opt,73,10,61;
-%    meta,11,72,107
-%}
-
 \definecolor{section}{RGB}{145,0,0}
 
 \definecolor{extlink}{RGB}{145,0,0}
@@ -331,7 +315,7 @@
 
 
 % Multilanguage support
-\providecommand\locale{en}
+\tl_gset:Nn \locale {de}
 \ExplSyntaxOn
 
 \tl_new:N \g_edumath_warningname
@@ -339,8 +323,6 @@
 
 \cs_generate_variant:Nn \tl_if_eq:nnT { xnT }
 \cs_generate_variant:Nn \tl_if_eq:nnTF { xnTF }
-\cs_generate_variant:Nn \tl_if_eq_p:NN { xn }
-\cs_generate_variant:Nn \tl_if_eq_p:NN { XN }
 
 \cs_generate_variant:Nn \tl_if_in:nnT { xnT }
 \cs_generate_variant:Nn \tl_if_in:nnT { nxT }
@@ -481,7 +463,20 @@
 }
 
 
-% Macros for referenfing other content
+% Indexing various keywords
+% https://tex.stackexchange.com/questions/367948/add-simple-keywords-to-index-using-glossaries-skdoc
+
+\DeclareDocumentCommand \Index { o m } {%
+  \IfNoValueTF {#1} {
+    \newglossaryentry{#2}{type=index,name={#2},description=\nopostdesc}%
+    \glsadd{#2}
+   }{
+    \newglossaryentry{#1}{type=index,name={#2},description=\nopostdesc}%
+    \glsadd{#1}
+   }
+}
+
+% Macros for referencing other content
 \ExplSyntaxOff % Needs to be switched off, because ~ doesn't work in expl3
 \DeclareDocumentCommand \sees { m } {%
   (s.\,\sectionname~\ref{#1})\xspace
@@ -874,6 +869,23 @@ Bei Beispielen wird der \LaTeX-Quelltext auf der rechten Seite dargestellt, link
 \]
 \end{example}
 
+
+\localeDE{\section{Danksagung}}
+
+\localeDE{
+  Ohne die mühevolle und leidenschaftliche Arbeit vieler Beteiligter des \LaTeX-Kosmos wäre die Erstellung eines eigenen Packages nicht möglich. Herzlichen Dank an jeden Einzelnen von ihnen!
+  
+  Einigen Personen sei an dieser Stelle persönlich gedankt:
+  
+  \begin{itemize}
+    \item \emph{Simon Sigurdhsson} für seine Dokumentenklasse \pkg*{skdoc} und sein Package \pkg*{skmath}, welche als Inspiration und Anleitung zugleich dienten. [\url{https://github.com/urdh}]
+    \item \emph{Karolina Plotzki} für die Motivation zum Schreiben dieses Packages, Feedback und gute Ideen.
+    \item \emph{Christian Hupfer} für ausführliche E-Mail-Antworten und kürzester Zeit, jede Menge Ratschläge und Motivation. [\url{http://www.ich-rede-mich-um-kopf-und-kragen.de/}]
+    \item \emph{Alexander Weick} für Hinweise auf viele Rechtschreib- und Tippfehler.
+    \item \emph{Den vielen fleißigen Helfern} auf \emph{\TeX\,StackExchange}, die meistens innerhalb weniger Stunden bei Problemen helfen. [\url{https://tex.stackexchange.com/users/60539/dawu?tab=questions}]
+  \end{itemize}
+}
+
 \newpage
 \localeDE{\part{Installation}} \label{part:inst}
 
@@ -895,7 +907,12 @@ expl3\\
 gauss\\
 icomma*\\
 l3keys2e\\
+mathalfa*\\
+mathpazo*\\
+mathtools\\
+newtxmath*\\
 polynom\\
+sansmath*\\
 tikz\\
 tikz-qtree*\\
 thmtools*\\
@@ -989,7 +1006,7 @@ Viele Optionen können auch nach dem Laden von \thepackage\ angepasst werden. Be
 \localeDE{
 \subsection{Dezimaltrenner}
 
-Standardmäßig wird durch \thepackage\ der Punkt als Dezimaltrenner durch das Komma ersetzt, wie es im Deutschen üblich ist.
+Standardmäßig wird durch \thepackage\ der Punkt als Dezimaltrenner \Index{Dezimaltrenner} durch das Komma \Index{Komma} ersetzt, wie es im Deutschen üblich ist.
 }
 
 \begin{example}[de]
@@ -1003,7 +1020,7 @@ $123,45$
 \localeDE{
 \subsection{Abstand vor und nach abgesetzten Formeln}
 
-Aus ökologischen und ökonomischen Gründen wird der Abstand vor und nach abgesetzten Formeln durch \thepackage\ reduziert.
+Aus ökologischen und ökonomischen Gründen wird der Abstand \Index{Abstand} vor und nach abgesetzten Formeln durch \thepackage\ reduziert.
 }
 
 \localeDE{
@@ -1031,7 +1048,7 @@ Das Entspricht-Zeichen.
 \localeDE{
 \DescribeMacro\diff
 %
-Der Differentialoperator $\diff$ der Integral- und Differentialrechnung sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\diff ein aufrechtes "`d"' erzeugt werden. 
+Der Differentialoperator \Index{Differentialoperator} $\diff$ der Integral- und Differentialrechnung \Index{Integral} sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\diff ein aufrechtes "`d"' erzeugt werden. 
 }
 
 \begin{example}[de]
@@ -1044,7 +1061,7 @@ Der Differentialoperator $\diff$ der Integral- und Differentialrechnung sollte n
 \localeDE{
 \DescribeMacro\iu
 %
-Die imaginäre Einheit $\iu$ der komplexen Zahlen sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\iu (vom engl. \emph{imaginary unit}) ein aufrechtes "`i"' erzeugt werden. 
+Die imaginäre \Index[imaginaer]{imaginär} Einheit $\iu$ der komplexen Zahlen \Index[komplexeZahl]{komplexe Zahlen} \Index[Zahlkomplex]{Zahl, komplex} sollte nicht kursiv gestaltet werden (es handelt sich nicht um eine Variable). Hierzu kann durch \Macro\iu (vom engl. \emph{imaginary unit}) ein aufrechtes "`i"' erzeugt werden. 
 }
 
 \begin{example}[de]
@@ -1055,13 +1072,13 @@ Die imaginäre Einheit $\iu$ der komplexen Zahlen sollte nicht kursiv gestaltet 
 
 
 \localeDE{
-\DescribeMacro\textlightning
+\DescribeMacro\lightning
 %
-Stellt einen Widerspruchspfeil im Textmodus zur Verfügung.
+Stellt einen Widerspruchspfeil \Index{Widerspruch} im Textmodus zur Verfügung.
 }
 
 \begin{example}[de]
-Dies führt zum Widerspruch. \textlightning
+Dies führt zum Widerspruch. \lightning
 \end{example}
 
 
@@ -1076,7 +1093,7 @@ Dies führt zum Widerspruch. \textlightning
 \DescribeMacro\C
 \DescribeMacro\L
 %
-Folgende gängige spezielle Mengen können durch kurze Makros erstellt werden: natürliche, ganze, rationale, irrationale und komplexe Zahlen. Darüber hinaus steht ein Symbol für die Lösungsmenge von Gleichungen zur Verfügung.
+Folgende gängige spezielle Mengen \Index{Mengen} können durch kurze Makros erstellt werden: natürliche, ganze, rationale, irrationale und komplexe Zahlen. Darüber hinaus steht ein Symbol für die Lösungsmenge von Gleichungen zur Verfügung.
 }
 
 \begin{example}[de]
@@ -1092,7 +1109,7 @@ Die Erzeugung dieser Makros kann durch die Option \opt{specialsets} unterbunden 
 \localeDE{
 \DescribeMacro\solset{<Elemente>}
 %
-Beim Lösen von Gleichungen und Gleichungssystemen soll häufig die Lösungsmenge angegeben werden. Dies kann durch \Macro\solset getätigt werden.
+Beim Lösen von Gleichungen und Gleichungssystemen \Index{Gleichung}\Index{Gleichungssystem} soll häufig die Lösungsmenge \Index[Loesungsmenge]{Lösungsmenge} angegeben werden. Dies kann durch \Macro\solset getätigt werden.
 }
 
 \begin{example}[de]
@@ -1105,7 +1122,7 @@ Beim Lösen von Gleichungen und Gleichungssystemen soll häufig die Lösungsmeng
 \localeDE{\section{Streichungen}}
 
 \localeDE{
-Um Streichungen (z.\,B. beim Kürzen eines Bruches) darzustellen, lädt \thepackage\ das Package \pkg{cancel}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{cancel} verwiesen, hier lediglich ein Beispiel:
+Um Streichungen \Index{Streichung} (z.\,B. beim Kürzen \Index[Kuerzen]{Kürzen} eines Bruches\Index{Bruch}) darzustellen, lädt \thepackage\ das Package \pkg{cancel}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{cancel} verwiesen, hier lediglich ein Beispiel:
 }
 
 \begin{example}[de]
@@ -1120,7 +1137,7 @@ Um Streichungen (z.\,B. beim Kürzen eines Bruches) darzustellen, lädt \thepack
 \localeDE{\section{Schriftliches Rechnen}}
 
 \localeDE{
-\thepackage\ das Package \pkg{xlop}, durch welches schriftliche Rechnungen einfach gesetzt werden können. Es wird hierzu, sofern möglich, an die deutsche Notation angepasst. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{xlop} verwiesen, hier lediglich ein Beispiel:
+\thepackage\ lädt das Package \pkg{xlop}, durch welches schriftliche Rechnungen \Index[schriftlichesRechnen]{schriftliches Rechnen} einfach gesetzt werden können. Es wird hierzu, sofern möglich, an die deutsche Notation angepasst. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{xlop} verwiesen, hier lediglich ein Beispiel:
 }
 
 \begin{example}[de]
@@ -1151,7 +1168,7 @@ Division:
 \localeDE{
 \DescribeEnv[<Gleichung(en)>]{aligntr}
 %
-Diese Umgebung ermöglicht das einfache setzen von Äquivalenzumformungen einer Gleichung (\texttt{tr} von engl. \emph{transformation}). Wie in bekannten Umgebungen wie \env*{align} muss hierzu vor Gleichheitszeichen ein \texttt{\&} stehen. Die Beschreibung der Umformung wird durch das neue Macro \Macro{tr} am Ende einer Zeile begonnen. Danach wird wie gewohnt der Zeilenumbruch durch \texttt{\textbackslash\textbackslash} eingeleitet.
+Diese Umgebung ermöglicht das einfache Setzen von Äquivalenzumformungen \Index[Aequivalenzumformung]{Äquivalenzumformung} einer Gleichung \Index{Gleichung} (\texttt{tr} von engl. \emph{transformation}). Wie in bekannten Umgebungen wie \env*{align} muss hierzu vor Gleichheitszeichen ein \texttt{\&} stehen. Die Beschreibung der Umformung wird durch das neue Macro \Macro{tr} am Ende einer Zeile begonnen. Danach wird wie gewohnt der Zeilenumbruch durch \texttt{\textbackslash\textbackslash} eingeleitet.
 
 Die Sternvariante unterdrückt die automatische Nummerierung der Zeilen.
 }
@@ -1181,7 +1198,7 @@ Dient der Einleitung der Beschreibung einer (Äquivalenz)Umformung (engl. \emph{
 \localeDE{\section{Rechenbäume}}
 
 \localeDE{
-  Rechenbäume können mithilfe des Packages \pkg{tizk-qtree} erstellt werden. Dieses wird nach Bedarf durch die Option \opt{qtree} geladen. Zusätzlich werden die TikZ-Styles \opt{bet} (vom engl. \emph{binary expression tree} -- \emph{Binärer Rechenbaum}) für das entsprechende \env*{tizkpicture}, \opt{betroot} für den Wurzelknoten (vom engl. \emph{root} -- \emph{Wurzel}) und \opt{betr} für rechteckige Knoten (vom engl. \emph{rectangular}) definiert.
+Rechenbäume \Index{Rechenbaum} können mithilfe des Packages \pkg{tizk-qtree} erstellt werden. Dieses wird nach Bedarf durch die Option \opt{qtree} geladen. Zusätzlich werden die TikZ-Styles \opt{bet} (vom engl. \emph{binary expression tree} -- \emph{Binärer Rechenbaum}) für das entsprechende \env*{tizkpicture}, \opt{betroot} für den Wurzelknoten (vom engl. \emph{root} -- \emph{Wurzel}) und \opt{betr} für rechteckige Knoten (vom engl. \emph{rectangular}) definiert.
   
   Weitere Informationen zur Erstellung derartiger Bäume erhält man in der Dokumentation von \pkg{tikz-qtree}.
   
@@ -1217,7 +1234,7 @@ Dient der Einleitung der Beschreibung einer (Äquivalenz)Umformung (engl. \emph{
 \DescribeMacro\abs{<Term>}
 \DescribeMacro\abs*{<Term>}
 %
-Mit diesen Makros kann der Betrag (vom engl. \emph{absolute value}) eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+Mit diesen Makros kann der Betrag \Index{Betrag} (vom engl. \emph{absolute value}) eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
 }
 
 \begin{example}[de]
@@ -1231,7 +1248,7 @@ Mit diesen Makros kann der Betrag (vom engl. \emph{absolute value}) eines \meta{
 \DescribeMacro\norm{<Term>}
 \DescribeMacro\norm*{<Term>}
 %
-Mit diesen Makros kann die Norm eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+Mit diesen Makros kann die Norm \Index{Norm} eines \meta{Term} angegeben werden. Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
 }
 
 \begin{example}[de]
@@ -1247,9 +1264,9 @@ Mit diesen Makros kann die Norm eines \meta{Term} angegeben werden. Hierbei skal
 \DescribeMacro\qf{<a>}{<b>}{<c>}
 \DescribeMacro\qfvar{<$\text{Term}_1$>}{<$\text{Term}_2$>}{<$\text{Term}_3$>}
 %
-Das Makro \Macro\qf kann verwendet werden, um die sog. abc-Formel oder Mitternachtsformel (vom engl. \emph{quadratic formula}) darzustellen. Hierbei sind \meta{a}, \meta{b} und \meta{c} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
+\Index[quadratischeGleichung]{quadratische Gleichung}\Index[Gleichungquadratisch]{Gleichung, quadratisch} Das Makro \Macro\qf kann verwendet werden, um die sog. abc-Formel \Index{abc-Formel} oder Mitternachtsformel \Index{Mitternachtsformel} (vom engl. \emph{quadratic formula}) darzustellen. Hierbei sind \meta{a}, \meta{b} und \meta{c} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
 
-Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qfvar (vom engl. \emph{quadratic formula (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
+Benötigt man eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qfvar\ (vom engl. \emph{quadratic formula (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
 \[
 	\frac{\text{\meta{$\text{Term}_1$}} \pm \sqrt{\text{\meta{$\text{Term}_2$}}}}{\text{\meta{$\text{Term}_3$}}}
 \]
@@ -1265,11 +1282,11 @@ Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritt
 
 \localeDE{
 \DescribeMacro\qfr{<p>}{<q>}
-\DescribeMacro\qfvar{<$\text{Term}_1$>}{<$\text{Term}_2$>}
+\DescribeMacro\qfrvar{<$\text{Term}_1$>}{<$\text{Term}_2$>}
 %
-Das Makro \Macro\qfr kann verwendet werden, um die sog. pq-Formel (vom engl. \emph{quadratic formula, reduced}) darzustellen. Hierbei sind \meta{p} und \meta{q} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
+\Index[quadratischeGleichung]{quadratische Gleichung}\Index[Gleichungquadratisch]{Gleichung, quadratisch} Das Makro \Macro\qfr kann verwendet werden, um die sog. pq-Formel \Index{pq-Formel} (vom engl. \emph{quadratic formula, reduced}) darzustellen. Hierbei sind \meta{p} und \meta{q} die entsprechenden Variablen der Formel und können beliebig angegeben werden.
 
-Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qrfvar (vom engl. \emph{quadratic formula, reduced (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
+Benötigt man eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritte anzugeben -- kann man \Macro\qfrvar\ (vom engl. \emph{quadratic formula, reduced (variable)}) verwenden. Hier werden die angegebenen Terme wie folgt ersetzt:
 \[
 	\text{\meta{$\text{Term}_1$}} \pm \sqrt{\text{\meta{$\text{Term}_2$}}}
 \]
@@ -1290,7 +1307,7 @@ Benötigt man ein eine flexiblere Gestaltung -- z.\,B. um spätere Rechenschritt
 \localeDE{\subsection{Grundlegendes}}
 
 \localeDE{
-Durch \thepackage\ können drei verschiedene Arten von Umgebungen für Sätze, Definitionen etc. (sog. Theorem-Umgebungen) erzeugt werden: im Stil von \pkg{amsthm}, umrahmte und/oder mit Hintergrundfarbe versehene Theoreme und Theoreme im Stil von \pkg{thmbox}. Die Erzeugung der jeweiligen Theorem-Umgebungen kann durch die Optionen \opt{amsthm}, \opt{framedthm} und \opt{thmbox} gesteuert werden \sees{ssec:doc-opt-theorem}.
+Durch \thepackage\ können drei verschiedene Arten von Umgebungen für Sätze, Definitionen \Index{Satz}\Index{Definition} etc. (sog. Theorem-Umgebungen) \Index{Theorem} erzeugt werden: im Stil von \pkg{amsthm}, umrahmte und/oder mit Hintergrundfarbe versehene Theoreme und Theoreme im Stil von \pkg{thmbox}. Die Erzeugung der jeweiligen Theorem-Umgebungen kann durch die Optionen \opt{amsthm}, \opt{framedthm} und \opt{thmbox} gesteuert werden \sees{ssec:doc-opt-theorem}.
 
 Theoreme sind eingeteilt in "`wichtige"' (engl. \emph{important}) und "`unwichtige"' (engl. \emph{unimportant}) Theoreme, welche sich in ihrer Darstellung unterscheiden \seet{tab:theorems}.
 
@@ -1328,7 +1345,7 @@ Für Theoreme stehen eine Vielzahl weiterer Optionen zur Konfiguration ihrer Dar
 %
 Die \pkg{amsthm} Darstellung ist sehr reduziert. Theorem-Umgebungen werden lediglich durch einen Absatzumbruch vom restlichen Inhalt getrennt und serifenlos und fett beschriftet -- es findet sonst keine andere gestalterische Trennung statt. Optional können die Theoreme durch \meta{Name} benannt werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
 
-\Notice{Auch technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
+\Notice{Aus technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
 }
 
 \begin{example}[de]
@@ -1369,9 +1386,9 @@ Die \pkg{amsthm} Darstellung ist sehr reduziert. Theorem-Umgebungen werden ledig
 \DescribeEnv[<Inhalt>]{remark}[<Name>]
 \DescribeEnv[<Inhalt>]{solution}[<Name>]
 %
-Die unwichtigen Theorem-Umgebungen im Stile von \pkg{amsthm} werden lediglich durch einen (oder mehrere) eigenen Absatz und eine serifenlose Beschriftung gekenntzeichnet.
+Die unwichtigen Theorem-Umgebungen im Stile von \pkg{amsthm} werden lediglich durch einen (oder mehrere) eigenen Absatz und eine serifenlose Beschriftung gekennzeichnet.
 
-\Notice{Auch technischen Gründen fehlt das Beispiel zur \env*{example} Umgebung.}
+\Notice{Aus technischen Gründen fehlt das Beispiel zur \env*{example} Umgebung.}
 }
 
 \begin{example}[de]
@@ -1404,7 +1421,7 @@ Die unwichtigen Theorem-Umgebungen im Stile von \pkg{amsthm} werden lediglich du
 %
 In dieser Variante werden Theorem-Umgebungen eingerahmt und/oder mit Hintergrundfarbe dargestellt. Optional können die Theoreme durch \meta{Name} benannt werden. Die Farben von Rahmen und Hintergrund können durch die Optionen \opt{thmframefg} und \opt{thmframebg} angepasst werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
 
-\Notice{Auch technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
+\Notice{Aus technischen Gründen werden die Theoreme der folgenden Beispiele nummeriert. Standardmäßig ist dies nicht der Fall, sondern muss ggf. durch \opt*{thmimpnumbered} bzw. \opt*{thmunimpnumbered} aktiviert werden.}
 }
 
 \begin{example}[de]
@@ -1557,7 +1574,7 @@ Die unwichtigen Theorem-Umgebungen unterscheiden sich in dieser Darstellung nich
 \localeDE{
 \DescribeMacro\sep
 %
-Bei der Angabe eines Punktes können durch \Macro\sep die im Deutschen gebräuchlichen, vertikalen Striche zur Trennung der Koordinaten verwendet werden.
+Bei der Angabe eines Punktes \Index{Punkt} können durch \Macro\sep die im Deutschen gebräuchlichen, vertikalen Striche zur Trennung der Koordinaten verwendet werden.
 }
 
 \begin{example}[de]
@@ -1570,7 +1587,7 @@ $P(1 \sep 2 \sep 3)$
 \localeDE{
 \DescribeMacro\planfigur[<Maßstab>]{<Seiten>}{<Winkel>}
 %
-Die Planfigur einer geometrischen Figur wird verwendet, um gegebene Größen (Seiten und Winkel) zu visualisieren. In \thepackage\ können komfortabel Planfiguren von Dreiecken gezeichnet werden. Wie gehen hierbei von der folgenden Benennung aus:
+Die Planfigur \Index{Planfigur} einer geometrischen Figur wird verwendet, um gegebene Größen (Seiten und Winkel) zu visualisieren. In \thepackage\ können komfortabel Planfiguren von Dreiecken gezeichnet werden. Wie gehen hierbei von der folgenden Benennung aus:
 
 \begin{center}
 	\begin{tikzpicture}[scale=0.75, line join=round, thick]
@@ -1612,7 +1629,7 @@ Optional kann durch \meta{Maßstab} angegeben werden, wobei 1,0 für 100\,\% ste
 \localeDE{\section{Polynomdivision}}
 
 \localeDE{
-Um Polynomdivisionen auf verschiedene Arten einfach darstellen zu können, lädt \thepackage\ das Package \pkg{polynom}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. \pkg{polynom} wird entsprechend der deutschen Notation konfiguriert. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{polynom} verwiesen, hier lediglich ein Beispiel:
+Um Polynomdivisionen \Index{Polynomdivision} auf verschiedene Arten einfach darstellen zu können, lädt \thepackage\ das Package \pkg{polynom}. In diesem werden verschiedene Makros zu diesem Zweck zur Verfügung gestellt. \pkg{polynom} wird entsprechend der deutschen Notation konfiguriert. Für genauere Informationen sei an dieser Stelle auf die Dokumentation von \pkg{polynom} verwiesen, hier lediglich ein Beispiel:
 }
 
 \begin{example}[de]
@@ -1627,7 +1644,7 @@ Um Polynomdivisionen auf verschiedene Arten einfach darstellen zu können, lädt
 \localeDE{\subsection{Gauß'sches Eliminationsverfahren}}
 
 \localeDE{
-Um das Gauß'sche Eliminationsverfahren in \LaTeX\ setzen zu können, kann das Package \pkg{gauss} verwendet werden, welches standardmäßig durch \thepackage\ geladen wird. Detaillierte Informationen hierzu enthält die entsprechende Dokumentation. Zusätzlich werden jedoch einige Anpassungen getroffen und Umgebungen erstellt.
+Um das Gauß'sche Eliminationsverfahren \Index[Eliminationsverfahrengausssches]{Eliminationsverfahren, gauß'sches}\Index[gausssches Eliminationsverfahren]{gauß'sches Eliminationsverfahren}\Index{Gleichungssystem} in \LaTeX\ setzen zu können, kann das Package \pkg{gauss} verwendet werden, welches standardmäßig durch \thepackage\ geladen wird. Detaillierte Informationen hierzu enthält die entsprechende Dokumentation. Zusätzlich werden jedoch einige Anpassungen getroffen und Umgebungen erstellt.
 
 \localeDE{\subsubsection{Gleichungssystem}} \label{sssec:doc-geo-equations}}
 
@@ -1637,7 +1654,7 @@ Erster Schritt beim Textsatz des Gauß'schen Eliminationsverfahren ist die Erste
 \DescribeEnv[<Matrix>]{gmatrix}
 \DescribeEnv[<Matrix>]{gmatrix*}[<Zeilenabstand>]
 %
-Diese Makros setzen Gleichungen ohne Zusätze analog zu \env*{matrix} aus \pkg*{amsmath}. Im schulischen Kontext eignen sie sich hauptsächlich dazu, Gleichungssysteme mit Angabe der Unbekannten zu setzen. Während sich \env{gmatrix} unverändert zu \pkg{gauss} verhält, wird in \env{gmatrix*} der Spaltenabstand automatisch auf \SI{2}{pt} verringert (was sich bei der Angabe von Rechenzeichen anbietet) und kann optional durch \meta{Zeilenabstand} beliebig angepasst werden.
+Diese Makros setzen Gleichungen \Index{Gleichungssystem} ohne Zusätze analog zu \env*{matrix} aus \pkg*{amsmath}. Im schulischen Kontext eignen sie sich hauptsächlich dazu, Gleichungssysteme mit Angabe der Unbekannten zu setzen. Während sich \env{gmatrix} unverändert zu \pkg{gauss} verhält, wird in \env{gmatrix*} der Spaltenabstand automatisch auf \SI{2}{pt} verringert (was sich bei der Angabe von Rechenzeichen anbietet) und kann optional durch \meta{Zeilenabstand} beliebig angepasst werden.
 }
 
 \begin{example}[de]
@@ -1663,7 +1680,7 @@ Diese Makros setzen Gleichungen ohne Zusätze analog zu \env*{matrix} aus \pkg*{
 \localeDE{
 \DescribeEnv[<Matrix>]{gmatrixp*}[<Zeilenabstand>]
 %
-Möchte man bei der Darstellung des Gauß'schen Eliminationsverfahren die Matrixschreibweise ohne Angabe der Unbekannten verwenden, kann man die Umgebung \env{gmatrixp*} verwenden. Diese setzt den Abstand zwischen den Spalten auf \SI{4}{pt}, was durch \meta{Zeilenabstand} angepasst werden kann.
+Möchte man bei der Darstellung des Gauß'schen Eliminationsverfahren die Matrixschreibweise \Index{Matrix}\Index{Matrixschreibweise} ohne Angabe der Unbekannten verwenden, kann man die Umgebung \env{gmatrixp*} verwenden. Diese setzt den Abstand zwischen den Spalten auf \SI{4}{pt}, was durch \meta{Zeilenabstand} angepasst werden kann.
 }
 
 \begin{example}[de]
@@ -1748,7 +1765,7 @@ Die Notation der Umformungen eines Gleichungssystems werden ausführlich in der 
 \DescribeMacro\vec{<Term>}
 \DescribeMacro\vect{<Spalte>}
 %
-Aufgrund der flexibleren und ansprechenderen Darstellung verwendet \thepackage\ für Vektorvariablen das Paket \pkg{esvect}. Durch \Macro\vec (vom engl. \emph{vector}) können diese erstellt werden. Zusätzlich können Zeilenvektoren durch \Macro\vect erstellt werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden.
+Aufgrund der flexibleren und ansprechenderen Darstellung verwendet \thepackage\ für Vektorvariablen \Index{Vektor} das Paket \pkg{esvect}. Durch \Macro\vec (vom engl. \emph{vector}) können diese erstellt werden. Zusätzlich können Zeilenvektoren durch \Macro\vect erstellt werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden.
 }
 
 \begin{example}[de]
@@ -1771,7 +1788,7 @@ $\vec{a} = \vect{-1 \\ \minusp 2 \\ -3}$
 \DescribeMacro\absvec{<Term>}
 \DescribeMacro\absvec*{<Term>}
 %
-Setzt den \meta{Term} als Vektor in Betragsstriche. Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+Setzt den \meta{Term} als Vektor in Betragsstriche. \Index{Vektorbetrag}\Index[BetragVektor]{Betrag, Vektor} Hierbei skalieren in der normalen Variante die Betragsstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
 }
 
 \begin{example}[de]
@@ -1784,7 +1801,7 @@ Setzt den \meta{Term} als Vektor in Betragsstriche. Hierbei skalieren in der nor
 \DescribeMacro\absvect{<Spalte>}
 \DescribeMacro\absvect*{<Spalte>}
 %
-Durch \Macro\absvect kann auf einfache Weise der Betrag eines Vektors angegeben werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden. In der Sternvariante skalieren die Betragsstriche im Vergleich zur normalen Variante nicht.
+Durch \Macro\absvect kann auf einfache Weise der Betrag \Index{Vektorbetrag}\Index[BetragVektor]{Betrag, Vektor} eines Vektors angegeben werden. Hierbei müssen die Einträge des Vektors durch \texttt{\textbackslash\textbackslash}\ getrennt werden. In der Sternvariante skalieren die Betragsstriche im Vergleich zur normalen Variante nicht.
 }
 
 \begin{example}[de]
@@ -1799,7 +1816,7 @@ Durch \Macro\absvect kann auf einfache Weise der Betrag eines Vektors angegeben 
 \DescribeMacro\normvec{<Term>}
 \DescribeMacro\normvec*{<Term>}
 %
-Setzt den \meta{Term} als Vektor in Normstriche. Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
+Setzt den \meta{Term} als Vektor in Normstriche. \Index{Vektornorm}\Index[NormVektor]{Norm, Vektor} Hierbei skalieren in der normalen Variante die Normstriche automatisch. In der Sternvariante hingegen skalieren sie nicht.
 }
 
 \begin{example}[de]
@@ -1825,13 +1842,41 @@ Durch \Macro\normvect kann auf einfache Weise die Norm eines Vektors angegeben w
 
 
 
+\localeDE{\subsection{Vielfache -- Lineare (Un)Abhängigkeit}}
+
+
+\localeDE{
+\DescribeMacro\vectmultsol{<Spalte>}
+%
+Häufig muss man überprüfen, ob zwei Vektoren Vielfache\Index{Vielfache}, also linear (un)abhängig \Index[lineareAbhaengigkeit]{lineare Abhängigkeit}\Index[lineareUnabhaengigkeit]{lineare Unabhängigkeit} voneinander sind. Die Notation einer solchen Überprüfung kann durch \Macro\vectmultsol (vom engl. \emph{vector multiple solution}). Die Zeilen der Lösung müssen hierbei durch \texttt{\textbackslash\textbackslash}\ voneinander getrennt werden.
+}
+
+\begin{example}[de]
+\begin{align*}
+  \vect{2 \\ 2 \\ 4} 
+  &= r \cdot \vect{1 \\ 1 \\ 2} 
+  \vectmultsol{
+    r = 2  \\ r = 2 \\ r = 2
+  } \\[3ex]
+  \vect{2 \\ 2 \\ 6} 
+  &= s \cdot \vect{1 \\ 1 \\ 2} 
+  \vectmultsol{
+    s = 2  \\ \\ s = 3 \lightning
+  }
+\end{align*}
+\end{example}
+
+
+
+
+
 \localeDE{\subsection{Geraden}}
 
 \localeDE{
 \DescribeMacro\linepvar[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
 \DescribeMacro\linepvar*[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
 %
-Durch \Macro\linepvar können Geraden in Parameterform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{line, parametric (variable)}). Optional können der \meta{Name} der Geraden und die Namen von \meta{Stützvektor-Variable}, \meta{Richtungsvektor-Variable} und der \meta{Parameter} der Geraden angegeben werden.
+Durch \Macro\linepvar können Geraden \Index{Gerade} in Parameterform \Index{Parameterform} mit Vektorvariablen einfach erstellt werden (vom engl. \emph{line, parametric (variable)}). Optional können der \meta{Name} der Geraden und die Namen von \meta{Stützvektor-Variable}, \meta{Richtungsvektor-Variable} und der \meta{Parameter} der Geraden angegeben werden.
 
 In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
 
@@ -1853,7 +1898,7 @@ Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Opti
 \DescribeMacro\linepvec[<Name>][<Stützvektor>][<Richtungsvektor>][<Parameter>]
 \DescribeMacro\linepvec*[<Name>][<Stützvektor-Variable>][<Richtungsvektor-Variable>][<Parameter>]
 %
-Sollen in einer Geradengleichung in Parameterform die Vektoren angegeben werden, kann \Macro\linepvec verwendet werden (vom engl. \emph{line, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{Richtungsvektor} und \meta{Parameter} der Geraden angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+Sollen in einer Geradengleichung \Index{Gerade} in Parameterform \Index{Parameterform} die Vektoren angegeben werden, kann \Macro\linepvec verwendet werden (vom engl. \emph{line, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{Richtungsvektor} und \meta{Parameter} der Geraden angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
 
 In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und die \meta{Richtungsvektor-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
 
@@ -1879,7 +1924,7 @@ In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und die
 \DescribeMacro\planepvar[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
 \DescribeMacro\planepvar*[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
 %
-Durch \Macro\planepvar können Ebenen in Parameterform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, parametric (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable}, \meta{$\text{Spannvektor}_1$-Variable}, \meta{$\text{Spannvektor}_2$-Variable} und die \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden.
+Durch \Macro\planepvar können Ebenen \Index{Ebene} in Parameterform \Index{Parameterform} mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, parametric (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable}, \meta{$\text{Spannvektor}_1$-Variable}, \meta{$\text{Spannvektor}_2$-Variable} und die \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden.
 
 In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
 
@@ -1903,7 +1948,7 @@ Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Opti
 \DescribeMacro\planepvec[<Name>][<Stützvektor>][<$\text{Spannvektor}_1$>][<$\text{Spannvektor}_2$>][<$\text{Parameter}_1$>][<$\text{Parameter}_2$>]
 \DescribeMacro\planepvec*[<Name>][<Stützvek.-Var.>][<$\text{Spannvek}_1$-Var>][<$\text{Spannvek}_2$-Var>][<$\text{Param}_1$>][<$\text{Param}_2$>]
 %
-Sollen in einer Ebenengleichung in Parameterform die Vektoren angegeben werden, kann \Macro\planepvec verwendet werden (vom engl. \emph{plane, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{$\text{Spannvektor}_1$}, \meta{$\text{Spannvektor}_2$}, \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+Sollen in einer Ebenengleichung \Index{Ebene} in Parameterform \Index{Parameterform} die Vektoren angegeben werden, kann \Macro\planepvec verwendet werden (vom engl. \emph{plane, parametric (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor}, \meta{$\text{Spannvektor}_1$}, \meta{$\text{Spannvektor}_2$}, \meta{$\text{Parameter}_1$} und \meta{$\text{Parameter}_2$} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
 
 In der Sternvariante können Namen für die \meta{Stützvektor-Variable}, die \meta{$\text{Spannvektor}_1$-Variable} und die \meta{$\text{Spannvektor}_2$-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
 
@@ -1928,7 +1973,7 @@ In der Sternvariante können Namen für die \meta{Stützvektor-Variable}, die \m
 \DescribeMacro\planenvar[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
 \DescribeMacro\planepvar*[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
 %
-Durch \Macro\planenvar können Ebenen in Normalenform mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, normal (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable} und \meta{Normalenvektor-Variable} der Ebene angegeben werden.
+Durch \Macro\planenvar können Ebenen \Index{Ebene} in Normalenform \Index{Normalenform} mit Vektorvariablen einfach erstellt werden (vom engl. \emph{plane, normal (variable)}). Optional können der \meta{Name} der Ebene und die Namen von \meta{Stützvektor-Variable} und \meta{Normalenvektor-Variable} der Ebene angegeben werden.
 
 In der Sternvariante werden die Variablennamen nicht automatisch durch \cs*{vec} als Vektoren gesetzt, wodurch sie flexibler eingesetzt werden kann.
 
@@ -1950,7 +1995,7 @@ Verzichtet man auf die Angabe der Argumente, wird auf die Standardwerte der Opti
 \DescribeMacro\planenvec[<Name>][<Stützvektor>][<Normalenvektor>]
 \DescribeMacro\planenvec*[<Name>][<Stützvektor-Variable>][<Normalenvektor-Variable>]
 %
-Sollen in einer Ebenengleichung in Normalenform die Vektoren angegeben werden, kann \Macro\planenvec verwendet werden (vom engl. \emph{plane, normal (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor} und der \meta{Normalenvektor} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
+Sollen in einer Ebenengleichung \Index{Ebene} in Normalenform \Index{Normalenform} die Vektoren angegeben werden, kann \Macro\planenvec verwendet werden (vom engl. \emph{plane, normal (vector)}). Es können der \meta{Name} der Geraden, der \meta{Stützvektor} und der \meta{Normalenvektor} der Ebene angegeben werden, wobei die Einträge der Vektoren durch \texttt{\textbackslash\textbackslash}\ getrennt werden müssen.
 
 In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und der \meta{Normalenvektor-Variable} angegeben werden, aus welchen dann automatisch drei indizierte Einträge erstellt werden.
 
@@ -1977,7 +2022,7 @@ In der Sternvariante können Namen für die \meta{Stützvektor-Variable} und der
 \DescribeMacro\qLeftrightarrow
 \DescribeMacro\qleftrightarrow
 %
-Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entsprechend eines \cs*{quad} ein:
+Fügt die entsprechenden Pfeile \Index{Pfeil} beidseitig umschlossen von einem Abstand entsprechend eines \cs*{quad} ein:
 }
 
 \begin{example}[de]
@@ -2000,7 +2045,7 @@ Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entspre
 \DescribeMacro\qqLeftrightarrow
 \DescribeMacro\qqleftrightarrow
 %
-Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entsprechend eines \cs*{qquad} ein:
+Fügt die entsprechenden Pfeile \Index{Pfeil} beidseitig umschlossen von einem Abstand entsprechend eines \cs*{qquad} ein:
 }
 
 \begin{example}[de]
@@ -2021,7 +2066,7 @@ Fügt die entsprechenden Pfeile beidseitig umschlossen von einem Abstand entspre
 \DescribeMacro\qtext{<Text>}
 \DescribeMacro\qqtext{<Text>}
 %
-Ermöglicht im Mathemodus das Einfügen eines \meta{Text}, der zu beiden Seiten von einem Abstand (bei \Macro\qtext ist dies \cs*{quad}, bei \Macro\qqtext ist es \cs*{qquad}) umgeben ist.
+Ermöglicht im Mathemodus das Einfügen eines \meta{Text}, \Index{Text} der zu beiden Seiten von einem Abstand (bei \Macro\qtext ist dies \cs*{quad}, bei \Macro\qqtext ist es \cs*{qquad}) umgeben ist.
 }
 
 \begin{example}[de]
@@ -2082,6 +2127,20 @@ Kein Displaystyle: $\lim_{x \rightarrow 0}
 Displaystyle: $\ds \lim_{x \rightarrow 0} 
 \int_x^0 \frac{1}{t} \diff t$
 \end{example}
+
+
+\localeDE{\section{Schriftarten}}
+
+\localeDE{
+Standardmäßig nimmt \thepackage\ keinerlei Veränderungen der verwendeten Schriftarten im Formelsatz vor. Es besteht jedoch die Möglichkeit, einige Anpassungen mithilfe von Optionen vorzunehmen.
+
+Für die (vorzugsweise) Verwendung von Serifenschriften steht die Option \opt{rmmathfont} (vom engl. \emph{roman math font}) zur Verfügung. Durch diese können die Schriftarten \emph{Libertine} (\opt*{rmmathfont=libertine}) und \emph{Palatino} (\opt*{rmmathfont=palatino}) geladen werden \sees{ssec:doc-opt-fonts}. 
+
+Durch die Option \opt{sfmath} wird die aktuelle serifenlose Schriftart zum Formelsatz verwendet.
+
+In beiden Fällen werden die Blackboard-Schriften der Schriftart \emph{Palatino} geladen, da aktuell keine freie serifenlose Blackboard-Schrift mit linkem doppeltem Strich existiert (bzw. vom Autor gefunden wurde).
+}
+
 
 
 
@@ -2235,6 +2294,20 @@ Durch diese Optionen können die Standardwerte einer Ebene in Normalenform (\Mac
 
 
 
+\localeDE{\subsection{Schriftarten} \label{ssec:doc-opt-fonts}}
+
+\localeDE{
+\Option{rmmathfont}\WithValues{computermodern, libertine, mathpazo}\AndDefault{computermodern}
+\Option{sfmath}\WithValues{true, false}\AndDefault{false}
+Durch diese Optionen kann die Schriftart des Formelsatzes manipuliert werden. Als serifenlose Schriftarten stehen \emph{Libertine} (\opt*{rmmathfont=libertine}) und \emph{Palatino} (\opt*{rmmathfont=palatino}) zur Verfügung.
+
+Durch die Option \opt{sfmath} wird die aktuelle serifenlose Schriftart zum Formelsatz verwendet.
+
+\NoticeLoadBeginDE*
+}
+
+
+
 
 
 
@@ -2244,10 +2317,10 @@ Durch diese Optionen können die Standardwerte einer Ebene in Normalenform (\Mac
 
 \Implementation\ExplHack
 
-\section{Implementierung}
+\part{Implementierung}
 
 
-\subsection{Basic Packages}
+\section{Basic Packages}
 
 Die folgenden Packages werden zur Erstellung und Bearbeitung der Optionen verwendet:
 
@@ -2263,7 +2336,7 @@ Die folgenden Packages werden zur Erstellung und Bearbeitung der Optionen verwen
 \end{MacroCode}
 
 
-\subsection{Messages}
+\section{Messages}
 
 Messages for future use:
 
@@ -2273,7 +2346,7 @@ Messages for future use:
 \end{MacroCode}
 
 
-\subsection{Variants}
+\section{Variants}
 
 \begin{MacroCode}{pkg}
 \cs_generate_variant:Nn \tl_if_eq:nnT { V }
@@ -2287,21 +2360,27 @@ Messages for future use:
 \end{MacroCode}
 
 
-\subsection{Temporary variables}
+\section{Temporary variables}
 
 \begin{macro*}{\g_edumath_temp_dim}
+\begin{macro*}{\g_edumath_temp_seq}
 \begin{macro*}{\g_edumath_temp_skip}
+\begin{macro*}{\g_edumath_temp_tl}
 Variables for temporary usage.
 \begin{MacroCode}{pkg}
 \dim_new:N \g_edumath_temp_dim
+\seq_new:N \g_edumath_temp_seq
 \skip_new:N \g_edumath_temp_skip
+\tl_new:N \g_edumath_temp_tl
 
 \end{MacroCode}
 \end{macro*}
 \end{macro*}
+\end{macro*}
+\end{macro*}
 
 
-\subsection{Parskip}
+\section{Parskip}
 
 \begin{macro*}{\g_edumath_temp_skip}
 Variable to store the documents parskip (at the beginning of the document).
@@ -2321,9 +2400,9 @@ Variable to store the documents parskip (at the beginning of the document).
 
 
 
-\subsection{Optionen}
+\section{Optionen}
 
-\subsubsection{Patches}
+\subsection{Patches}
 
 \begin{macro}{\__edumath_keys_initial:n}[1]{<key = value list>}
 Da die Zuweisung initialer Werte in relativen Einheiten (em, ex etc.) bei \cs*{key}-Option durch \cs*{.initial} nicht funktioniert, werden diese mithilfe dieses Hilsmakros am Dokumentenanfang zugewiesen.
@@ -2337,11 +2416,11 @@ Da die Zuweisung initialer Werte in relativen Einheiten (em, ex etc.) bei \cs*{k
 \end{MacroCode}
 \end{macro}
 
-\begin{macro}{\@usetl}[1]{<token list>}
+\begin{macro}{\@usetl}[3]{<module>}{<option>}{<type>}
 \pkg{tikz}-Optionen können (noch?) nicht in \LaTeX3 eingebettet, d.\,h. innerhalb von \cs{ExplSyntaxOn} und \cs{ExplSyntaxOff} verwendet werden. Mithilfe dieses Makros können durch \cs{keys_define} definierte Optionen dennoch in \pkg{tikz} verwendet werden.
 \begin{MacroCode}{pkg}
-\DeclareExpandableDocumentCommand \@usetl { m m } {
-  \tl_use:c {g_edumath_#1_#2}
+\DeclareExpandableDocumentCommand \@usetl { m m m } {
+  \tl_use:c {g_#1_#2_#3}
 }
 
 \end{MacroCode}
@@ -2351,10 +2430,12 @@ Im Folgenden werden die Optionen nach Kategorie deklariert.
 
 
 
-\subsubsection{Mathematik}
+\subsection{Mathematik}
 
 \begin{option}{commasep}
 \begin{option}{amsoptions}
+\begin{option}{specialsets}
+\begin{option}{qtree}
 Basic math options:
 \begin{MacroCode}{pkg}
 \keys_define:nn {edumath} {
@@ -2369,6 +2450,8 @@ Basic math options:
 }
 
 \end{MacroCode}
+\end{option}
+\end{option}
 \end{option}
 \end{option}
 
@@ -2586,8 +2669,37 @@ TODO
 
 
 
+\subsection{Schriftarten}
 
-\subsubsection{Optionen verarbeiten}
+\begin{option}{sfmath}
+\begin{option}{rmmathfont}
+Font math options:
+\begin{MacroCode}{pkg}
+
+\tl_new:N \g_edumath_rmmathfont_tl
+
+\keys_define:nn {edumath} {
+  rmmathfont .choices:nn = {
+    computermodern,
+    libertine,
+    palatino
+  }
+  {
+    \tl_gset:NV \g_edumath_rmmathfont_tl \l_keys_choice_tl
+  },
+  rmfont .initial:n = computermodern,
+  sfmath .bool_gset:N = \g_edumath_sfmath_bool,  % Use sans serif math fonts
+  sfmath .initial:n = false,
+}
+
+\end{MacroCode}
+\end{option}
+\end{option}
+
+
+
+
+\subsection{Optionen verarbeiten}
 
 \begin{MacroCode}{pkg}
 %\ProcessOptions              % LaTeX-Basics (for \PassOptionsTopkg)
@@ -2596,13 +2708,13 @@ TODO
 \end{MacroCode}
 
 
-\subsection{Packages laden}
+\section{Packages laden}
 
 Informationen der einzelnen Packages sind der jeweiligen Dokumentation zu entnehmen.
 
 
 
-\subsubsection{Grundlegende Packages}
+\subsection{Grundlegende Packages}
 
 \begin{MacroCode}{pkg}
 \RequirePackage{calc}
@@ -2612,7 +2724,7 @@ Informationen der einzelnen Packages sind der jeweiligen Dokumentation zu entneh
 
 
 
-\subsubsection{TikZ}
+\subsection{TikZ}
 
 \begin{MacroCode}{pkg}
 \RequirePackage{tikz}
@@ -2624,7 +2736,7 @@ Informationen der einzelnen Packages sind der jeweiligen Dokumentation zu entneh
 \end{MacroCode}
 
 
-\subsubsection{Mathematik}
+\subsection{Mathematik}
 
 \begin{MacroCode}{pkg}
 \RequirePackage[\g_edumath_amsoptions_tl]{amsmath}
@@ -2637,6 +2749,7 @@ Informationen der einzelnen Packages sind der jeweiligen Dokumentation zu entneh
 \RequirePackage{thmtools}
 \RequirePackage[only, lightning]{stmaryrd}
 \RequirePackage{xlop}
+\RequirePackage{mathtools}
 
 
 \end{MacroCode}
@@ -2658,7 +2771,9 @@ Because of the incompatibility of \textsf{tikz-qtree} and \textsf{struktex}, it 
 \begin{macro*}{\c_colon_tl}
 Define a token list which can be used as a colon in \textsf{TikZ} within \cs*{\ExplSyntaxOn} and \cs*{\ExplSyntaxOff}.
 \begin{MacroCode}{pkg}
-\tl_const:Nx \c_colon_tl { \token_to_str:N : }
+\tl_if_exist:NF \c_colon_tl {
+  \tl_const:Nx \c_colon_tl { \token_to_str:N : }
+}
 
 \end{MacroCode}
 \end{macro*}
@@ -2666,7 +2781,7 @@ Define a token list which can be used as a colon in \textsf{TikZ} within \cs*{\E
 
 
 
-\subsection{Einrichtung des \textsf{edumath}-Packages}
+\section{Einrichtung des \textsf{edumath}-Packages}
 
 \begin{macro}{\edumathsetup}[1]{<key>=<val> list}
 \begin{macro}{\edumathoption}[2]{<key>}{<val>}
@@ -2709,9 +2824,9 @@ Wrapper für \cs{setkeys} zum Setzen der Optionen.
 
 
 
-\subsection{Mathematik}
+\section{Mathematik}
 
-\subsubsection{Längen anpassen}
+\subsection{Längen anpassen}
 
 Zum Einsparen von Platz, werden Abstände vor und nach Gleichungen 
 verkleinert.
@@ -2727,7 +2842,7 @@ verkleinert.
 \end{MacroCode}
 
 
-\subsubsection{Komma als Dezimaltrenner}
+\subsection{Komma als Dezimaltrenner}
 
 Abhängig von der Option \opt{commasep} wird mithilfe des Packages \pkg{icomma} das Komma als Dezimaltrenner verwendet.
 
@@ -2739,7 +2854,7 @@ Abhängig von der Option \opt{commasep} wird mithilfe des Packages \pkg{icomma} 
 \end{MacroCode}
 
 
-\subsubsection{Gleichungsumgebungen}
+\subsection{Gleichungsumgebungen}
 
 \begin{environment}{aligntr}
 \begin{environment}{aligntr*}
@@ -2780,7 +2895,7 @@ Dient als Trenner für Umformungen in \env*{aligntr}.
 \end{macro}
 
 
-\subsubsection{Rechenbäume}
+\subsection{Rechenbäume}
 
 Rechenbäume können mithilfe des Packages \textsf{tikz-qtree} erstellt werden. Dieses wir hier geladen und konfiguriert.
 
@@ -2828,7 +2943,7 @@ Rechenbäume können mithilfe des Packages \textsf{tikz-qtree} erstellt werden. 
 
 
 
-\subsubsection{Theorem-Umgebungen}
+\subsection{Theorem-Umgebungen}
 
 First, check option-dependencies:
 
@@ -3294,7 +3409,7 @@ Es folgen die Theoremugebungen durch \pkg{thmbox} in allen Varianten. Seltsamerw
 
 
 
-\subsubsection{Symbole für spezielle Mengen}
+\subsection{Symbole für spezielle Mengen}
 
 \begin{macro}{\N}
 \begin{macro}{\Z}
@@ -3325,7 +3440,7 @@ Definiert Symbole für spezielle Mengen.
 \end{macro}
 
 
-\subsubsection{Vektoren}
+\subsection{Vektoren}
 
 \begin{macro}{\vec}[1]{<expression>}
 Anderer Name für einen Vektor markiert durch einen Pfeil, der durch \cs*{vv} aus dem Package \pkg{esvect} erzeugt wird.
@@ -3345,7 +3460,7 @@ Verkürzte Erzeugung eines Spaltenvektors durch \env*{pmatrix}-Umgebung.
 \end{macro}
 
 
-\subsubsection{Gleichungssysteme/Gauß-Verfahren}
+\subsection{Gleichungssysteme/Gauß-Verfahren}
 
 In \pkg{gauss} sollen die Zeilenumformungen angezeigt werden:
 
@@ -3398,7 +3513,41 @@ This command can be used to typeset a horizontal rule inside an array which span
 \end{macro}
 
 
-\subsubsection{Schriftliche Grundrechenarten}
+\subsection{Vielfache von Vektoren}
+
+\begin{macro}{\vectmultsol}[1]{<solution as vector>}
+The arrows of the solutions depend on the way of solving the equation. That's why the argument has to be split first and then processed per row using the following \cs*{__edumath_build_vectmultsol:n}. The result is typeset as a matrix. First, the rows of the matrix are generated as \cs*{g_edumath_temp_tl} and then appended to \cs*{g_edumath_temp_seq}, which is finally concatenated inside the matrix.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \vectmultsol { >{\SplitList{\\}} m } {
+
+  \seq_clear:N \g_edumath_temp_seq
+  \tl_clear:N \g_edumath_temp_tl
+  
+  \ProcessList { #1 } { \__edumath_build_vectmultsol:n }
+  
+  \begin{matrix*}[l]
+    \seq_use:Nnnn \g_edumath_temp_seq { \\ } { \\ } { \\ }
+  \end{matrix*}
+}
+\cs_new:Npn \__edumath_build_vectmultsol:n #1 {
+  \tl_clear:N \g_edumath_temp_tl
+  
+  \tl_if_empty:nTF {#1} {
+    \tl_put_right:Nn \g_edumath_temp_tl {~}
+  }{
+    \tl_put_right:Nn \g_edumath_temp_tl {\rightarrow}
+    \tl_put_right:Nn \g_edumath_temp_tl {#1}
+  }
+  \seq_put_right:NV \g_edumath_temp_seq \g_edumath_temp_tl
+}
+
+\end{MacroCode}
+\end{macro}
+
+
+
+
+\subsection{Schriftliche Grundrechenarten}
 
 Set up \textsf{xlop} to look as much as possible like the german school notation.
 
@@ -3417,7 +3566,7 @@ Set up \textsf{xlop} to look as much as possible like the german school notation
 
 
 
-\subsubsection{Polynomdivision}
+\subsection{Polynomdivision}
 
 Polynomdivision wird durch \textsf{polynom} durchgeführt. Dieses Package wird an dieser Stelle konfiguriert.
 
@@ -3426,7 +3575,7 @@ Polynomdivision wird durch \textsf{polynom} durchgeführt. Dieses Package wird a
 
 \end{MacroCode}
 
-\subsubsection{Typographie}
+\subsection{Typographie}
 
 \begin{macro}{\qtext}[1]{<text>}
 \begin{macro}{\qqtext}[1]{<text>}
@@ -3499,7 +3648,7 @@ Einfügen von Text/Formeln mit beidseitigem Abstand \cs*{quad} bzw. \cs{qquad} i
 \end{macro}
 
 
-\subsubsection{Betrag und Norm -- auch von Vektoren}
+\subsection{Betrag und Norm -- auch von Vektoren}
 
 \begin{macro}{\abs}[1]{<expression>}
 \begin{macro}{\absvec}[1]{<expression>}
@@ -3578,7 +3727,7 @@ Makros für (Vektor-)Beträge und (Vektor-)Normen. In den Sternvarianten skalier
 \end{macro}
 
 
-\subsubsection{Special Equations/Formulas}
+\subsection{Special Equations/Formulas}
 
 \begin{macro}{\qf}
 \begin{macro}{\qfvar}
@@ -3745,7 +3894,7 @@ Planes in normal form:
 \end{macro}
 
 
-\subsubsection{Planfiguren}
+\subsection{Planfiguren}
 
 \begin{macro}{\planfigurLines}[1]{<edges to highlight>}
 \begin{macro}{\planfigurAngles}[1]{<angles to highlight>}
@@ -3823,26 +3972,29 @@ Draws a "`planfigur"' (sketch) of a triangle, where the given edges and angles a
 
 
 
-\subsubsection{Verschiedenes}
+\subsection{Verschiedenes}
 
 \begin{macro}{\corr}
 \begin{macro}{\ds}
 \begin{macro}{\der}
 \begin{macro}{\i}
+\begin{macro}{\lightning}
 \begin{macro}{\minusp}
 \begin{macro}{\sep}
 \begin{macro}{\solset}
-\begin{macro}{\textlightning}
 Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
 \begin{MacroCode}{pkg}
 \DeclareDocumentCommand \corr {  } {\ensuremath{\mathrel{\hat{=}}}}
 \DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
 \DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}
 \DeclareDocumentCommand \iu {  } {\ensuremath{\mathrm{i}}}
+
+\let\lightningorig\lightning
+\DeclareDocumentCommand \lightning {  } {\relax\ifmmode\ \fi\ensuremath{\lightningorig}}
+
 \DeclareDocumentCommand \minusp {  } {\ensuremath{\hphantom{-}}}
 \DeclareDocumentCommand \sep {  } {\,\vert\,}    
 \DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
-\DeclareDocumentCommand \textlightning {  } {\ensuremath{\lightning}}
 
 \end{MacroCode}
 \end{macro}
@@ -3856,21 +4008,79 @@ Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
 
 
 
-\subsection{Sonstiges}
+\subsection{Schriftarten}
 
-Various additional common commands.
+Durch die Option \opt{rmmathfont} können (neben der standardmäßig verwendeten Schrift \emph{Computer Modern}) optional die Schriftarten \emph{Libertine} oder \emph{Palatino} gewählt werden.
 
-\begin{macro}{\templength}
-\begin{macro}{tempcounter}
-Length/command/counter for temporary usage.
 \begin{MacroCode}{pkg}
-\newlength{\templength}
-\newcommand{\tempcommand}{}
-\newcounter{tempcounter}
+
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {libertine} {
+  \RequirePackage[libertine, varbb]{newtxmath}
+}
+
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {palatino} {
+  \RequirePackage{mathpazo}
+}
 
 \end{MacroCode}
-\end{macro}
-\end{macro}
+
+Durch die Option \opt{sfmath} wird mithilfe des Packages \pkg{sansmath} die aktuelle serifenlose Schrift als Schrift für den Formelsatz gewählt. Als Blackboard-Schrift wird durch das Package \pkg{mathalfa} \emph{Palatino} gewählt, da aktuell keine freie serifenlose Blackboard-Schrift mit linkem doppeltem Strich existiert (bzw. vom Autor gefunden wurde). Außerdem werden griechische serifenlose Buchstaben der Schrift \emph{Iwona} verwendet.
+
+\begin{MacroCode}{pkg}
+\bool_if:NT \g_edumath_sfmath_bool {
+  \RequirePackage{sansmath}                     % Default sans serif font as math font
+  \sansmath
+ 
+  \usepackage[bb=pazo, bbscaled=0.9]{mathalfa}  % Load blackboard font of palatino
+  
+  % Load small and large greek letters of Iwona as there are
+  % not many other sans serif greek letters
+	\DeclareSymbolFont{Greekletters}{OT1}{iwona}{m}{n}
+	\DeclareSymbolFont{greekletters}{OML}{iwona}{m}{it}
+	
+	\DeclareMathSymbol{\Delta}{\mathord}{Greekletters}{"01}
+	\DeclareMathSymbol{\Theta}{\mathord}{Greekletters}{"02}
+	\DeclareMathSymbol{\Lambda}{\mathord}{Greekletters}{"03}
+	\DeclareMathSymbol{\Xi}{\mathord}{Greekletters}{"04}
+	\DeclareMathSymbol{\Pi}{\mathord}{Greekletters}{"05}
+	\DeclareMathSymbol{\Sigma}{\mathord}{Greekletters}{"06}
+	\DeclareMathSymbol{\Upsilon}{\mathord}{Greekletters}{"07}
+	\DeclareMathSymbol{\Phi}{\mathord}{Greekletters}{"08}
+	\DeclareMathSymbol{\Psi}{\mathord}{Greekletters}{"09}
+	\DeclareMathSymbol{\Omega}{\mathord}{Greekletters}{"0A}
+	
+	\DeclareMathSymbol{\alpha}{\mathord}{greekletters}{"0B}
+	\DeclareMathSymbol{\beta}{\mathord}{greekletters}{"0C}
+	\DeclareMathSymbol{\gamma}{\mathord}{greekletters}{"0D}
+	\DeclareMathSymbol{\delta}{\mathord}{greekletters}{"0E}
+	\DeclareMathSymbol{\epsilon}{\mathord}{greekletters}{"0F}
+	\DeclareMathSymbol{\zeta}{\mathord}{greekletters}{"10}
+	\DeclareMathSymbol{\eta}{\mathord}{greekletters}{"11}
+	\DeclareMathSymbol{\theta}{\mathord}{greekletters}{"12}
+	\DeclareMathSymbol{\iota}{\mathord}{greekletters}{"13}
+	\DeclareMathSymbol{\kappa}{\mathord}{greekletters}{"14}
+	\DeclareMathSymbol{\lambda}{\mathord}{greekletters}{"15}
+	\DeclareMathSymbol{\mu}{\mathord}{greekletters}{"16}
+	\DeclareMathSymbol{\nu}{\mathord}{greekletters}{"17}
+	\DeclareMathSymbol{\xi}{\mathord}{greekletters}{"18}
+	\DeclareMathSymbol{\pi}{\mathord}{greekletters}{"19}
+	\DeclareMathSymbol{\rho}{\mathord}{greekletters}{"1A}
+	\DeclareMathSymbol{\sigma}{\mathord}{greekletters}{"1B}
+	\DeclareMathSymbol{\tau}{\mathord}{greekletters}{"1C}
+	\DeclareMathSymbol{\upsilon}{\mathord}{greekletters}{"1D}
+	\DeclareMathSymbol{\phi}{\mathord}{greekletters}{"1E}
+	\DeclareMathSymbol{\chi}{\mathord}{greekletters}{"1F}
+	\DeclareMathSymbol{\psi}{\mathord}{greekletters}{"20}
+	\DeclareMathSymbol{\omega}{\mathord}{greekletters}{"21}
+	\DeclareMathSymbol{\varepsilon}{\mathord}{greekletters}{"22}
+	\DeclareMathSymbol{\vartheta}{\mathord}{greekletters}{"23}
+	\DeclareMathSymbol{\varpi}{\mathord}{greekletters}{"24}
+	\DeclareMathSymbol{\varrho}{\mathord}{greekletters}{"25}
+	\DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
+	\DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
+}
+
+\end{MacroCode}
 
 
 \begin{MacroCode}{pkg}

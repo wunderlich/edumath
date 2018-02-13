@@ -38,7 +38,9 @@
 \cs_generate_variant:Nn \tl_if_eq:nnTF { v }
 
 \dim_new:N \g_edumath_temp_dim
+\seq_new:N \g_edumath_temp_seq
 \skip_new:N \g_edumath_temp_skip
+\tl_new:N \g_edumath_temp_tl
 
 \dim_new:N \g_edumath_parskip_dim
 \skip_new:N \g_edumath_parskip_skip
@@ -54,8 +56,8 @@
   }
 }
 
-\DeclareExpandableDocumentCommand \@usetl { m m } {
-  \tl_use:c {g_edumath_#1_#2}
+\DeclareExpandableDocumentCommand \@usetl { m m m } {
+  \tl_use:c {g_#1_#2_#3}
 }
 
 \keys_define:nn {edumath} {
@@ -165,6 +167,23 @@
   planenvarnormal .initial:n = n,
 }
 
+
+\tl_new:N \g_edumath_rmmathfont_tl
+
+\keys_define:nn {edumath} {
+  rmmathfont .choices:nn = {
+    computermodern,
+    libertine,
+    palatino
+  }
+  {
+    \tl_gset:NV \g_edumath_rmmathfont_tl \l_keys_choice_tl
+  },
+  rmfont .initial:n = computermodern,
+  sfmath .bool_gset:N = \g_edumath_sfmath_bool,  % Use sans serif math fonts
+  sfmath .initial:n = false,
+}
+
 %\ProcessOptions              % LaTeX-Basics (for \PassOptionsTopkg)
 \ProcessKeysOptions{edumath}  % l3keys2e options
 
@@ -187,6 +206,7 @@
 \RequirePackage{thmtools}
 \RequirePackage[only, lightning]{stmaryrd}
 \RequirePackage{xlop}
+\RequirePackage{mathtools}
 
 
 \bool_if:NT \g_edumath_qtree_bool {
@@ -196,7 +216,9 @@
 }
 
 
-\tl_const:Nx \c_colon_tl { \token_to_str:N : }
+\tl_if_exist:NF \c_colon_tl {
+  \tl_const:Nx \c_colon_tl { \token_to_str:N : }
+}
 
 \DeclareDocumentCommand  \edumathsetup { m } {
   \keys_set:nn {edumath} {#1}
@@ -631,6 +653,29 @@
   \hspace{0.25em}\kern-\tabcolsep\vrule height\arraystretch\ht\strutbox depth\arraystretch\dp\strutbox\kern-\tabcolsep\hspace{0.25em}
 }
 
+\DeclareDocumentCommand \vectmultsol { >{\SplitList{\\}} m } {
+
+  \seq_clear:N \g_edumath_temp_seq
+  \tl_clear:N \g_edumath_temp_tl
+
+  \ProcessList { #1 } { \__edumath_build_vectmultsol:n }
+
+  \begin{matrix*}[l]
+    \seq_use:Nnnn \g_edumath_temp_seq { \\ } { \\ } { \\ }
+  \end{matrix*}
+}
+\cs_new:Npn \__edumath_build_vectmultsol:n #1 {
+  \tl_clear:N \g_edumath_temp_tl
+
+  \tl_if_empty:nTF {#1} {
+    \tl_put_right:Nn \g_edumath_temp_tl {~}
+  }{
+    \tl_put_right:Nn \g_edumath_temp_tl {\rightarrow}
+    \tl_put_right:Nn \g_edumath_temp_tl {#1}
+  }
+  \seq_put_right:NV \g_edumath_temp_seq \g_edumath_temp_tl
+}
+
 \opset{voperation=top}                % Vertikale Ausrichtung der Rechnung
 \opset{voperator=bottom}              % Rechenzeichen in unterer Zeile
 \opset{carrysub=true}                 % Übertrag bei Subtraktion
@@ -905,14 +950,75 @@
 \DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
 \DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}
 \DeclareDocumentCommand \iu {  } {\ensuremath{\mathrm{i}}}
+
+\let\lightningorig\lightning
+\DeclareDocumentCommand \lightning {  } {\relax\ifmmode\ \fi\ensuremath{\lightningorig}}
+
 \DeclareDocumentCommand \minusp {  } {\ensuremath{\hphantom{-}}}
 \DeclareDocumentCommand \sep {  } {\,\vert\,}
 \DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
-\DeclareDocumentCommand \textlightning {  } {\ensuremath{\lightning}}
 
-\newlength{\templength}
-\newcommand{\tempcommand}{}
-\newcounter{tempcounter}
+
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {libertine} {
+  \RequirePackage[libertine, varbb]{newtxmath}
+}
+
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {palatino} {
+  \RequirePackage{mathpazo}
+}
+
+\bool_if:NT \g_edumath_sfmath_bool {
+  \RequirePackage{sansmath}                     % Default sans serif font as math font
+  \sansmath
+
+  \usepackage[bb=pazo, bbscaled=0.9]{mathalfa}  % Load blackboard font of palatino
+
+  % Load small and large greek letters of Iwona as there are
+  % not many other sans serif greek letters
+\DeclareSymbolFont{Greekletters}{OT1}{iwona}{m}{n}
+\DeclareSymbolFont{greekletters}{OML}{iwona}{m}{it}
+
+\DeclareMathSymbol{\Delta}{\mathord}{Greekletters}{"01}
+\DeclareMathSymbol{\Theta}{\mathord}{Greekletters}{"02}
+\DeclareMathSymbol{\Lambda}{\mathord}{Greekletters}{"03}
+\DeclareMathSymbol{\Xi}{\mathord}{Greekletters}{"04}
+\DeclareMathSymbol{\Pi}{\mathord}{Greekletters}{"05}
+\DeclareMathSymbol{\Sigma}{\mathord}{Greekletters}{"06}
+\DeclareMathSymbol{\Upsilon}{\mathord}{Greekletters}{"07}
+\DeclareMathSymbol{\Phi}{\mathord}{Greekletters}{"08}
+\DeclareMathSymbol{\Psi}{\mathord}{Greekletters}{"09}
+\DeclareMathSymbol{\Omega}{\mathord}{Greekletters}{"0A}
+
+\DeclareMathSymbol{\alpha}{\mathord}{greekletters}{"0B}
+\DeclareMathSymbol{\beta}{\mathord}{greekletters}{"0C}
+\DeclareMathSymbol{\gamma}{\mathord}{greekletters}{"0D}
+\DeclareMathSymbol{\delta}{\mathord}{greekletters}{"0E}
+\DeclareMathSymbol{\epsilon}{\mathord}{greekletters}{"0F}
+\DeclareMathSymbol{\zeta}{\mathord}{greekletters}{"10}
+\DeclareMathSymbol{\eta}{\mathord}{greekletters}{"11}
+\DeclareMathSymbol{\theta}{\mathord}{greekletters}{"12}
+\DeclareMathSymbol{\iota}{\mathord}{greekletters}{"13}
+\DeclareMathSymbol{\kappa}{\mathord}{greekletters}{"14}
+\DeclareMathSymbol{\lambda}{\mathord}{greekletters}{"15}
+\DeclareMathSymbol{\mu}{\mathord}{greekletters}{"16}
+\DeclareMathSymbol{\nu}{\mathord}{greekletters}{"17}
+\DeclareMathSymbol{\xi}{\mathord}{greekletters}{"18}
+\DeclareMathSymbol{\pi}{\mathord}{greekletters}{"19}
+\DeclareMathSymbol{\rho}{\mathord}{greekletters}{"1A}
+\DeclareMathSymbol{\sigma}{\mathord}{greekletters}{"1B}
+\DeclareMathSymbol{\tau}{\mathord}{greekletters}{"1C}
+\DeclareMathSymbol{\upsilon}{\mathord}{greekletters}{"1D}
+\DeclareMathSymbol{\phi}{\mathord}{greekletters}{"1E}
+\DeclareMathSymbol{\chi}{\mathord}{greekletters}{"1F}
+\DeclareMathSymbol{\psi}{\mathord}{greekletters}{"20}
+\DeclareMathSymbol{\omega}{\mathord}{greekletters}{"21}
+\DeclareMathSymbol{\varepsilon}{\mathord}{greekletters}{"22}
+\DeclareMathSymbol{\vartheta}{\mathord}{greekletters}{"23}
+\DeclareMathSymbol{\varpi}{\mathord}{greekletters}{"24}
+\DeclareMathSymbol{\varrho}{\mathord}{greekletters}{"25}
+\DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
+\DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
+}
 
 \endinput
 
