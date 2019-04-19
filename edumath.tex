@@ -155,6 +155,7 @@
 \DeclareDocumentCommand \vec { m } {}
 \DeclareDocumentCommand \vect { m } {}
 
+\DeclareDocumentCommand \rn { m } {}
 \DeclareDocumentCommand \rowswapfromlabel { m } {}
 \DeclareDocumentCommand \rowswaptolabel { m } {}
 
@@ -190,6 +191,7 @@
 \seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {strategy}
 
 \seq_new:N \g__edumath_thmunimp_seq
 
@@ -1195,6 +1197,21 @@ Dient der Einleitung der Beschreibung einer (Äquivalenz)Umformung (engl. \emph{
 }
 
 
+\localeDE{\section{Römische Zahlen}}
+
+\localeDE{
+\DescribeMacro\rn{<Term>}
+%
+Dieses Makro wandelt eine (arabische) Zahl in eine römische Zahl um. Es funktioniert im Text- und Mathemodus.
+}
+
+\begin{example}[de]
+Dem Jahr 1986 entspricht \rn{1986}.
+
+$\rn{15} + \rn{85} = \rn{100}$.
+\end{example}
+
+
 \localeDE{\section{Rechenbäume}}
 
 \localeDE{
@@ -1323,7 +1340,7 @@ Theoreme sind eingeteilt in "`wichtige"' (engl. \emph{important}) und "`unwichti
     \env{defitheo} & Definition/Satz & \env{exampleexe} & Beispielaufgabe \\
     \env{theorem} & Satz & \env{hint} & Hinweis \\
     \env{calcrule} & Regel & \env{remark} & Bemerkung \\
-    &  & \env{solution} & Lösung \\
+    \env{strategy} & Lösungsstrategie & \env{solution} & Lösung \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -1342,6 +1359,7 @@ Für Theoreme stehen eine Vielzahl weiterer Optionen zur Konfiguration ihrer Dar
 \DescribeEnv[<Inhalt>]{defitheo}[<Name>]
 \DescribeEnv[<Inhalt>]{theorem}[<Name>]
 \DescribeEnv[<Inhalt>]{calcrule}[<Name>]
+\DescribeEnv[<Inhalt>]{strategy}[<Name>]
 %
 Die \pkg{amsthm} Darstellung ist sehr reduziert. Theorem-Umgebungen werden lediglich durch einen Absatzumbruch vom restlichen Inhalt getrennt und serifenlos und fett beschriftet -- es findet sonst keine andere gestalterische Trennung statt. Optional können die Theoreme durch \meta{Name} benannt werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
 
@@ -1376,6 +1394,16 @@ Die \pkg{amsthm} Darstellung ist sehr reduziert. Theorem-Umgebungen werden ledig
       = (a \pm b) \cdot 10^{p}
     \] 
 \end{calcrule}
+
+\begin{strategy}[Extremstellen]~
+  \begin{enumerate}
+	  \item Bestimme $f'$ und $f''$.
+	  \item Suche alle $x_0$, für die gilt: 
+	    $f'(x_0) = 0$.
+	  \item Überprüfe der Reihe nach 
+	    für alle $x_0$ aus 2.: …
+	\end{enumerate}
+\end{strategy}
 \end{example}
 
 
@@ -1418,6 +1446,7 @@ Die unwichtigen Theorem-Umgebungen im Stile von \pkg{amsthm} werden lediglich du
 \DescribeEnv[<Inhalt>]{defitheof}[<Name>]
 \DescribeEnv[<Inhalt>]{theoremf}[<Name>]
 \DescribeEnv[<Inhalt>]{calcrulef}[<Name>]
+\DescribeEnv[<Inhalt>]{strategyf}[<Name>]
 %
 In dieser Variante werden Theorem-Umgebungen eingerahmt und/oder mit Hintergrundfarbe dargestellt. Optional können die Theoreme durch \meta{Name} benannt werden. Die Farben von Rahmen und Hintergrund können durch die Optionen \opt{thmframefg} und \opt{thmframebg} angepasst werden. Es folgen Beispiele der wichtigen Theorem-Umgebungen.
 
@@ -1452,6 +1481,16 @@ In dieser Variante werden Theorem-Umgebungen eingerahmt und/oder mit Hintergrund
       = (a \pm b) \cdot 10^{p}
     \] 
 \end{calcrulef}
+
+\begin{strategyf}[Extremstellen]~
+  \begin{enumerate}
+	  \item Bestimme $f'$ und $f''$.
+	  \item Suche alle $x_0$, für die gilt: 
+	    $f'(x_0) = 0$.
+	  \item Überprüfe der Reihe nach 
+	    für alle $x_0$ aus 2.: …
+	\end{enumerate}
+\end{strategyf}
 \end{example}
 
 
@@ -1502,6 +1541,9 @@ Die unwichtigen Theorem-Umgebungen unterscheiden sich in dieser Darstellung dadu
 \DescribeEnv[<Inhalt>]{calcrulebs}[<Name>]
 \DescribeEnv[<Inhalt>]{calcrulebm}[<Name>]
 \DescribeEnv[<Inhalt>]{calcrulebl}[<Name>]
+\DescribeEnv[<Inhalt>]{strategybs}[<Name>]
+\DescribeEnv[<Inhalt>]{strategybm}[<Name>]
+\DescribeEnv[<Inhalt>]{strategybl}[<Name>]
 %
 In der \pkg{thmbox} Darstellung stehen für jede Theorem-Umgebung drei Varianten zur verfügung, welche sich durch die Endung unterscheiden: \env*{*bs} (vom engl. \emph{boxed small}), \env*{*bm} (vom engl. \emph{boxed medium}) und \env*{*bl} (vom engl. \emph{boxed large}), welche sich durch Anzahl der umrahmten Seiten den Umgebung unterscheiden (links; links und unten; links; unten und rechts). Optional können die Theoreme durch \meta{Name} benannt werden. Es folgen Beispiele der unterschiedlichen Umrandungen für Definitionen. Alle anderen Theorem-Umgebungen werden analog verwendet.
 
@@ -2256,6 +2298,7 @@ Durch diese Optionen kann die Formatierung unwichtiger (vom engl. \emph{unimport
 \Option{thmdefitheolabel}\WithValues{\meta{Name}}\AndDefault{Definition/Satz}
 \Option{thmtheoremlabel}\WithValues{\meta{Name}}\AndDefault{Satz}
 \Option{thmcalcrulelabel}\WithValues{\meta{Name}}\AndDefault{Regel}
+\Option{thmstrategylabel}\WithValues{\meta{Name}}\AndDefault{Regel}
 \Option{thmexamplelabel}\WithValues{\meta{Name}}\AndDefault{Beispiel}
 \Option{thmexampleexelabel}\WithValues{\meta{Name}}\AndDefault{Beispielaufgabe}
 \Option{thmhintlabel}\WithValues{\meta{Name}}\AndDefault{Hinweis}
@@ -2552,6 +2595,7 @@ Style of unimportant theorems:
 \begin{option}{thmdefitheolabel}
 \begin{option}{thmtheoremlabel}
 \begin{option}{thmcalcrulelabel}
+\begin{option}{thmstrategylabel}
 \begin{option}{thmexamplelabel}
 \begin{option}{thmexampleexelabel}
 \begin{option}{thmhintlabel}
@@ -2568,6 +2612,8 @@ Labels of theorems:
   thmtheoremlabel .initial:n = Satz,
   thmcalcrulelabel .tl_gset:N = \g_edumath_thmcalcrulelabel_tl,
   thmcalcrulelabel .initial:n = Regel,
+  thmstrategylabel .tl_gset:N = \g_edumath_thmstrategylabel_tl,
+  thmstrategylabel .initial:n = Lösungsstrategie,
   thmexamplelabel .tl_gset:N = \g_edumath_thmexamplelabel_tl,
   thmexamplelabel .initial:n = Beispiel,
   thmexampleexelabel .tl_gset:N = \g_edumath_thmexampleexelabel_tl,
@@ -2581,6 +2627,7 @@ Labels of theorems:
 }
 
 \end{MacroCode}
+\end{option}
 \end{option}
 \end{option}
 \end{option}
@@ -2895,6 +2942,17 @@ Dient als Trenner für Umformungen in \env*{aligntr}.
 \end{macro}
 
 
+\subsection{Römische Zahlen}
+
+\begin{macro}{\rn}[1]{<number>}
+Converts an (arabic) number into a roman number.
+\begin{MacroCode}{pkg}
+\DeclareDocumentCommand \rn { m } {\textup{ \int_to_Roman:n { #1 } }}
+
+\end{MacroCode}
+\end{macro}
+
+
 \subsection{Rechenbäume}
 
 Rechenbäume können mithilfe des Packages \textsf{tikz-qtree} erstellt werden. Dieses wir hier geladen und konfiguriert.
@@ -2976,6 +3034,7 @@ Zuerst werden benötigte Längen definiert. After that, sequences with the diffe
 \seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {strategy}
 
 \seq_new:N \g__edumath_thmunimp_seq
 
@@ -3043,6 +3102,7 @@ Depending on the options \opt{theoremstyleimp} and \opt{theoremstyleunimp} the t
 \begin{environment}{defitheo}[1]{[<definition/theorem name>]}
 \begin{environment}{theorem}[1]{[<theorem name>]}
 \begin{environment}{calcrule}[1]{[<calculation rule name>]}
+\begin{environment}{strategy}[1]{[<strategy rule name>]}
 \begin{environment}{example}[1]{[<example name>]}
 \begin{environment}{exampleexe}[1]{[<example exercise name>]}
 \begin{environment}{hint}[1]{[<hint name>]}
@@ -3062,6 +3122,7 @@ Dann werden die Theoremumgebungen definiert. Zuerst die Standard-Umgebungen vom 
 }
 
 \end{MacroCode}
+\end{environment}
 \end{environment}
 \end{environment}
 \end{environment}
@@ -3154,6 +3215,7 @@ After that, the control sequences are called for all names within \cs{__edumath_
 \begin{environment}{defitheofthm}[1]{[<definition/theorem name>]}
 \begin{environment}{theoremfthm}[1]{[<theorem name>]}
 \begin{environment}{calcrulefthm}[1]{[<calculation rule name>]}
+\begin{environment}{strategythm}[1]{[<strategy rule name>]}
 \begin{environment}{examplefthm}[1]{[<example name>]}
 \begin{environment}{exampleexefthm}[1]{[<example exercise name>]}
 \begin{environment}{hintfthm}[1]{[<hint name>]}
@@ -3218,6 +3280,7 @@ Now, the user commands are declared separately, to manipulate the spacing arount
 \end{environment}
 \end{environment}
 \end{environment}
+\end{environment}
 
 
 \begin{environment}{definitionbs}[1]{[<definition name>]}
@@ -3232,6 +3295,9 @@ Now, the user commands are declared separately, to manipulate the spacing arount
 \begin{environment}{calcrulebs}[1]{[<calculation rule name>]}
 \begin{environment}{calcrulebm}[1]{[<calculation rule name>]}
 \begin{environment}{calcrulebl}[1]{[<calculation rule name>]}
+\begin{environment}{strategybs}[1]{[<strategy rule name>]}
+\begin{environment}{strategybm}[1]{[<strategy rule name>]}
+\begin{environment}{strategybl}[1]{[<strategy rule name>]}
 \begin{environment}{examplebs}[1]{[<example name>]}
 \begin{environment}{examplebm}[1]{[<example name>]}
 \begin{environment}{examplebl}[1]{[<example name>]}
@@ -3406,6 +3472,9 @@ Es folgen die Theoremugebungen durch \pkg{thmbox} in allen Varianten. Seltsamerw
 \end{environment}
 \end{environment}
 \end{environment}
+\end{environment}
+\end{environment}
+\end{environment}
 
 
 
@@ -3501,7 +3570,7 @@ Declare starred versions of the \pkg{gauss}-environments with optional \cs{array
 \end{environment}
 \end{environment}
 
-\begin{macro}{\vect}[1]{<expressions in matrix-syntax>}
+\begin{macro}{\mvsep}
 This command can be used to typeset a horizontal rule inside an array which spans over the whole height of the cell.
 \begin{MacroCode}{pkg}
 \DeclareDocumentCommand \mvsep { } {

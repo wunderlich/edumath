@@ -120,6 +120,8 @@
   thmtheoremlabel .initial:n = Satz,
   thmcalcrulelabel .tl_gset:N = \g_edumath_thmcalcrulelabel_tl,
   thmcalcrulelabel .initial:n = Regel,
+  thmstrategylabel .tl_gset:N = \g_edumath_thmstrategylabel_tl,
+  thmstrategylabel .initial:n = Lösungsstrategie,
   thmexamplelabel .tl_gset:N = \g_edumath_thmexamplelabel_tl,
   thmexamplelabel .initial:n = Beispiel,
   thmexampleexelabel .tl_gset:N = \g_edumath_thmexampleexelabel_tl,
@@ -260,6 +262,8 @@
 
 \DeclareDocumentCommand \tr { } {&& \mid}
 
+\DeclareDocumentCommand \rn { m } {\textup{ \int_to_Roman:n { #1 } }}
+
 \bool_if:NT \g_edumath_qtree_bool {
 \tikzset{
   edge~from~parent/.style={
@@ -317,6 +321,7 @@
 \seq_gput_right:Nn \g__edumath_thmimp_seq {defitheo}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {theorem}
 \seq_gput_right:Nn \g__edumath_thmimp_seq {calcrule}
+\seq_gput_right:Nn \g__edumath_thmimp_seq {strategy}
 
 \seq_new:N \g__edumath_thmunimp_seq
 
