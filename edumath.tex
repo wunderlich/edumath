@@ -3514,7 +3514,9 @@ Definiert Symbole für spezielle Mengen.
 \begin{macro}{\vec}[1]{<expression>}
 Anderer Name für einen Vektor markiert durch einen Pfeil, der durch \cs*{vv} aus dem Package \pkg{esvect} erzeugt wird.
 \begin{MacroCode}{pkg}
-\DeclareDocumentCommand \vec { m } {\vv{#1}}
+\AtEndPreamble{
+  \DeclareDocumentCommand \vec { m } {\vv{#1}}
+}
 
 \end{MacroCode}
 \end{macro}

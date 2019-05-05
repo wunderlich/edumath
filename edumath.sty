@@ -625,7 +625,9 @@
 \DeclareDocumentCommand \L { } {\ensuremath{\mathbb{L}}}
 }
 
-\DeclareDocumentCommand \vec { m } {\vv{#1}}
+\AtEndPreamble{
+  \DeclareDocumentCommand \vec { m } {\vv{#1}}
+}
 
 \DeclareDocumentCommand \vect { m } {\begin{pmatrix} #1 \end{pmatrix}}
 
