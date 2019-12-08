@@ -4086,6 +4086,13 @@ Durch die Option \opt{rmmathfont} können (neben der standardmäßig verwendeten
 \begin{MacroCode}{pkg}
 
 \tl_if_eq:VnT \g_edumath_rmmathfont_tl {libertine} {
+    \makeatletter
+      % Using edu documentclass loads a package which already creats these macros
+      % and causes an error.
+      \let\lvert\relax
+      \let\lVert\relax
+      \let\rvert\relax
+      \let\rVert\relax
   \RequirePackage[libertine, varbb]{newtxmath}
 }
 
