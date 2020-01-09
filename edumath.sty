@@ -953,6 +953,7 @@
 }
 \ExplSyntaxOn
 
+\DeclareDocumentCommand \bigsquare {  } {\ensuremath{\mathrel{\tikz[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]{\draw[yshift=-0.7ex] (0,0) rectangle (1.7ex, 1.7ex);}}}}
 \DeclareDocumentCommand \corr {  } {\ensuremath{\mathrel{\hat{=}}}}
 \DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
 \DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}

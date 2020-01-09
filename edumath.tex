@@ -78,6 +78,7 @@
 \DeclareDocumentCommand \absvect { s m } {}
 
 \DeclareDocumentCommand \corr {  } {}
+\DeclareDocumentCommand \bigsquare {  } {}
 \DeclareDocumentCommand \ds {  } {}
 \DeclareDocumentCommand \diff {  } {}
 
@@ -1033,6 +1034,18 @@ Möchte man Optionen an das Package \pkg{amsmath}, welches von \thepackage\ auto
 
 
 \localeDE{\section{Symbole und Operatoren}}
+
+\localeDE{
+\DescribeMacro\bigsquare
+%
+Häufig wird ein Quadrat in niedrigeren Schulklassen als Platzhalter („Box“) für Zahlen (Vorstufe der Variable) oder Rechenzeichen verwendet. Das vorhandene \cs*{square} wirkt hierfür zu klein, weshalb durch \Macro\bigsquare ein großes Quadrat erzeugt werden kann.
+}
+
+\begin{example}[de]
+\[
+  1,524 \bigsquare 1,534
+\]
+\end{example}
 
 \localeDE{
 \DescribeMacro\corr
@@ -4045,6 +4058,7 @@ Draws a "`planfigur"' (sketch) of a triangle, where the given edges and angles a
 
 \subsection{Verschiedenes}
 
+\begin{macro}{\bigsquare}
 \begin{macro}{\corr}
 \begin{macro}{\ds}
 \begin{macro}{\der}
@@ -4055,6 +4069,7 @@ Draws a "`planfigur"' (sketch) of a triangle, where the given edges and angles a
 \begin{macro}{\solset}
 Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
 \begin{MacroCode}{pkg}
+\DeclareDocumentCommand \bigsquare {  } {\ensuremath{\mathrel{\tikz[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]{\draw[yshift=-0.7ex] (0,0) rectangle (1.7ex, 1.7ex);}}}}
 \DeclareDocumentCommand \corr {  } {\ensuremath{\mathrel{\hat{=}}}}
 \DeclareDocumentCommand \ds {  } {\ensuremath{\displaystyle}}
 \DeclareDocumentCommand \diff {  } {\ensuremath{\mathop{}\!\mathrm{d}}}
@@ -4068,6 +4083,7 @@ Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
 \DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
 
 \end{MacroCode}
+\end{macro}
 \end{macro}
 \end{macro}
 \end{macro}
