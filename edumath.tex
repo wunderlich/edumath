@@ -3239,7 +3239,7 @@ After that, the control sequences are called for all names within \cs{__edumath_
 \begin{environment}{hintfthm}[1]{[<hint name>]}
 \begin{environment}{remarkfthm}[1]{[<remark name>]}
 \begin{environment}{solutionfthm}[1]{[<solution name>]}
-Now, the user commands are declared separately, to manipulate the spacing arount the theorems.
+Now, the user commands are declared separately, to manipulate the spacing around the theorems.
 \begin{MacroCode}{pkg}
 
 \bool_if:NT \g_edumath_framedthm_bool {
@@ -3257,7 +3257,6 @@ Now, the user commands are declared separately, to manipulate the spacing arount
       }
       \setlength{\parskip}{\g_edumath_temp_skip}
       \setlength{\parindent}{\g_edumath_temp_dim}
-      \vspace{-\parskip}%
     }{
       \end{\use:n {#1 fthm}}%
       %\vspace{-0.3\baselineskip}%
