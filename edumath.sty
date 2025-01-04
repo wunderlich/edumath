@@ -1,7 +1,7 @@
 %% This is file `edumath.sty', generated from `edumath.tex' (key `pkg').
 %% edumath package for mathematics in educational contexts
 %%
-%% Copyright (C) 2012-2017 by Daniel Wunderlich <code@wu-web.de>
+%% Copyright (C) 2012-2024 by Daniel Wunderlich <code@wu-web.de>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -18,6 +18,7 @@
 %% This work consists of the file edumath.tex and the derived files:
 %%  * edumath.sty
 %%  * edumath.pdf
+%
 
 \RequirePackage{expl3, l3keys2e}
 \RequirePackage{xparse}
@@ -787,18 +788,18 @@
 \DeclareDocumentCommand \linepvar { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
   \ensuremath
   \tl_if_empty:nF {#2} {
-    #2:
+    #2\colon
   }
   \IfBooleanTF {#1} {
-    \vec{x} = #3 + #5 #4
+    \vec{x} = #3 + #5 \cdot #4
   }{
-    \vec{x} = \vec{#3} + #5 \vec{#4}
+    \vec{x} = {\vec{#3}} + {#5} \cdot \vec{#4}
   }
 }
 
 \DeclareDocumentCommand \linepvec { s O{\g_edumath_linepname_tl} O{\g_edumath_linepsupport_tl} O{\g_edumath_linepdir_tl} O{\g_edumath_lineppar_tl} } {
   \tl_if_empty:nF {#1} {
-    #2:
+    #2\colon
   }
   \ensuremath
   \IfBooleanTF {#1} {
@@ -808,32 +809,32 @@
   #3 \c_math_subscript_token 2 \\
   #3 \c_math_subscript_token 3
     } +
-    #5
+    #5 \cdot
     \vect{
       #4 \c_math_subscript_token 1 \\
   #4 \c_math_subscript_token 2 \\
   #4 \c_math_subscript_token 3
     }
 }{
-  \vec{x} = \vect{#3} + #5 \vect{#4}
+  \vec{x} = \vect{#3} + #5 \cdot \vect{#4}
 }
 }
 
 \DeclareDocumentCommand \planepvar { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
   \tl_if_empty:nF {#2} {
-    #2:
+    #2\colon
   }
   \ensuremath
   \IfBooleanTF {#1} {
-    \vec{x} = #3 + #6 #4 + #7 #5
+    \vec{x} = {#3} + {#6} \cdot {#4} + {#7} \cdot #5
   }{
-    \vec{x} = \vec{#3} + #6 \vec{#4} + #7 \vec{#5}
+    \vec{x} = {\vec{#3}} + {#6} \cdot {\vec{#4}} + {#7} \cdot \vec{#5}
   }
 }
 
 \DeclareDocumentCommand \planepvec { s O{\g_edumath_planepname_tl} O{\g_edumath_planepsupport_tl} O{\g_edumath_planepdiri_tl} O{\g_edumath_planepdirii_tl} O{\g_edumath_planeppari_tl} O{\g_edumath_planepparii_tl} } {
   \tl_if_empty:nF {#1} {
-    #2:
+    #2\colon
   }
   \ensuremath
   \IfBooleanTF {#1} {
@@ -843,26 +844,26 @@
   #3 \c_math_subscript_token 2 \\
   #3 \c_math_subscript_token 3
     } +
-    #6
+    #6 \cdot
     \vect{
       #4 \c_math_subscript_token 1 \\
   #4 \c_math_subscript_token 2 \\
   #4 \c_math_subscript_token 3
     } +
-    #7
+    #7 \cdot
     \vect{
       #5 \c_math_subscript_token 1 \\
   #5 \c_math_subscript_token 2 \\
   #5 \c_math_subscript_token 3
     }
 }{
-  \vec{x} = \vect{#3} + #6 \vect{#4} + #7 \vect{#5}
+  \vec{x} = {\vect{#3}} + {#6} \cdot {\vect{#4}} + {#7} \cdot \vect{#5}
 }
 }
 
 \DeclareDocumentCommand \planenvar { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
   \tl_if_empty:nF {#2} {
-    #2:
+    #2\colon
   }
   \ensuremath
   \IfBooleanTF {#1} {
@@ -874,7 +875,7 @@
 
 \DeclareDocumentCommand \planenvec { s O{\g_edumath_planenvarname_tl} O{\g_edumath_planenvarsupport_tl} O{\g_edumath_planenvarnormal_tl} } {
   \tl_if_empty:nF {#1} {
-    #2:
+    #2\colon
   }
   \ensuremath
   \IfBooleanTF {#1} {

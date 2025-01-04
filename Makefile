@@ -11,6 +11,7 @@ clean:
 	rm -f *.fls *.log *.out *.run.xml *.toc
 	rm -f *.cod *.gnuplot *.table
 	rm -f *.log *.synctex *.tmp
+	rm -f -R _minted-*
 
 distclean: clean
 	rm -f *.sty *.pdf *.clo *.tar.gz *.tds.zip
