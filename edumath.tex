@@ -2622,7 +2622,7 @@ Style of unimportant theorems:
 Labels of theorems:
 \begin{MacroCode}{pkg}
 \keys_define:nn {edumath} {
-  thmdefinitionlabel .tl_gset:N = \g_edumath_thmdefinitionlabel_tl, 
+  thmdefinitionlabel .tl_gset:N = \g_edumath_thmdefinitionlabel_tl,
   thmdefinitionlabel .initial:n = Definition,
   thmdefitheolabel .tl_gset:N = \g_edumath_thmdefitheolabel_tl,
   thmdefitheolabel .initial:n = Definition/Satz,
@@ -2747,6 +2747,7 @@ Font math options:
   rmmathfont .choices:nn = {
     computermodern,
     libertine,
+    noto,
     palatino
   }
   {
@@ -3025,7 +3026,7 @@ First, check option-dependencies:
 
 \begin{MacroCode}{pkg}
 \bool_if:nT {
-  \bool_if_p:N \g_edumath_thmbox_bool && 
+  \bool_if_p:N \g_edumath_thmbox_bool &&
   (!\bool_if_p:N \g_edumath_thmimpnumbered_bool || !\bool_if_p:N \g_edumath_thmunimpnumbered_bool)
 } {
   \msg_error:nnnn {edumath} {option-dep-enable} {`thmbox'} {`thmimpnumbered', `thmunimpnumbered'}
@@ -3133,7 +3134,7 @@ Dann werden die Theoremumgebungen definiert. Zuerst die Standard-Umgebungen vom 
   \seq_map_inline:Nn \g__edumath_thmimp_seq {
     \declaretheorem[style=important, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
   }
-  
+
   \seq_map_inline:Nn \g__edumath_thmunimp_seq {
     \declaretheorem[style=unimportant, name=\use:c {g_edumath_thm #1 label_tl}]{#1}
   }
@@ -4083,7 +4084,7 @@ Sonstige Symbole, Konstanten, Abkürzungen etc. Selbsterklärend.
 \DeclareDocumentCommand \lightning {  } {\relax\ifmmode\ \fi\ensuremath{\lightningorig}}
 
 \DeclareDocumentCommand \minusp {  } {\ensuremath{\hphantom{-}}}
-\DeclareDocumentCommand \sep {  } {\,\vert\,}    
+\DeclareDocumentCommand \sep {  } {\,\vert\,}
 \DeclareDocumentCommand \solset { m } {\ensuremath \mathbb{L} = \left\lbrace #1 \right\rbrace}
 
 \end{MacroCode}
@@ -4116,6 +4117,12 @@ Durch die Option \opt{rmmathfont} können (neben der standardmäßig verwendeten
   \RequirePackage[libertine, varbb]{newtxmath}
 }
 
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {noto} {
+  \bool_if:NF \g_edumath_sfmath_bool {
+    \RequirePackage[noto, varbb]{newtxmath}
+  }
+}
+
 \tl_if_eq:VnT \g_edumath_rmmathfont_tl {palatino} {
   \RequirePackage{mathpazo}
 }
@@ -4126,56 +4133,60 @@ Durch die Option \opt{sfmath} wird mithilfe des Packages \pkg{sansmath} die aktu
 
 \begin{MacroCode}{pkg}
 \bool_if:NT \g_edumath_sfmath_bool {
-  \RequirePackage{sansmath}                     % Default sans serif font as math font
-  \sansmath
- 
-  \usepackage[bb=pazo, bbscaled=0.9]{mathalfa}  % Load blackboard font of palatino
-  
-  % Load small and large greek letters of Iwona as there are
-  % not many other sans serif greek letters
-	\DeclareSymbolFont{Greekletters}{OT1}{iwona}{m}{n}
-	\DeclareSymbolFont{greekletters}{OML}{iwona}{m}{it}
+  \tl_if_eq:VnTF \g_edumath_rmmathfont_tl {noto} {
+    \RequirePackage[notosans, varbb]{newtxmath}
+  }{
+	  \RequirePackage{sansmath}                     % Default sans serif font as math font
+	  \sansmath
 	
-	\DeclareMathSymbol{\Delta}{\mathord}{Greekletters}{"01}
-	\DeclareMathSymbol{\Theta}{\mathord}{Greekletters}{"02}
-	\DeclareMathSymbol{\Lambda}{\mathord}{Greekletters}{"03}
-	\DeclareMathSymbol{\Xi}{\mathord}{Greekletters}{"04}
-	\DeclareMathSymbol{\Pi}{\mathord}{Greekletters}{"05}
-	\DeclareMathSymbol{\Sigma}{\mathord}{Greekletters}{"06}
-	\DeclareMathSymbol{\Upsilon}{\mathord}{Greekletters}{"07}
-	\DeclareMathSymbol{\Phi}{\mathord}{Greekletters}{"08}
-	\DeclareMathSymbol{\Psi}{\mathord}{Greekletters}{"09}
-	\DeclareMathSymbol{\Omega}{\mathord}{Greekletters}{"0A}
+	  \usepackage[bb=pazo, bbscaled=0.9]{mathalfa}  % Load blackboard font of palatino
 	
-	\DeclareMathSymbol{\alpha}{\mathord}{greekletters}{"0B}
-	\DeclareMathSymbol{\beta}{\mathord}{greekletters}{"0C}
-	\DeclareMathSymbol{\gamma}{\mathord}{greekletters}{"0D}
-	\DeclareMathSymbol{\delta}{\mathord}{greekletters}{"0E}
-	\DeclareMathSymbol{\epsilon}{\mathord}{greekletters}{"0F}
-	\DeclareMathSymbol{\zeta}{\mathord}{greekletters}{"10}
-	\DeclareMathSymbol{\eta}{\mathord}{greekletters}{"11}
-	\DeclareMathSymbol{\theta}{\mathord}{greekletters}{"12}
-	\DeclareMathSymbol{\iota}{\mathord}{greekletters}{"13}
-	\DeclareMathSymbol{\kappa}{\mathord}{greekletters}{"14}
-	\DeclareMathSymbol{\lambda}{\mathord}{greekletters}{"15}
-	\DeclareMathSymbol{\mu}{\mathord}{greekletters}{"16}
-	\DeclareMathSymbol{\nu}{\mathord}{greekletters}{"17}
-	\DeclareMathSymbol{\xi}{\mathord}{greekletters}{"18}
-	\DeclareMathSymbol{\pi}{\mathord}{greekletters}{"19}
-	\DeclareMathSymbol{\rho}{\mathord}{greekletters}{"1A}
-	\DeclareMathSymbol{\sigma}{\mathord}{greekletters}{"1B}
-	\DeclareMathSymbol{\tau}{\mathord}{greekletters}{"1C}
-	\DeclareMathSymbol{\upsilon}{\mathord}{greekletters}{"1D}
-	\DeclareMathSymbol{\phi}{\mathord}{greekletters}{"1E}
-	\DeclareMathSymbol{\chi}{\mathord}{greekletters}{"1F}
-	\DeclareMathSymbol{\psi}{\mathord}{greekletters}{"20}
-	\DeclareMathSymbol{\omega}{\mathord}{greekletters}{"21}
-	\DeclareMathSymbol{\varepsilon}{\mathord}{greekletters}{"22}
-	\DeclareMathSymbol{\vartheta}{\mathord}{greekletters}{"23}
-	\DeclareMathSymbol{\varpi}{\mathord}{greekletters}{"24}
-	\DeclareMathSymbol{\varrho}{\mathord}{greekletters}{"25}
-	\DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
-	\DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
+	  % Load small and large greek letters of Iwona as there are
+	  % not many other sans serif greek letters
+		\DeclareSymbolFont{Greekletters}{OT1}{iwona}{m}{n}
+		\DeclareSymbolFont{greekletters}{OML}{iwona}{m}{it}
+		
+		\DeclareMathSymbol{\Delta}{\mathord}{Greekletters}{"01}
+		\DeclareMathSymbol{\Theta}{\mathord}{Greekletters}{"02}
+		\DeclareMathSymbol{\Lambda}{\mathord}{Greekletters}{"03}
+		\DeclareMathSymbol{\Xi}{\mathord}{Greekletters}{"04}
+		\DeclareMathSymbol{\Pi}{\mathord}{Greekletters}{"05}
+		\DeclareMathSymbol{\Sigma}{\mathord}{Greekletters}{"06}
+		\DeclareMathSymbol{\Upsilon}{\mathord}{Greekletters}{"07}
+		\DeclareMathSymbol{\Phi}{\mathord}{Greekletters}{"08}
+		\DeclareMathSymbol{\Psi}{\mathord}{Greekletters}{"09}
+		\DeclareMathSymbol{\Omega}{\mathord}{Greekletters}{"0A}
+		
+		\DeclareMathSymbol{\alpha}{\mathord}{greekletters}{"0B}
+		\DeclareMathSymbol{\beta}{\mathord}{greekletters}{"0C}
+		\DeclareMathSymbol{\gamma}{\mathord}{greekletters}{"0D}
+		\DeclareMathSymbol{\delta}{\mathord}{greekletters}{"0E}
+		\DeclareMathSymbol{\epsilon}{\mathord}{greekletters}{"0F}
+		\DeclareMathSymbol{\zeta}{\mathord}{greekletters}{"10}
+		\DeclareMathSymbol{\eta}{\mathord}{greekletters}{"11}
+		\DeclareMathSymbol{\theta}{\mathord}{greekletters}{"12}
+		\DeclareMathSymbol{\iota}{\mathord}{greekletters}{"13}
+		\DeclareMathSymbol{\kappa}{\mathord}{greekletters}{"14}
+		\DeclareMathSymbol{\lambda}{\mathord}{greekletters}{"15}
+		\DeclareMathSymbol{\mu}{\mathord}{greekletters}{"16}
+		\DeclareMathSymbol{\nu}{\mathord}{greekletters}{"17}
+		\DeclareMathSymbol{\xi}{\mathord}{greekletters}{"18}
+		\DeclareMathSymbol{\pi}{\mathord}{greekletters}{"19}
+		\DeclareMathSymbol{\rho}{\mathord}{greekletters}{"1A}
+		\DeclareMathSymbol{\sigma}{\mathord}{greekletters}{"1B}
+		\DeclareMathSymbol{\tau}{\mathord}{greekletters}{"1C}
+		\DeclareMathSymbol{\upsilon}{\mathord}{greekletters}{"1D}
+		\DeclareMathSymbol{\phi}{\mathord}{greekletters}{"1E}
+		\DeclareMathSymbol{\chi}{\mathord}{greekletters}{"1F}
+		\DeclareMathSymbol{\psi}{\mathord}{greekletters}{"20}
+		\DeclareMathSymbol{\omega}{\mathord}{greekletters}{"21}
+		\DeclareMathSymbol{\varepsilon}{\mathord}{greekletters}{"22}
+		\DeclareMathSymbol{\vartheta}{\mathord}{greekletters}{"23}
+		\DeclareMathSymbol{\varpi}{\mathord}{greekletters}{"24}
+		\DeclareMathSymbol{\varrho}{\mathord}{greekletters}{"25}
+		\DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
+		\DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
+  }
 }
 
 \end{MacroCode}

@@ -177,6 +177,7 @@
   rmmathfont .choices:nn = {
     computermodern,
     libertine,
+    noto,
     palatino
   }
   {
@@ -978,11 +979,20 @@
   \RequirePackage[libertine, varbb]{newtxmath}
 }
 
+\tl_if_eq:VnT \g_edumath_rmmathfont_tl {noto} {
+  \bool_if:NF \g_edumath_sfmath_bool {
+    \RequirePackage[noto, varbb]{newtxmath}
+  }
+}
+
 \tl_if_eq:VnT \g_edumath_rmmathfont_tl {palatino} {
   \RequirePackage{mathpazo}
 }
 
 \bool_if:NT \g_edumath_sfmath_bool {
+  \tl_if_eq:VnTF \g_edumath_rmmathfont_tl {noto} {
+    \RequirePackage[notosans, varbb]{newtxmath}
+  }{
   \RequirePackage{sansmath}                     % Default sans serif font as math font
   \sansmath
 
@@ -1033,6 +1043,7 @@
 \DeclareMathSymbol{\varrho}{\mathord}{greekletters}{"25}
 \DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
 \DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
+  }
 }
 
 \endinput
