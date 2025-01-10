@@ -21,7 +21,7 @@
 \PassOptionsToPackage{intlimits}{amsmath}
 \PassOptionsToPackage{qtree}{edumath}
 
-\documentclass[load]{include/skdoc}
+\documentclass[load]{skdoc}
 
 \usepackage[T1]{fontenc} 
 \usepackage[utf8]{inputenc}
@@ -911,7 +911,7 @@ expl3\\
 gauss\\
 icomma*\\
 l3keys2e\\
-mathalfa*\\
+mathalpha*\\
 mathpazo*\\
 mathtools\\
 newtxmath*\\
@@ -4129,7 +4129,8 @@ Durch die Option \opt{rmmathfont} können (neben der standardmäßig verwendeten
 
 \end{MacroCode}
 
-Durch die Option \opt{sfmath} wird mithilfe des Packages \pkg{sansmath} die aktuelle serifenlose Schrift als Schrift für den Formelsatz gewählt. Als Blackboard-Schrift wird durch das Package \pkg{mathalfa} \emph{Palatino} gewählt, da aktuell keine freie serifenlose Blackboard-Schrift mit linkem doppeltem Strich existiert (bzw. vom Autor gefunden wurde). Außerdem werden griechische serifenlose Buchstaben der Schrift \emph{Iwona} verwendet.
+Serifenlose Schrift wird durch \opt{sfmath} entweder durch das Package \pkg{noto} eingebunden (sofern Noto durch \opt{rmmathfont} gewählt wurde) oder mithilfe des Packages \pkg{sansmath} die aktuelle serifenlose Schrift als Schrift für den Formelsatz gewählt. Im zweiten Fall werden außerdem griechische serifenlose Buchstaben der Schrift \emph{Iwona} verwendet.
+Als Blackboard-Schrift wird durch das Package \pkg{mathalpha} die serifenlose Variante von \emph{Doublestroke} des Packages \pkg{dsfont} gewählt. 
 
 \begin{MacroCode}{pkg}
 \bool_if:NT \g_edumath_sfmath_bool {
@@ -4138,8 +4139,6 @@ Durch die Option \opt{sfmath} wird mithilfe des Packages \pkg{sansmath} die aktu
   }{
 	  \RequirePackage{sansmath}                     % Default sans serif font as math font
 	  \sansmath
-	
-	  \usepackage[bb=pazo, bbscaled=0.9]{mathalfa}  % Load blackboard font of palatino
 	
 	  % Load small and large greek letters of Iwona as there are
 	  % not many other sans serif greek letters
@@ -4187,6 +4186,7 @@ Durch die Option \opt{sfmath} wird mithilfe des Packages \pkg{sansmath} die aktu
 		\DeclareMathSymbol{\varsigma}{\mathord}{greekletters}{"26}
 		\DeclareMathSymbol{\varphi}{\mathord}{greekletters}{"27}
   }
+  \usepackage[bb=dsfontsans, bbscaled=0.9]{mathalpha}  % Load blackboard font of palatino
 }
 
 \end{MacroCode}
